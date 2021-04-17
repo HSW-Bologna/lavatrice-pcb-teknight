@@ -1,0 +1,12 @@
+#ifndef HARDWAREPROFILE_H_INCLUDED
+#define HARDWAREPROFILE_H_INCLUDED
+
+#include <xc.h>
+
+#define TRIS_OUTPUT 0
+#define TRIS_INPUT  1
+
+#define BUZZER_TRIS TRISAbits.TRISA14
+#define BUZZER_LAT  LATAbits.LATA14
+
+#endif
