@@ -6,17 +6,34 @@
 #include "peripherals/spi.h"
 #include "peripherals/temperature.h"
 #include "peripherals/keyboard.h"
-
+#include "peripherals/digin.h"
+#include "peripherals/i2c_devices.h"
+#include "i2c_ports/PIC/i2c_driver.h"
+#include "i2c_ports/PIC/i2c_bitbang.h"
+#include "i2c_common/i2c_common.h"
+#include "i2c_devices/eeprom/24LC16.h"
+#include "peripherals/timer.h"
+#include "gel/timer/timecheck.h"
+#include "ptc.h"
 
 int main(void) {
     
-    BUZZER_TRIS = TRIS_OUTPUT;
+    unsigned long ts=0, tskp=0;
+    int onoff=0;
+    int count=0;
+    
     spi_init();
     nt7534_init();
     lv_init();
     digout_init();
     temperature_init();
     keyboard_init();
+    
+    //inizializzazioni
+    Init_I2C();
+    digin_init();
+    timer_init();
+    // ptc_init();
         
     static lv_disp_buf_t disp_buf;
     static uint8_t gbuf[512];
@@ -49,29 +66,58 @@ int main(void) {
 //        uint16_t t, h;
 //        int x= spi_read_temperature(&t,&h);
 //        lv_label_set_text_fmt(label, "%i %i %i", x, t, h);
-            
-        uint16_t map;
-        map=keyboard_read();
-        lv_label_set_text_fmt(label, "0x%03X", map);
-//        BUZZER_LAT = 1;
-//        __delay_ms(10);
-//        BUZZER_LAT = 0;
-//        __delay_ms(990);
-       
         
-//        rele_set(RELE_1, 1);
-//        rele_set(RELE_2, 1);
-//        rele_set(RELE_3, 1);
-//        rele_set(RELE_4, 1);
-//        rele_set(RELE_5, 1);
-//        rele_set(RELE_6, 1);
-//        __delay_ms(1000);
-//        rele_set(RELE_1, 0);
-//        rele_set(RELE_2, 0);
-//        rele_set(RELE_3, 0);
-//        rele_set(RELE_4, 0);
-//        rele_set(RELE_5, 0);
-//        rele_set(RELE_6, 0);
+        //TEST TASTIERA   
+//        unsigned int map;
+//        map=keyboard_read();
+//        lv_label_set_text_fmt(label, "0x%03X", map);
+        
+        if (is_expired(tskp,get_millis(), 2)) {
+            tskp=get_millis();
+            keypad_update_t update = keyboard_manage(get_millis());
+           // view_event(update);
+            if (update.code==BUTTON_SKIP_RIGHT && update.event==KEY_CLICK) {
+                lv_label_set_text(label, "skip destra");
+            }
+            if (update.code==BUTTON_SKIP_LEFT && update.event==KEY_CLICK) {
+                lv_label_set_text(label, "skip sinistra");
+            }
+            if (update.code==BUTTON_GLOBE && update.event==KEY_CLICK) {
+                lv_label_set_text(label, "globo");
+            }
+            if (update.code==BUTTON_STOP && update.event==KEY_CLICK) {
+                lv_label_set_text(label, "STOP");
+            }
+            
+        }
+        
+        
+
+        //PROVA TIMER CON RELE1
+        if (is_expired(ts,get_millis(), 1000)) {
+            rele_set(RELE_1, onoff);
+            onoff=!onoff;
+            
+            
+            //test ptc analogico
+//            char string[32]={0};
+//            unsigned long valore=ptc_read_input(PTC_CHANNEL);
+//            sprintf(string, "%i valore: %x", count, valore);
+//            count++;
+//            lv_label_set_text(label, string);
+            
+            ts=get_millis();
+        }
+        
+        //controllo buzzer
+        digout_buzzer_check();
+              
+        //test eeprom
+//      uint8_t dataw[128]={"ciao"};
+//      uint8_t datar[128]={0};
+//      EE24LC16_sequential_write(eeprom_driver, 0, EEPROM24LC16_DEFAULT_ADDRESS, "ciaociao", 128);
+//      EE24LC16_sequential_read(eeprom_driver, 0, EEPROM24LC16_DEFAULT_ADDRESS, datar, 128);
+//      lv_label_set_text(label, datar);      
     }
    
     return 0;

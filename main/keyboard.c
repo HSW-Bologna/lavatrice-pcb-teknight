@@ -8,6 +8,23 @@
 #include "peripherals/system.h"
 #include "peripherals/keyboard.h"
 #include "peripherals/hardwareprofile.h"
+#include "gel/debounce/debounce.h"
+#include "gel/keypad/keypad.h"
+
+static debounce_filter_t filter;
+
+static keypad_key_t keyboard[] = {
+    KEYPAD_KEY(0x01, BUTTON_SKIP_RIGHT),
+    KEYPAD_KEY(0x02, BUTTON_PADLOCK),
+    KEYPAD_KEY(0x04, BUTTON_SKIP_LEFT),
+    KEYPAD_KEY(0x8, BUTTON_MINUS),
+    KEYPAD_KEY(0x10, BUTTON_PLAY),
+    KEYPAD_KEY(0x20, BUTTON_PLUS),
+    KEYPAD_KEY(0x40, BUTTON_GLOBE),
+    KEYPAD_KEY(0x80, BUTTON_DOC),
+    KEYPAD_KEY(0x100, BUTTON_STOP),
+  KEYPAD_NULL_KEY,  
+};
 
 void keyboard_init(void) {
     
@@ -23,12 +40,14 @@ void keyboard_init(void) {
     KEYBOARD_RIGA3_LAT=0;
     
     ANSELB=0;
+    
+    debounce_filter_init(&filter);
    
 }
 
-uint16_t keyboard_read(void) {
+unsigned int keyboard_read(void) {
     
-    uint16_t res=0;
+    unsigned int res=0;
     
     KEYBOARD_RIGA1_LAT=1;
     __delay_us(1);
@@ -53,4 +72,15 @@ uint16_t keyboard_read(void) {
     
     return res;
     
+}
+
+
+keypad_update_t keyboard_manage(unsigned long ts) {
+    unsigned int input=0;
+    
+    input|=keyboard_read();
+    debounce_filter(&filter, input, 5);
+    
+    unsigned int keymap = debounce_value(&filter);
+    return keypad_routine(keyboard, 40, 1500, 100, ts, keymap);
 }
