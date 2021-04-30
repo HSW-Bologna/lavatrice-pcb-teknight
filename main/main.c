@@ -20,7 +20,7 @@ int main(void) {
     
     unsigned long ts=0, tskp=0;
     int onoff=0;
-    int count=0;
+    // int count=0;
     
     spi_init();
     nt7534_init();
@@ -52,15 +52,28 @@ int main(void) {
     lv_obj_t *label = lv_label_create(lv_scr_act(),NULL);
     lv_label_set_text(label, "ariciao");
     lv_obj_set_pos(label, 10, 10);
-
+    
     for(;;) {
-            
+        //PROVA TIMER CON RELE1
+        if (is_expired(ts, get_millis(), 1000)) {
+            rele_set(RELE_1, onoff);
+            onoff=!onoff;
+
+            //test ptc analogico
+//            char string[32]={0};
+//            unsigned long valore=ptc_read_input(PTC_CHANNEL);
+//            sprintf(string, "%i valore: %x", count, valore);
+//            count++;
+//            lv_label_set_text(label, string);
+            ts=get_millis();
+        }
+                
 //        uint8_t buffer[128]={0};
 //        __delay_ms(500);
 //        memset(buffer,0xaa,128);
 //        nt7534_sync(buffer,10,10,20,20);
         lv_task_handler();
-        __delay_ms(50);
+        __delay_ms(1);
         lv_tick_inc(50);
         
 //        uint16_t t, h;
@@ -81,37 +94,21 @@ int main(void) {
             }
             if (update.code==BUTTON_SKIP_LEFT && update.event==KEY_CLICK) {
                 lv_label_set_text(label, "skip sinistra");
+                digout_buzzer_bip(8,500,500);
             }
             if (update.code==BUTTON_GLOBE && update.event==KEY_CLICK) {
                 lv_label_set_text(label, "globo");
             }
             if (update.code==BUTTON_STOP && update.event==KEY_CLICK) {
                 lv_label_set_text(label, "STOP");
+                digout_buzzer_bip(5,500,100);
             }
             
         }
-        
-        
-
-        //PROVA TIMER CON RELE1
-        if (is_expired(ts,get_millis(), 1000)) {
-            rele_set(RELE_1, onoff);
-            onoff=!onoff;
-            
-            
-            //test ptc analogico
-//            char string[32]={0};
-//            unsigned long valore=ptc_read_input(PTC_CHANNEL);
-//            sprintf(string, "%i valore: %x", count, valore);
-//            count++;
-//            lv_label_set_text(label, string);
-            
-            ts=get_millis();
-        }
-        
-        //controllo buzzer
+       
+         //controllo buzzer
         digout_buzzer_check();
-              
+
         //test eeprom
 //      uint8_t dataw[128]={"ciao"};
 //      uint8_t datar[128]={0};
@@ -119,6 +116,5 @@ int main(void) {
 //      EE24LC16_sequential_read(eeprom_driver, 0, EEPROM24LC16_DEFAULT_ADDRESS, datar, 128);
 //      lv_label_set_text(label, datar);      
     }
-   
     return 0;
 }

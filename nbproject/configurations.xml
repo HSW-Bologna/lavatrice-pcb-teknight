@@ -197,9 +197,6 @@
           <logicalFolder name="pagemanager" displayName="pagemanager" projectFiles="true">
             <itemPath>components/generic_embedded_libs/gel/pagemanager/page_manager.c</itemPath>
           </logicalFolder>
-          <logicalFolder name="parameter" displayName="parameter" projectFiles="true">
-            <itemPath>components/generic_embedded_libs/gel/parameter/parameter.c</itemPath>
-          </logicalFolder>
           <logicalFolder name="pid" displayName="pid" projectFiles="true">
             <itemPath>components/generic_embedded_libs/gel/pid/pid.c</itemPath>
           </logicalFolder>

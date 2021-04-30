@@ -12,7 +12,7 @@
 
 static debounce_filter_t filter;
 
-void digin_init() {
+void digin_init(void) {
     IN1_TRIS=TRIS_INPUT;
     IN2_TRIS=TRIS_INPUT;
     IN3_TRIS=TRIS_INPUT;
@@ -28,7 +28,7 @@ int digin_get(digin_t digin) {
    return debounce_read(&filter, digin);
 }
 
-void digin_take_reading() {
+void digin_take_reading(void) {
     unsigned int input=0;
     input|=!IN1_PORT;
     input|=(!IN2_PORT)<<1;
