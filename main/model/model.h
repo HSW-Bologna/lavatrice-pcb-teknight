@@ -4,8 +4,7 @@
 #include <stdlib.h>
 
 typedef struct {
-    size_t velocita;
-    int fan_on;
+   
 } model_t ;
 
 #endif

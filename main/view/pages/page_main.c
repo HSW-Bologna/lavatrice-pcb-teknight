@@ -56,12 +56,7 @@ static view_message_t process_page_event(model_t *model, void *arg, pman_event_t
 }
 
 static view_t update_page(model_t *model, void *arg){
-    size_t i = 0;
     view_t view = 0;
-    
-    for (i = 0; i < model->velocita + 1; i++) {
-        view |= 1 << i;
-    }
     
     return view;
 }
