@@ -150,6 +150,9 @@
           <itemPath>main/config/lv_conf.h</itemPath>
           <itemPath>main/config/gel_conf.h</itemPath>
         </logicalFolder>
+        <logicalFolder name="model" displayName="model" projectFiles="true">
+          <itemPath>main/model/model.h</itemPath>
+        </logicalFolder>
         <logicalFolder name="peripherals" displayName="peripherals" projectFiles="true">
           <itemPath>main/peripherals/system.h</itemPath>
           <itemPath>main/peripherals/hardwareprofile.h</itemPath>
@@ -163,6 +166,12 @@
           <itemPath>main/peripherals/timer.h</itemPath>
           <itemPath>main/peripherals/ptc.h</itemPath>
           <itemPath>main/peripherals/pwoff.h</itemPath>
+        </logicalFolder>
+        <logicalFolder name="view" displayName="view" projectFiles="true">
+          <logicalFolder name="pages" displayName="pages" projectFiles="true">
+          </logicalFolder>
+          <itemPath>main/view/view.h</itemPath>
+          <itemPath>main/view/view_types.h</itemPath>
         </logicalFolder>
       </logicalFolder>
     </logicalFolder>
@@ -367,6 +376,12 @@
           <itemPath>main/peripherals/ptc.c</itemPath>
           <itemPath>main/peripherals/pwoff.c</itemPath>
         </logicalFolder>
+        <logicalFolder name="view" displayName="view" projectFiles="true">
+          <logicalFolder name="pages" displayName="pages" projectFiles="true">
+            <itemPath>main/view/pages/page_main.c</itemPath>
+          </logicalFolder>
+          <itemPath>main/view/view.c</itemPath>
+        </logicalFolder>
         <itemPath>main/main.c</itemPath>
       </logicalFolder>
     </logicalFolder>
@@ -388,7 +403,7 @@
         <targetDevice>PIC24FJ256GA705</targetDevice>
         <targetHeader></targetHeader>
         <targetPluginBoard></targetPluginBoard>
-        <platformTool>snap</platformTool>
+        <platformTool>noID</platformTool>
         <languageToolchain>XC16</languageToolchain>
         <languageToolchainVersion>1.36</languageToolchainVersion>
         <platform>3</platform>
@@ -938,8 +953,6 @@
         <property key="memories.programmemory" value="true"/>
         <property key="memories.programmemory.ranges" value="0-2aeff"/>
         <property key="memories.rww" value="true"/>
-        <property key="programmerToGoFilePath"
-                  value="C:/Users/Virginia/Desktop/Projects/paperoga/debug/default/default_ptg"/>
         <property key="programoptions.donoteraseauxmem" value="false"/>
         <property key="programoptions.eraseb4program" value="true"/>
         <property key="programoptions.pgmentry.voltage" value="low"/>

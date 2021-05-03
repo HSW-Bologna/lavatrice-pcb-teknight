@@ -9,7 +9,6 @@
 #include "peripherals/keyboard.h"
 #include "peripherals/hardwareprofile.h"
 #include "gel/debounce/debounce.h"
-#include "gel/keypad/keypad.h"
 
 static debounce_filter_t filter;
 

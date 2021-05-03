@@ -15,6 +15,8 @@
 #include "peripherals/timer.h"
 #include "gel/timer/timecheck.h"
 #include "ptc.h"
+#include "model/model.h"
+#include "view/view.h"
 
 int main(void) {
     
@@ -88,7 +90,7 @@ int main(void) {
         if (is_expired(tskp,get_millis(), 2)) {
             tskp=get_millis();
             keypad_update_t update = keyboard_manage(get_millis());
-           // view_event(update);
+            view_event(update);
             if (update.code==BUTTON_SKIP_RIGHT && update.event==KEY_CLICK) {
                 lv_label_set_text(label, "skip destra");
             }
