@@ -172,6 +172,9 @@
           <itemPath>main/peripherals/pwoff.h</itemPath>
         </logicalFolder>
         <logicalFolder name="view" displayName="view" projectFiles="true">
+          <logicalFolder name="fonts" displayName="fonts" projectFiles="true">
+            <itemPath>main/view/fonts/legacy_fonts.h</itemPath>
+          </logicalFolder>
           <logicalFolder name="pages" displayName="pages" projectFiles="true">
           </logicalFolder>
           <itemPath>main/view/view.h</itemPath>
@@ -386,6 +389,10 @@
           <itemPath>main/peripherals/spi.c</itemPath>
         </logicalFolder>
         <logicalFolder name="view" displayName="view" projectFiles="true">
+          <logicalFolder name="fonts" displayName="fonts" projectFiles="true">
+            <itemPath>main/view/fonts/hsw8x8.c</itemPath>
+            <itemPath>main/view/fonts/legacy_fonts.c</itemPath>
+          </logicalFolder>
           <logicalFolder name="pages" displayName="pages" projectFiles="true">
             <itemPath>main/view/pages/page_main.c</itemPath>
           </logicalFolder>
@@ -477,7 +484,7 @@
         <property key="oXC16gcc-sfr-warn" value="false"/>
         <property key="oXC16gcc-smar-io-lvl" value="1"/>
         <property key="oXC16gcc-smart-io-fmt" value=""/>
-        <property key="optimization-level" value="0"/>
+        <property key="optimization-level" value="1"/>
         <property key="post-instruction-scheduling" value="default"/>
         <property key="pre-instruction-scheduling" value="default"/>
         <property key="preprocessor-macros" value="LV_CONF_INCLUDE_SIMPLE"/>

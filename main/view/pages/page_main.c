@@ -3,7 +3,7 @@
 #include "model/model.h"
 #include "keyboard.h"
 #include "lvgl/lvgl.h"
-
+#include "view/fonts/legacy_fonts.h"
 
 
 static struct {
@@ -19,6 +19,7 @@ static void *create_page(model_t *model, void *extra) {
 
 static void open_page(model_t *model, void *data) {
     lv_obj_t *label = lv_label_create(lv_scr_act(),NULL);
+    
     lv_label_set_text(label, "ariciao");
     lv_obj_set_pos(label, 10, 10);
     page_data.label = label;

@@ -29,7 +29,7 @@ view_t view_init(model_t *model, void (*flush_cb)(struct _disp_drv_t *, const lv
     disp_drv.rounder_cb=rounder_cb;
     lv_disp_drv_register(&disp_drv);
     
-    lv_theme_t *th = lv_theme_mono_init(0,&lv_font_unscii_8);
+    lv_theme_t *th = lv_theme_mono_init(0,&hsw_8x8_font);
     lv_theme_set_current(th);
     
     pman_init(&pman);

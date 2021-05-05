@@ -156,7 +156,7 @@ typedef void * lv_fs_drv_user_data_t;
 #endif
 
 /*1: Add a `user_data` to drivers and objects*/
-#define LV_USE_USER_DATA        0
+#define LV_USE_USER_DATA        1
 
 /*========================
  * Image decoder and cache
@@ -314,7 +314,7 @@ typedef void * lv_indev_drv_user_data_t;            /*Type of user data in the i
 
 /*Pixel perfect monospace font
  * http://pelulamu.net/unscii/ */
-#define LV_FONT_UNSCII_8     1
+#define LV_FONT_UNSCII_8     0
 
 /* Optionally declare your custom fonts here.
  * You can use these fonts as default font too
@@ -322,10 +322,10 @@ typedef void * lv_indev_drv_user_data_t;            /*Type of user data in the i
  * #define LV_FONT_CUSTOM_DECLARE LV_FONT_DECLARE(my_font_1) \
  *                                LV_FONT_DECLARE(my_font_2)
  */
-#define LV_FONT_CUSTOM_DECLARE
+#define LV_FONT_CUSTOM_DECLARE  LV_FONT_DECLARE(hsw_8x8_font)
 
 /*Always set a default font from the built-in fonts*/
-#define LV_FONT_DEFAULT        &lv_font_unscii_8
+#define LV_FONT_DEFAULT        &hsw_8x8_font
 
 /* Enable it if you have fonts with a lot of characters.
  * The limit depends on the font size, font face and bpp
@@ -339,7 +339,11 @@ typedef void * lv_indev_drv_user_data_t;            /*Type of user data in the i
 #define LV_FONT_SUBPX_BGR    0
 
 /*Declare the type of the user data of fonts (can be e.g. `void *`, `int`, `struct`)*/
-typedef void * lv_font_user_data_t;
+typedef struct {
+    int height;
+    int bitmap_width;
+    int char_width;
+} lv_font_user_data_t;
 
 /*=================
  *  Text settings
