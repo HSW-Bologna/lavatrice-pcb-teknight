@@ -10,16 +10,24 @@
 #include "hardwareprofile.h"
 #include "pwoff.h"
 
+
 void pwoff_init(void) {
-    INT0_TRIS = 0;
-    IEC0bits.INT0IE = 1;
-    IFS0bits.INT0IF = 0;
-    IPC0bits.INT0IP = 5;
+    INT0_TRIS = TRIS_INPUT;
+    
+    IOCNBbits.IOCNB7 = 1; /* Interrupt trigger su transizioni high-to-low */
+
+    IOCPUBbits.IOCPUB7 = 0; /* Disabilitare il pull-up interno */
+    IOCPDBbits.IOCPDB7 = 0; /* Disabilitare il pull-down interno */
+
+    IPC4bits.IOCIP = 0x05; /* maximum priority */
+
+    IFS1bits.IOCIF   = 0; /* Interrupt flag */
+    PADCONbits.IOCON = 1; /* Interrupt-on-change enable bit */
+    IEC1bits.IOCIE   = 1; /* Interrupt enable bit globale */
 }
 
 
 
-void __attribute__((interrupt, auto_psv))  _INT0Interrupt(void) {
-   
-   IFS0bits.INT0IF = 0;
+void __attribute__((interrupt, no_auto_psv)) _IOCInterrupt() {
+    IFS1bits.IOCIF = 0;
 }

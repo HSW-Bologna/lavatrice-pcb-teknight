@@ -78,7 +78,7 @@ keypad_update_t keyboard_manage(unsigned long ts) {
     unsigned int input=0;
     
     input|=keyboard_read();
-    debounce_filter(&filter, input, 5);
+    debounce_filter(&filter, input, 2);
     
     unsigned int keymap = debounce_value(&filter);
     return keypad_routine(keyboard, 40, 1500, 100, ts, keymap);

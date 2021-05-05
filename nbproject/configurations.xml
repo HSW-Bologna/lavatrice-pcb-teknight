@@ -150,6 +150,10 @@
           <itemPath>main/config/lv_conf.h</itemPath>
           <itemPath>main/config/gel_conf.h</itemPath>
         </logicalFolder>
+        <logicalFolder name="controller" displayName="controller" projectFiles="true">
+          <itemPath>main/controller/controller.h</itemPath>
+          <itemPath>main/controller/gui.h</itemPath>
+        </logicalFolder>
         <logicalFolder name="model" displayName="model" projectFiles="true">
           <itemPath>main/model/model.h</itemPath>
         </logicalFolder>
@@ -361,20 +365,25 @@
         </logicalFolder>
       </logicalFolder>
       <logicalFolder name="main" displayName="main" projectFiles="true">
+        <logicalFolder name="controller" displayName="controller" projectFiles="true">
+          <itemPath>main/controller/gui.c</itemPath>
+          <itemPath>main/controller/controller.c</itemPath>
+        </logicalFolder>
+        <logicalFolder name="model" displayName="model" projectFiles="true">
+          <itemPath>main/model/model.c</itemPath>
+        </logicalFolder>
         <logicalFolder name="peripherals" displayName="peripherals" projectFiles="true">
           <itemPath>main/peripherals/system.c</itemPath>
           <itemPath>main/peripherals/NT7534.c</itemPath>
-          <itemPath>main/peripherals/display_common.c</itemPath>
-          <itemPath>main/peripherals/lv_drv_conf.h</itemPath>
-          <itemPath>main/digout.c</itemPath>
-          <itemPath>main/keyboard.c</itemPath>
-          <itemPath>main/spi.c</itemPath>
-          <itemPath>main/temperature.c</itemPath>
           <itemPath>main/peripherals/digin.c</itemPath>
           <itemPath>main/peripherals/i2c_devices.c</itemPath>
           <itemPath>main/peripherals/timer.c</itemPath>
           <itemPath>main/peripherals/ptc.c</itemPath>
           <itemPath>main/peripherals/pwoff.c</itemPath>
+          <itemPath>main/peripherals/digout.c</itemPath>
+          <itemPath>main/peripherals/keyboard.c</itemPath>
+          <itemPath>main/peripherals/temperature.c</itemPath>
+          <itemPath>main/peripherals/spi.c</itemPath>
         </logicalFolder>
         <logicalFolder name="view" displayName="view" projectFiles="true">
           <logicalFolder name="pages" displayName="pages" projectFiles="true">
@@ -403,16 +412,14 @@
         <targetDevice>PIC24FJ256GA705</targetDevice>
         <targetHeader></targetHeader>
         <targetPluginBoard></targetPluginBoard>
-        <platformTool>noID</platformTool>
+        <platformTool>ICD3PlatformTool</platformTool>
         <languageToolchain>XC16</languageToolchain>
         <languageToolchainVersion>1.36</languageToolchainVersion>
-        <platform>3</platform>
+        <platform>2</platform>
       </toolsSet>
       <packs>
         <pack name="PIC24F-GA-GB_DFP" vendor="Microchip" version="1.1.74"/>
       </packs>
-      <ScriptingSettings>
-      </ScriptingSettings>
       <compileType>
         <linkerTool>
           <linkerLibItems>
@@ -422,7 +429,7 @@
         </archiverTool>
         <loading>
           <useAlternateLoadableFile>false</useAlternateLoadableFile>
-          <parseOnProdLoad>false</parseOnProdLoad>
+          <parseOnProdLoad>true</parseOnProdLoad>
           <alternateLoadableFile></alternateLoadableFile>
         </loading>
         <subordinates>
@@ -430,7 +437,6 @@
       </compileType>
       <makeCustomizationType>
         <makeCustomizationPreStepEnabled>false</makeCustomizationPreStepEnabled>
-        <makeUseCleanTarget>false</makeUseCleanTarget>
         <makeCustomizationPreStep></makeCustomizationPreStep>
         <makeCustomizationPostStepEnabled>false</makeCustomizationPostStepEnabled>
         <makeCustomizationPostStep></makeCustomizationPostStep>
@@ -558,7 +564,6 @@
         <property key="legacy-libc" value="true"/>
         <property key="mpreserve-all" value="false"/>
         <property key="oXC16glb-macros" value=""/>
-        <property key="omit-pack-options" value="1"/>
         <property key="output-file-format" value="elf"/>
         <property key="preserve-all" value="false"/>
         <property key="preserve-file" value=""/>
@@ -741,49 +746,7 @@
         <C30Global>
         </C30Global>
       </item>
-      <item path="main/keyboard.c" ex="false" overriding="false">
-        <C30>
-        </C30>
-        <C30-AR>
-        </C30-AR>
-        <C30-AS>
-        </C30-AS>
-        <C30-CO>
-        </C30-CO>
-        <C30-LD>
-        </C30-LD>
-        <C30Global>
-        </C30Global>
-      </item>
       <item path="main/peripherals/NT7534.c" ex="false" overriding="false">
-        <C30>
-        </C30>
-        <C30-AR>
-        </C30-AR>
-        <C30-AS>
-        </C30-AS>
-        <C30-CO>
-        </C30-CO>
-        <C30-LD>
-        </C30-LD>
-        <C30Global>
-        </C30Global>
-      </item>
-      <item path="main/peripherals/display_common.c" ex="true" overriding="false">
-        <C30>
-        </C30>
-        <C30-AR>
-        </C30-AR>
-        <C30-AS>
-        </C30-AS>
-        <C30-CO>
-        </C30-CO>
-        <C30-LD>
-        </C30-LD>
-        <C30Global>
-        </C30Global>
-      </item>
-      <item path="main/peripherals/lv_drv_conf.h" ex="true" overriding="false">
         <C30>
         </C30>
         <C30-AR>

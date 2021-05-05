@@ -7,4 +7,7 @@ typedef struct {
    
 } model_t ;
 
+
+void model_init(model_t *model);
+
 #endif

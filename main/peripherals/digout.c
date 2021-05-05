@@ -53,14 +53,16 @@ void rele_set(rele_t rele, int val) {
     }
 }
 
+
 void digout_buzzer_bip(size_t r, unsigned long t_on, unsigned long t_off) {
-    repeat=r+1;
-    time_on=t_on;
-    time_off=t_off;
-    is_set=1;
-    BUZZER_LAT=1;
-    
+    repeat = r;
+    time_on = t_on;
+    time_off = t_off;
+    is_set = 1;
+    BUZZER_LAT = 1;
+    ts = get_millis();
 }
+
 
 void digout_buzzer_check(void) {
     if (is_set && repeat>0) {
@@ -68,14 +70,12 @@ void digout_buzzer_check(void) {
             BUZZER_LAT=!BUZZER_LAT;
             ts=get_millis();
             repeat--;
-           
-        }
-        if ((is_expired(ts, get_millis(), time_off)) && !BUZZER_LAT) {
+        } else if ((is_expired(ts, get_millis(), time_off)) && !BUZZER_LAT) {
             BUZZER_LAT=!BUZZER_LAT; 
             ts=get_millis();
-            
         }
     }
+    
     if (is_set && repeat==0) {
         is_set=0;
         ts=0;

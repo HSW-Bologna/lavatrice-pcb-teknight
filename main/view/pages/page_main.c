@@ -2,6 +2,14 @@
 #include "gel/pagemanager/page_manager.h"
 #include "model/model.h"
 #include "keyboard.h"
+#include "lvgl/lvgl.h"
+
+
+
+static struct {
+    lv_obj_t *label;
+} page_data;
+
 
 
 static void *create_page(model_t *model, void *extra) {
@@ -9,60 +17,48 @@ static void *create_page(model_t *model, void *extra) {
 }
 
 
-static view_message_t process_page_event(model_t *model, void *arg, pman_event_t update){
+static void open_page(model_t *model, void *data) {
+    lv_obj_t *label = lv_label_create(lv_scr_act(),NULL);
+    lv_label_set_text(label, "ariciao");
+    lv_obj_set_pos(label, 10, 10);
+    page_data.label = label;
+}
+
+
+static view_message_t process_page_event(model_t *model, void *arg, pman_event_t event){
     view_message_t msg = {.vmsg = {VIEW_PAGE_COMMAND_CODE_NOTHING}};
-    
-    if (update.event==KEY_CLICK) {
-        switch (update.code) {
-            case BUTTON_SKIP_RIGHT:
-                msg.cmsg.code = VIEW_CONTROLLER_COMMAND_CODE_SKIP_RIGHT;
-                msg.vmsg.code = VIEW_PAGE_COMMAND_CODE_UPDATE;
-                break;
-            case BUTTON_PADLOCK:
-                msg.cmsg.code = VIEW_CONTROLLER_COMMAND_CODE_PADLOCK;
-                msg.vmsg.code = VIEW_PAGE_COMMAND_CODE_UPDATE;
-                break;
-            case BUTTON_SKIP_LEFT:
-                msg.cmsg.code = VIEW_CONTROLLER_COMMAND_CODE_SKIP_LEFT;
-                msg.vmsg.code = VIEW_PAGE_COMMAND_CODE_UPDATE;
-                break;
-            case BUTTON_MINUS:
-                msg.cmsg.code = VIEW_CONTROLLER_COMMAND_CODE_MINUS;
-                msg.vmsg.code = VIEW_PAGE_COMMAND_CODE_UPDATE;
-                break;
-            case BUTTON_PLAY:
-                msg.cmsg.code = VIEW_CONTROLLER_COMMAND_CODE_PLAY;
-                msg.vmsg.code = VIEW_PAGE_COMMAND_CODE_UPDATE;
-                break;
-            case BUTTON_PLUS:
-                msg.cmsg.code = VIEW_CONTROLLER_COMMAND_CODE_PLUS;
-                msg.vmsg.code = VIEW_PAGE_COMMAND_CODE_UPDATE;
-                break;
-            case BUTTON_GLOBE:
-                msg.cmsg.code = VIEW_CONTROLLER_COMMAND_CODE_GLOBE;
-                msg.vmsg.code = VIEW_PAGE_COMMAND_CODE_UPDATE;
-                break;
-            case BUTTON_DOC:
-                msg.cmsg.code = VIEW_CONTROLLER_COMMAND_CODE_DOC;
-                msg.vmsg.code = VIEW_PAGE_COMMAND_CODE_UPDATE;
-                break;
-            case BUTTON_STOP:
-                msg.cmsg.code = VIEW_CONTROLLER_COMMAND_CODE_STOP;
-                msg.vmsg.code = VIEW_PAGE_COMMAND_CODE_UPDATE;
-                break;
+
+    switch (event.code) {
+        case VIEW_EVENT_KEYPAD: {
+            msg.vmsg.code = VIEW_PAGE_COMMAND_CODE_UPDATE; 
+                    
+            if (event.key_event.code==BUTTON_SKIP_RIGHT && event.key_event.event==KEY_CLICK) {
+                lv_label_set_text(page_data.label, "skip destra");
+            } else if (event.key_event.code==BUTTON_SKIP_LEFT && event.key_event.event==KEY_CLICK) {
+                lv_label_set_text(page_data.label, "skip sinistra");
+            } else if (event.key_event.code==BUTTON_GLOBE && event.key_event.event==KEY_CLICK) {
+                lv_label_set_text(page_data.label, "globo");
+            } else if (event.key_event.code==BUTTON_STOP && event.key_event.event==KEY_CLICK) {
+                lv_label_set_text(page_data.label, "STOP");
+            }
+            break;
         }
     }
+
     return msg;
 }
 
+
 static view_t update_page(model_t *model, void *arg){
-    view_t view = 0;
     
-    return view;
+    return 0;
 }
+
 
 const pman_page_t page_main = {
     .create = create_page,
+    .open = open_page,
     .update        = update_page,
     .process_event = process_page_event,
+    .close = view_close_all,
 };
