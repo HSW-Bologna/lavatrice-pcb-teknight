@@ -1,7 +1,7 @@
 #include "view/view.h"
 #include "gel/pagemanager/page_manager.h"
 #include "model/model.h"
-#include "keyboard.h"
+#include "peripherals/keyboard.h"
 #include "lvgl/lvgl.h"
 #include "view/fonts/legacy_fonts.h"
 

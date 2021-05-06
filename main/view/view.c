@@ -15,23 +15,29 @@ static page_manager_t pman;
 
 
 view_t view_init(model_t *model, void (*flush_cb)(struct _disp_drv_t *, const lv_area_t *, lv_color_t *),
-                void (*rounder_cb)(struct _disp_drv_t *, lv_area_t *),
-                void (*set_px_cb)(struct _disp_drv_t *, uint8_t *, lv_coord_t, lv_coord_t, lv_coord_t, lv_color_t, lv_opa_t)
-        ) {
+                 void (*rounder_cb)(struct _disp_drv_t *, lv_area_t *),
+                 void (*set_px_cb)(struct _disp_drv_t *, uint8_t *, lv_coord_t, lv_coord_t, lv_coord_t, lv_color_t,
+                                   lv_opa_t)) {
+    lv_init();
+
     static lv_disp_buf_t disp_buf;
+#ifdef PC_SIMULATOR
+    static uint8_t gbuf[256 * 8];
+#else
     static uint8_t gbuf[256];
-    lv_disp_buf_init(&disp_buf, gbuf, NULL, 2048 );
+#endif
+    lv_disp_buf_init(&disp_buf, gbuf, NULL, 256 * 8);
     lv_disp_drv_t disp_drv;
     lv_disp_drv_init(&disp_drv);
-    disp_drv.buffer=&disp_buf;
-    disp_drv.flush_cb=flush_cb;
-    disp_drv.set_px_cb=set_px_cb;
-    disp_drv.rounder_cb=rounder_cb;
+    disp_drv.buffer     = &disp_buf;
+    disp_drv.flush_cb   = flush_cb;
+    disp_drv.set_px_cb  = set_px_cb;
+    disp_drv.rounder_cb = rounder_cb;
     lv_disp_drv_register(&disp_drv);
-    
-    lv_theme_t *th = lv_theme_mono_init(0,&hsw_8x8_font);
+
+    lv_theme_t *th = lv_theme_mono_init(0, &hsw_8x8_font);
     lv_theme_set_current(th);
-    
+
     pman_init(&pman);
     event_queue_init(&q);
     return view_change_page(model, &page_main);
@@ -45,7 +51,7 @@ view_t view_change_page_extra(model_t *model, const pman_page_t *page, void *ext
 
 
 view_t view_change_page(model_t *model, const pman_page_t *page) {
-   return view_change_page_extra(model, page, NULL);
+    return view_change_page_extra(model, page, NULL);
 }
 
 
@@ -82,7 +88,7 @@ int view_process_msg(view_page_command_t vmsg, model_t *model) {
     } else if (vmsg.code == VIEW_PAGE_COMMAND_CODE_BACK) {
         pman_back(&pman, model);
         event_queue_init(&q);
-       // view_event((view_event_t){.code = VIEW_EVENT_CODE_OPEN});
+        // view_event((view_event_t){.code = VIEW_EVENT_CODE_OPEN});
     } else if (vmsg.code == VIEW_PAGE_COMMAND_CODE_REBASE) {
         view_rebase_page(model, vmsg.page);
     } else if (vmsg.code == VIEW_PAGE_COMMAND_CODE_UPDATE) {

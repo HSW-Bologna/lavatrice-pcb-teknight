@@ -10,7 +10,6 @@ typedef enum {
 } button_t;
 
 void keyboard_init(void);
-unsigned int keyboard_read(void);
 keypad_update_t keyboard_manage(unsigned long ts);
 
 #endif	

@@ -14,7 +14,9 @@
 /* clang-format off */
 
 #include <stdint.h>
+#ifndef PC_SIMULATOR
 typedef uint16_t uintptr_t;
+#endif
 
 /*====================
    Graphical settings

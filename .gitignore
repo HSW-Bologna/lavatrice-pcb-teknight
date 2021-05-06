@@ -1,4 +1,7 @@
-
+.sconsign.dblite
+compile_commands.json
+.cache
+*.exe
 *.d
 *.pre
 *.p1

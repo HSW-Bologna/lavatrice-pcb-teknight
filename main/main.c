@@ -27,7 +27,6 @@ int main(void) {
     
     spi_init();
     nt7534_init();
-    lv_init();
     digout_init();
     temperature_init();
     keyboard_init();
@@ -67,7 +66,6 @@ int main(void) {
         digout_buzzer_check(); 
         
         __delay_ms(1);
-        lv_tick_inc(1); //TODO: incrementare del valore effettivamente passato
     }
     return 0;
 }
