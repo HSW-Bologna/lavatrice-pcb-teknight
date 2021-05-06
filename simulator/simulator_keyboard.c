@@ -1,6 +1,8 @@
 #include <SDL2/SDL.h>
 #include "peripherals/keyboard.h"
 
+const uint8_t *keystates = NULL;
+
 static keypad_key_t keyboard[] = {
     KEYPAD_KEY(0x01, BUTTON_SKIP_RIGHT), KEYPAD_KEY(0x02, BUTTON_PADLOCK),
     KEYPAD_KEY(0x04, BUTTON_SKIP_LEFT),  KEYPAD_KEY(0x8, BUTTON_MINUS),
@@ -9,86 +11,48 @@ static keypad_key_t keyboard[] = {
     KEYPAD_KEY(0x100, BUTTON_STOP),      KEYPAD_NULL_KEY,
 };
 
-void keyboard_init(void) {}
+void keyboard_init(void) {
+    keystates = SDL_GetKeyboardState(NULL);
+}
 
 static unsigned int keyboard_read(void) {
     static unsigned int input = 0;
 
-    SDL_Event event;
-    /* Poll for events. SDL_PollEvent() returns 0 when there are no  */
-    /* more events on the event queue, our while loop will exit when */
-    /* that occurs.                                                  */
-    while (SDL_PollEvent(&event)) {
-        /* We are only worried about SDL_KEYDOWN and SDL_KEYUP events */
-        switch (event.key.keysym.scancode) {
-            case SDL_SCANCODE_1:
-            case SDL_SCANCODE_KP_1:
-                if (event.type == SDL_KEYDOWN) {
-                    input |= 0x100;
-                } else {
-                    input &= ~0x100;
-                }
-                break;
-            case SDL_SCANCODE_2:
-            case SDL_SCANCODE_KP_2:
-                if (event.type == SDL_KEYDOWN) {
-                    input |= 0x02;
-                } else {
-                    input &= ~0x02;
-                }
-                break;
-            case SDL_SCANCODE_3:
-            case SDL_SCANCODE_KP_3:
-                if (event.type == SDL_KEYDOWN) {
-                    input |= 0x40;
-                } else {
-                    input &= ~0x40;
-                }
-                break;
-            case SDL_SCANCODE_4:
-            case SDL_SCANCODE_KP_4:
-                if (event.type == SDL_KEYDOWN) {
-                    input |= 0x20;
-                } else {
-                    input &= ~0x20;
-                }
-                break;
-            case SDL_SCANCODE_5:
-            case SDL_SCANCODE_KP_5:
-                if (event.type == SDL_KEYDOWN) {
-                    input |= 0x10;
-                } else {
-                    input &= ~0x10;
-                }
-                break;
-            case SDL_SCANCODE_6:
-            case SDL_SCANCODE_KP_6:
-                if (event.type == SDL_KEYDOWN) {
-                    input |= 0x8;
-                } else {
-                    input &= ~0x8;
-                }
-                break;
-            case SDL_SCANCODE_7:
-            case SDL_SCANCODE_KP_7:
-                if (event.type == SDL_KEYDOWN) {
-                    input |= 0x4;
-                } else {
-                    input &= ~0x4;
-                }
-                break;
-            case SDL_SCANCODE_9:
-            case SDL_SCANCODE_KP_9:
-                if (event.type == SDL_KEYDOWN) {
-                    input |= 0x1;
-                } else {
-                    input &= ~0x1;
-                }
-                break;
-
-            default:
-                break;
-        }
+    SDL_PumpEvents();
+    if (keystates[SDL_SCANCODE_1] || keystates[SDL_SCANCODE_KP_1]) {
+        input |= 0x100;
+    } else {
+        input &= ~0x100;
+    }
+    if (keystates[SDL_SCANCODE_3] || keystates[SDL_SCANCODE_KP_3]) {
+        input |= 0x40;
+    } else {
+        input &= ~0x40;
+    }
+    if (keystates[SDL_SCANCODE_4] || keystates[SDL_SCANCODE_KP_4]) {
+        input |= 0x20;
+    } else {
+        input &= ~0x20;
+    }
+    if (keystates[SDL_SCANCODE_5] || keystates[SDL_SCANCODE_KP_5]) {
+        input |= 0x10;
+    } else {
+        input &= ~0x10;
+    }
+    if (keystates[SDL_SCANCODE_6] || keystates[SDL_SCANCODE_KP_6]) {
+        input |= 0x8;
+    } else {
+        input &= ~0x8;
+    }
+    if (keystates[SDL_SCANCODE_7] || keystates[SDL_SCANCODE_KP_7]) {
+        input |= 0x4;
+    } else {
+        input &= ~0x4;
+    }
+    if (keystates[SDL_SCANCODE_9] || keystates[SDL_SCANCODE_KP_9]) {
+        input |= 0x1;
+    } else {
+        input &= ~0x1;
     }
 
     return input;

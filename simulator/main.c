@@ -37,7 +37,7 @@ int main(int argc, char *argv[]) {
             tskp = get_millis();
         }
 
-        usleep(1000UL);
+        SDL_Delay(1);
     }
 
     return 0;
