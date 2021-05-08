@@ -19,10 +19,11 @@
 #include "view/view.h"
 #include "controller/gui.h"
 #include "pwoff.h"
+#include "gettoniera.h"
 
 
 int main(void) {
-    unsigned long ts=0, tskp=0;
+    unsigned long ts=0, tskp=0, ts_input=0;
     model_t model;
     
     spi_init();
@@ -30,6 +31,7 @@ int main(void) {
     digout_init();
     temperature_init();
     keyboard_init();
+    system_init();
     
     //inizializzazioni
     i2c_bitbang_init();
@@ -38,6 +40,7 @@ int main(void) {
     ptc_init();
     pwoff_init();
     pwm_init();
+    gettoniera_init();
 
     
     model_init(&model);
@@ -46,6 +49,22 @@ int main(void) {
     
     for(;;) {
         controller_manage_gui(&model);
+        
+        if (is_expired(ts_input, get_millis(), 2)) {
+            if (digin_take_reading()) {
+                view_event((view_event_t){.code = VIEW_EVENT_MODEL_UPDATE});
+                model.inputs=digin_get_inputs();
+            }
+            if (gettoniera_take_insert()) {
+                view_event((view_event_t) {.code = VIEW_EVENT_MODEL_UPDATE});
+                model.impulsi+=gettoniera_get_count();
+                gettoniera_reset_count();
+            }
+            ts_input=get_millis();
+        }
+        
+        
+        
         
         if (is_expired(ts, get_millis(), 1000)) {
             //test ptc analogico
@@ -66,7 +85,7 @@ int main(void) {
          //controllo buzzer
         digout_buzzer_check(); 
         
-        __delay_ms(1);
+        __delay_us(100);
     }
     return 0;
 }

@@ -7,6 +7,7 @@ typedef enum {
 
 void digin_init(void);
 int digin_get(digin_t digin);
-void digin_take_reading(void);
+int digin_take_reading(void);
+unsigned int digin_get_inputs(void);
 
 #endif

@@ -4,10 +4,12 @@
 #include "peripherals/keyboard.h"
 #include "lvgl/lvgl.h"
 #include "view/fonts/legacy_fonts.h"
+#include <stdio.h>
 
 
 static struct {
     lv_obj_t *label;
+    lv_obj_t *label_inputs;
 } page_data;
 
 
@@ -23,6 +25,10 @@ static void open_page(model_t *model, void *data) {
     lv_label_set_text(label, "ariciao");
     lv_obj_set_pos(label, 10, 10);
     page_data.label = label;
+
+    lv_obj_t *label_inputs = lv_label_create(lv_scr_act(), NULL);
+    lv_obj_set_pos(label_inputs, 10, 30);
+    page_data.label_inputs=label_inputs;
 }
 
 
@@ -44,13 +50,22 @@ static view_message_t process_page_event(model_t *model, void *arg, pman_event_t
             }
             break;
         }
-    }
+        case VIEW_EVENT_MODEL_UPDATE: {
+            msg.vmsg.code = VIEW_PAGE_COMMAND_CODE_UPDATE;
+            break;
+        }
+
+    } 
 
     return msg;
 }
 
 
 static view_t update_page(model_t *model, void *arg){
+
+    char string[32]={0};
+    snprintf(string, 32, "%02x", model->impulsi);
+    lv_label_set_text(page_data.label_inputs, string);
     
     return 0;
 }

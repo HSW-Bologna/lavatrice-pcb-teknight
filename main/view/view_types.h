@@ -45,6 +45,7 @@ typedef uint8_t view_t;
 
 typedef enum {
     VIEW_EVENT_KEYPAD,
+    VIEW_EVENT_MODEL_UPDATE
 } view_event_code_t;
 
 

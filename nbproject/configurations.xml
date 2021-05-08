@@ -170,6 +170,7 @@
           <itemPath>main/peripherals/timer.h</itemPath>
           <itemPath>main/peripherals/ptc.h</itemPath>
           <itemPath>main/peripherals/pwoff.h</itemPath>
+          <itemPath>main/peripherals/gettoniera.h</itemPath>
         </logicalFolder>
         <logicalFolder name="view" displayName="view" projectFiles="true">
           <logicalFolder name="fonts" displayName="fonts" projectFiles="true">
@@ -387,7 +388,11 @@
           <itemPath>main/peripherals/keyboard.c</itemPath>
           <itemPath>main/peripherals/temperature.c</itemPath>
           <itemPath>main/peripherals/spi.c</itemPath>
+<<<<<<< HEAD
           <itemPath>main/peripherals/pwm.c</itemPath>
+=======
+          <itemPath>main/peripherals/gettoniera.c</itemPath>
+>>>>>>> b1d6a7c1e1d5528de0c57db4922a51edb46615a0
         </logicalFolder>
         <logicalFolder name="view" displayName="view" projectFiles="true">
           <logicalFolder name="fonts" displayName="fonts" projectFiles="true">
@@ -420,14 +425,16 @@
         <targetDevice>PIC24FJ256GA705</targetDevice>
         <targetHeader></targetHeader>
         <targetPluginBoard></targetPluginBoard>
-        <platformTool>ICD3PlatformTool</platformTool>
+        <platformTool>snap</platformTool>
         <languageToolchain>XC16</languageToolchain>
         <languageToolchainVersion>1.36</languageToolchainVersion>
-        <platform>2</platform>
+        <platform>3</platform>
       </toolsSet>
       <packs>
         <pack name="PIC24F-GA-GB_DFP" vendor="Microchip" version="1.1.74"/>
       </packs>
+      <ScriptingSettings>
+      </ScriptingSettings>
       <compileType>
         <linkerTool>
           <linkerLibItems>
@@ -445,6 +452,7 @@
       </compileType>
       <makeCustomizationType>
         <makeCustomizationPreStepEnabled>false</makeCustomizationPreStepEnabled>
+        <makeUseCleanTarget>false</makeUseCleanTarget>
         <makeCustomizationPreStep></makeCustomizationPreStep>
         <makeCustomizationPostStepEnabled>false</makeCustomizationPostStepEnabled>
         <makeCustomizationPostStep></makeCustomizationPostStep>

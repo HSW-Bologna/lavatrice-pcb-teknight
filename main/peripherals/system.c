@@ -57,3 +57,10 @@
 // Use project enums instead of #define for ON and OFF.
 
 #include <xc.h>
+#include "system.h"
+
+void system_init(void) {
+    ANSELB=0;
+    ANSELAbits.ANSA1=0;
+    ANSELBbits.ANSB12 = 1;
+}

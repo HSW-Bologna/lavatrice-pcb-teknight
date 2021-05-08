@@ -28,7 +28,7 @@ int digin_get(digin_t digin) {
    return debounce_read(&filter, digin);
 }
 
-void digin_take_reading(void) {
+int digin_take_reading(void) {
     unsigned int input=0;
     input|=!IN1_PORT;
     input|=(!IN2_PORT)<<1;
@@ -37,6 +37,9 @@ void digin_take_reading(void) {
     input|=(!IN5_PORT)<<4;
     input|=(!IN6_PORT)<<5;
     input|=(!IN7_PORT)<<6;
-    debounce_filter(&filter, input, 10);
+    return debounce_filter(&filter, input, 10);
 }
 
+unsigned int digin_get_inputs(void) {
+    return debounce_value(&filter);
+}

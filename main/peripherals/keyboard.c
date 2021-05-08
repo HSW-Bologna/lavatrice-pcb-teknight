@@ -37,9 +37,7 @@ void keyboard_init(void) {
     KEYBOARD_RIGA1_LAT=0;
     KEYBOARD_RIGA2_LAT=0;
     KEYBOARD_RIGA3_LAT=0;
-    
-    ANSELB=0;
-    
+       
     debounce_filter_init(&filter);
    
 }
