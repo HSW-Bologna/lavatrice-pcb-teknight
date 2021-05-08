@@ -104,7 +104,7 @@ def main():
 
     prog = env.Program(PROGRAM, sources + i2c_objects +
                        gel_objects, LIBPATH=LIBPATH)
-    PhonyTargets('run', f"./{PROGRAM}", prog, env)
+    PhonyTargets('run', os.path.join(".", PROGRAM), prog, env)
     env.Alias('mingw', prog)
     env.CompilationDatabase('compile_commands.json')
 
