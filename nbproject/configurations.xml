@@ -387,6 +387,7 @@
           <itemPath>main/peripherals/keyboard.c</itemPath>
           <itemPath>main/peripherals/temperature.c</itemPath>
           <itemPath>main/peripherals/spi.c</itemPath>
+          <itemPath>main/peripherals/pwm.c</itemPath>
         </logicalFolder>
         <logicalFolder name="view" displayName="view" projectFiles="true">
           <logicalFolder name="fonts" displayName="fonts" projectFiles="true">

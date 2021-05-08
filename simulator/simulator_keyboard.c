@@ -49,6 +49,11 @@ static unsigned int keyboard_read(void) {
     } else {
         input &= ~0x4;
     }
+    if (keystates[SDL_SCANCODE_8] || keystates[SDL_SCANCODE_KP_8]) {
+        input |= 0x2;
+    } else {
+        input &= ~0x2;
+    }
     if (keystates[SDL_SCANCODE_9] || keystates[SDL_SCANCODE_KP_9]) {
         input |= 0x1;
     } else {

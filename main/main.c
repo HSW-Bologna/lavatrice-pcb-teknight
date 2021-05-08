@@ -32,11 +32,12 @@ int main(void) {
     keyboard_init();
     
     //inizializzazioni
-    Init_I2C();
+    i2c_bitbang_init();
     digin_init();
     timer_init();
     ptc_init();
     pwoff_init();
+    pwm_init();
 
     
     model_init(&model);

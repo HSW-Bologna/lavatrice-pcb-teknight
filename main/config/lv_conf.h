@@ -256,7 +256,14 @@ typedef void * lv_indev_drv_user_data_t;            /*Type of user data in the i
  * The behavior of asserts can be overwritten by redefining them here.
  * E.g. #define LV_ASSERT_MEM(p)  <my_assert_code>
  */
-#define LV_USE_DEBUG        0
+#define LV_USE_DEBUG        1
+#define LV_DEBUG_ASSERT(expr, msg, value) 
+#define LV_ASSERT_NULL(p)
+#define LV_ASSERT_MEM(p)
+#define LV_ASSERT_STR(str)
+#define LV_ASSERT_OBJ(obj_p, obj_type)
+#define LV_ASSERT_STYLE(style)
+
 #if LV_USE_DEBUG
 
 /*Check if the parameter is NULL. (Quite fast) */
@@ -268,11 +275,11 @@ typedef void * lv_indev_drv_user_data_t;            /*Type of user data in the i
 /* Check the strings.
  * Search for NULL, very long strings, invalid characters, and unnatural repetitions. (Slow)
  * If disabled `LV_USE_ASSERT_NULL` will be performed instead (if it's enabled) */
-#define LV_USE_ASSERT_STR       0
+#define LV_USE_ASSERT_STR       1
 
 /* Check NULL, the object's type and existence (e.g. not deleted). (Quite slow)
  * If disabled `LV_USE_ASSERT_NULL` will be performed instead (if it's enabled) */
-#define LV_USE_ASSERT_OBJ       0
+#define LV_USE_ASSERT_OBJ       1
 
 /*Check if the styles are properly initialized. (Fast)*/
 #define LV_USE_ASSERT_STYLE     1
