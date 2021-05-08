@@ -388,11 +388,8 @@
           <itemPath>main/peripherals/keyboard.c</itemPath>
           <itemPath>main/peripherals/temperature.c</itemPath>
           <itemPath>main/peripherals/spi.c</itemPath>
-<<<<<<< HEAD
           <itemPath>main/peripherals/pwm.c</itemPath>
-=======
           <itemPath>main/peripherals/gettoniera.c</itemPath>
->>>>>>> b1d6a7c1e1d5528de0c57db4922a51edb46615a0
         </logicalFolder>
         <logicalFolder name="view" displayName="view" projectFiles="true">
           <logicalFolder name="fonts" displayName="fonts" projectFiles="true">
