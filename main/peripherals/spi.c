@@ -13,7 +13,6 @@
 void spi_init(void) {
     SPI_MOSI_TRIS=TRIS_OUTPUT;
     SPI_CLK_TRIS=TRIS_OUTPUT;
-    ANSELAbits.ANSA1=0;
     SPI_MISO_TRIS=TRIS_INPUT;
     SPI_CLK_LAT = 1;
 }

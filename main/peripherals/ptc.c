@@ -25,7 +25,7 @@
 
 
 void ptc_init(void) {
-    ANSELBbits.ANSB12 = 1;
+    
     
     // ASAM disabled; ADDMABM disabled; ADSIDL disabled; DONE disabled; SIMSAM Sequential; FORM Absolute decimal result,
     // unsigned, right-justified; SAMP disabled; SSRC Clearing sample bit ends sampling and starts conversion; AD12B

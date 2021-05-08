@@ -84,5 +84,9 @@
 #define INT0_TRIS TRISBbits.TRISB7
 #define INT0_PORT PORTBbits.RB7
 
+//gettoniera
+#define GETT_TRIS TRISBbits.TRISB13
+#define GETT_PORT (!PORTBbits.RB13)
+
 
 #endif
