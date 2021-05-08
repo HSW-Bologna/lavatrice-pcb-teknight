@@ -47,7 +47,20 @@ static view_message_t process_page_event(model_t *model, void *arg, pman_event_t
                 lv_label_set_text(page_data.label, "globo");
             } else if (event.key_event.code==BUTTON_STOP && event.key_event.event==KEY_CLICK) {
                 lv_label_set_text(page_data.label, "STOP");
+            } else if (event.key_event.code==BUTTON_PLUS && event.key_event.event==KEY_CLICK) {
+                lv_label_set_text(page_data.label, "pwm up");
+                if (model->pwm<100) {
+                    model->pwm+=10;
+                    msg.cmsg.code = VIEW_CONTROLLER_COMMAND_CODE_UPDATE_PWM;
+                }
+            } else if (event.key_event.code==BUTTON_MINUS && event.key_event.event==KEY_CLICK) {
+                lv_label_set_text(page_data.label, "pwm down");
+                if (model->pwm>0) {
+                    model->pwm-=10;
+                    msg.cmsg.code = VIEW_CONTROLLER_COMMAND_CODE_UPDATE_PWM;
+                }
             }
+            msg.vmsg.code = VIEW_PAGE_COMMAND_CODE_UPDATE;
             break;
         }
         case VIEW_EVENT_MODEL_UPDATE: {
@@ -64,7 +77,7 @@ static view_message_t process_page_event(model_t *model, void *arg, pman_event_t
 static view_t update_page(model_t *model, void *arg){
 
     char string[32]={0};
-    snprintf(string, 32, "%02x", model->impulsi);
+    snprintf(string, 32, "%i", model->pwm);
     lv_label_set_text(page_data.label_inputs, string);
     
     return 0;

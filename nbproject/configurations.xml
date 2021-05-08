@@ -171,6 +171,7 @@
           <itemPath>main/peripherals/ptc.h</itemPath>
           <itemPath>main/peripherals/pwoff.h</itemPath>
           <itemPath>main/peripherals/gettoniera.h</itemPath>
+          <itemPath>main/peripherals/pwm.h</itemPath>
         </logicalFolder>
         <logicalFolder name="view" displayName="view" projectFiles="true">
           <logicalFolder name="fonts" displayName="fonts" projectFiles="true">

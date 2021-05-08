@@ -27,6 +27,7 @@ typedef struct {
 
 typedef enum {
     VIEW_CONTROLLER_COMMAND_CODE_NOTHING=0,
+    VIEW_CONTROLLER_COMMAND_CODE_UPDATE_PWM
 } view_controller_command_code_t;
 
 

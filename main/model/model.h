@@ -7,6 +7,8 @@
 typedef struct {
     uint8_t inputs;
     unsigned int impulsi;
+    int temperatura;
+    int pwm;
 } model_t ;
 
 

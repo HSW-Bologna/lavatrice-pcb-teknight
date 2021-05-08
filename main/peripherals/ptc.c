@@ -10,9 +10,18 @@
 #include "hardwareprofile.h"
 #include "ptc.h"
 
+#define MINIMUM_AD_VALUE 1061L
+#define MAXIMUM_AD_VALUE 2049L
+#define MINIMUM_TEMP_VALUE -10L
+#define MAXIMUM_TEMP_VALUE 140L
+
+#define COEFF_M_TIMES(x) ((x * (MAXIMUM_TEMP_VALUE-MINIMUM_TEMP_VALUE))/(MAXIMUM_AD_VALUE-MINIMUM_AD_VALUE))
+#define COEFF_Q (-MINIMUM_AD_VALUE*(MAXIMUM_TEMP_VALUE-MINIMUM_TEMP_VALUE)/(MAXIMUM_AD_VALUE-MINIMUM_AD_VALUE)+MINIMUM_TEMP_VALUE)
 
 #define NUM_SAMPLES 1
 #define TCY_NS      (1000000000ULL / FCY)
+
+#define NUM_READINGS 10
 
 #define MINIMUM_ADCS (120 / TCY_NS)
 #define ADCS_SET     10
@@ -23,10 +32,11 @@
 #error "Impostazione troppo veloce per il TAD dell'ADC"
 #endif
 
+static unsigned long temperature_average[NUM_READINGS]={0};
+static int index=0;
+static int first_loop=1;
 
 void ptc_init(void) {
-    
-    
     // ASAM disabled; ADDMABM disabled; ADSIDL disabled; DONE disabled; SIMSAM Sequential; FORM Absolute decimal result,
     // unsigned, right-justified; SAMP disabled; SSRC Clearing sample bit ends sampling and starts conversion; AD12B
     // 12-bit; ADON enabled; SSRCG disabled;
@@ -57,7 +67,7 @@ unsigned long ptc_read_input(int channel) {
     unsigned long value = 0, i, tmp, result;
     
     AD1CON1bits.ADON   = 0;
-    AD1CON1bits.MODE12 = 0;
+    AD1CON1bits.MODE12 = 1;
     AD1CHS0bits.CH0SA  = channel;
     AD1CON1bits.ADON   = 1;
     __delay_us(20);     // TODO: riduci
@@ -81,3 +91,34 @@ unsigned long ptc_read_input(int channel) {
     result = value / NUM_SAMPLES;
     return result;
 }
+
+void ptc_read_temperature(void) {
+    temperature_average[index]= ptc_read_input(PTC_CHANNEL);
+    if (index==NUM_READINGS-1) 
+        first_loop=0;
+    index=(index+1)%NUM_READINGS;
+   
+}
+
+int ptc_get_temperature(void) {
+    unsigned long temperature_sum=0;
+    unsigned long temp=0;
+    int i;
+    int num_readings = first_loop ? index : NUM_READINGS;
+    for (i=0; i<num_readings; i++) {
+        temperature_sum+=temperature_average[i];
+    }
+    if (num_readings==0) {
+        return 0;
+    }
+    else {
+        temp=temperature_sum/num_readings;
+        if (temp<=MINIMUM_AD_VALUE)
+            return MINIMUM_TEMP_VALUE;
+        else if (temp>=MAXIMUM_AD_VALUE)
+            return MAXIMUM_TEMP_VALUE;
+        else
+                return (int) (COEFF_M_TIMES(temp)+COEFF_Q);
+    }
+}
+

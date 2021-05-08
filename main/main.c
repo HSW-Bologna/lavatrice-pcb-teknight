@@ -23,7 +23,7 @@
 
 
 int main(void) {
-    unsigned long ts=0, tskp=0, ts_input=0;
+    unsigned long ts=0, tskp=0, ts_input=0, ts_temperature=0;
     model_t model;
     
     spi_init();
@@ -45,6 +45,7 @@ int main(void) {
     
     model_init(&model);
     view_init(&model, nt7534_flush, nt7534_rounder, nt7534_set_px);
+    digout_buzzer_bip(2, 100, 100);
     
     
     for(;;) {
@@ -61,6 +62,14 @@ int main(void) {
                 gettoniera_reset_count();
             }
             ts_input=get_millis();
+           
+        }
+        
+        if (is_expired(ts_temperature, get_millis(), 50)) {
+            ptc_read_temperature();
+            view_event((view_event_t) {.code = VIEW_EVENT_MODEL_UPDATE});
+            model.temperatura=ptc_get_temperature();
+            ts_temperature=get_millis();
         }
         
         
