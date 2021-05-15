@@ -36,13 +36,6 @@ void pwm_init(void) {
     CCP1RB = 0;                       // Set the falling edge compare value
     CCP1CON1Lbits.CCPON = 1;          // Turn on MCCP module
     
-    #define  PPSUnLock                   __builtin_write_OSCCONL(OSCCON & 0xbf) 
-    #define  PPSLock                     __builtin_write_OSCCONL(OSCCON | 0x40)
-
-    PPSUnLock;
-    RPOR2bits.RP5R = 16;
-    PPSLock;
-    
     // Set MCCP operating mode
     CCP2CON1Lbits.CCSEL = 0;         // Set MCCP operating mode (OC mode)
     CCP2CON1Lbits.MOD = 0b0101;      // Set mode (Buffered Dual-Compare/PWM mode)

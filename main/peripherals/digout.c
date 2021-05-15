@@ -53,6 +53,17 @@ void rele_set(rele_t rele, int val) {
     }
 }
 
+uint8_t rele_get_status(void) {
+    uint8_t res=0;
+    res=RELE1_LAT<<0;
+    res|=RELE2_LAT<<1;
+    res|=RELE3_LAT<<2;
+    res|=RELE4_LAT<<3;
+    res|=RELE5_LAT<<4;
+    res|=RELE6_LAT<<5;
+    return res;
+}
+
 
 void digout_buzzer_bip(size_t r, unsigned long t_on, unsigned long t_off) {
     repeat = r;

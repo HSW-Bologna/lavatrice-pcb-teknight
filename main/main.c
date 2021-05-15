@@ -21,18 +21,20 @@
 #include "pwoff.h"
 #include "gettoniera.h"
 #include "peripherals/pwm.h"
+#include "uart_driver.h"
+#include "controller/modbus_server.h"
 
 
 int main(void) {
-    unsigned long tskp=0, ts_input=0, ts_temperature=0, ts_spi=0;
+    unsigned long tskp=0, ts_input=0, ts_temperature=0, ts_spi=0, ts_uart=0;
     model_t model;
     
+    system_init();
     spi_init();
     nt7534_init();
     digout_init();
     temperature_init();
     keyboard_init();
-    system_init();
     
     //inizializzazioni
     i2c_bitbang_init();
@@ -42,6 +44,8 @@ int main(void) {
     pwoff_init();
     pwm_init();
     gettoniera_init();
+    uart_init();
+    modbus_server_init();
 
     
     model_init(&model);
@@ -51,6 +55,7 @@ int main(void) {
     
     for(;;) {
         controller_manage_gui(&model);
+        modbus_server_manage();
         
         if (is_expired(ts_input, get_millis(), 2)) {
             if (digin_take_reading()) {
@@ -85,7 +90,7 @@ int main(void) {
             
             ts_spi=get_millis();
         }
-
+        
        
         if (is_expired(tskp,get_millis(), 5)) {
             keypad_update_t update = keyboard_manage(get_millis());

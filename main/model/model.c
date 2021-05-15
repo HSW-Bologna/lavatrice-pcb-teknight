@@ -1,16 +1,27 @@
 #include "model.h"
 
 
-void model_init(model_t *model) {
-    model->inputs          = 0;
-    model->impulsi         = 0;
-    model->ptc_temperature = 0;
-    model->sht_temperature = 0;
-    model->pwm             = 0;
-    model->ptc_adc = 0;
+void model_init(model_t *pmodel) {
+    pmodel->inputs          = 0;
+    pmodel->impulsi         = 0;
+    pmodel->ptc_temperature = 0;
+    pmodel->sht_temperature = 0;
+    pmodel->pwm             = 0;
+    pmodel->ptc_adc = 0;
+    pmodel->outputs         = 0;
 }
 
 
-int model_get_input(model_t *model, int input) {
-    return ((model->inputs >> input - 1) | 0);
+//int model_get_input(model_t *pmodel, int input) {
+//    return ((pmodel->inputs >> input - 1) & 1);
+//}
+//
+//int model_get_output(model_t *pmodel, int output) {
+//    return ((pmodel->outputs >> output) & 1);
+//}
+
+char* model_get_output_status(model_t *pmodel, int output) {
+    if ((pmodel->outputs >> output) & 1)
+        return "on";
+    else return "off";
 }

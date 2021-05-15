@@ -19,6 +19,41 @@
             <itemPath>components/I2C/i2c_ports/PIC/i2c_driver.h</itemPath>
           </logicalFolder>
         </logicalFolder>
+        <logicalFolder name="liblightmodbus"
+                       displayName="liblightmodbus"
+                       projectFiles="true">
+          <logicalFolder name=".github" displayName=".github" projectFiles="true">
+          </logicalFolder>
+          <logicalFolder name="include" displayName="include" projectFiles="true">
+            <logicalFolder name="lightmodbus" displayName="lightmodbus" projectFiles="true">
+              <logicalFolder name="addons" displayName="addons" projectFiles="true">
+                <itemPath>components/liblightmodbus/include/lightmodbus/addons/examine.h</itemPath>
+              </logicalFolder>
+              <logicalFolder name="master" displayName="master" projectFiles="true">
+                <itemPath>components/liblightmodbus/include/lightmodbus/master/mbcoils.h</itemPath>
+                <itemPath>components/liblightmodbus/include/lightmodbus/master/mbregs.h</itemPath>
+                <itemPath>components/liblightmodbus/include/lightmodbus/master/mpcoils.h</itemPath>
+                <itemPath>components/liblightmodbus/include/lightmodbus/master/mpregs.h</itemPath>
+              </logicalFolder>
+              <logicalFolder name="slave" displayName="slave" projectFiles="true">
+                <itemPath>components/liblightmodbus/include/lightmodbus/slave/scoils.h</itemPath>
+                <itemPath>components/liblightmodbus/include/lightmodbus/slave/sregs.h</itemPath>
+              </logicalFolder>
+              <itemPath>components/liblightmodbus/include/lightmodbus/lightmodbus.h</itemPath>
+              <itemPath>components/liblightmodbus/include/lightmodbus/master.h</itemPath>
+              <itemPath>components/liblightmodbus/include/lightmodbus/parser.h</itemPath>
+              <itemPath>components/liblightmodbus/include/lightmodbus/slave.h</itemPath>
+            </logicalFolder>
+          </logicalFolder>
+          <logicalFolder name="src" displayName="src" projectFiles="true">
+            <logicalFolder name="addons" displayName="addons" projectFiles="true">
+            </logicalFolder>
+            <logicalFolder name="master" displayName="master" projectFiles="true">
+            </logicalFolder>
+            <logicalFolder name="slave" displayName="slave" projectFiles="true">
+            </logicalFolder>
+          </logicalFolder>
+        </logicalFolder>
         <logicalFolder name="lvgl" displayName="lvgl" projectFiles="true">
           <logicalFolder name=".github" displayName=".github" projectFiles="true">
             <logicalFolder name="ISSUE_TEMPLATE"
@@ -149,10 +184,12 @@
         <logicalFolder name="config" displayName="config" projectFiles="true">
           <itemPath>main/config/lv_conf.h</itemPath>
           <itemPath>main/config/gel_conf.h</itemPath>
+          <itemPath>main/config/libconf.h</itemPath>
         </logicalFolder>
         <logicalFolder name="controller" displayName="controller" projectFiles="true">
           <itemPath>main/controller/controller.h</itemPath>
           <itemPath>main/controller/gui.h</itemPath>
+          <itemPath>main/controller/modbus_server.h</itemPath>
         </logicalFolder>
         <logicalFolder name="model" displayName="model" projectFiles="true">
           <itemPath>main/model/model.h</itemPath>
@@ -172,6 +209,7 @@
           <itemPath>main/peripherals/pwoff.h</itemPath>
           <itemPath>main/peripherals/gettoniera.h</itemPath>
           <itemPath>main/peripherals/pwm.h</itemPath>
+          <itemPath>main/peripherals/uart_driver.h</itemPath>
         </logicalFolder>
         <logicalFolder name="view" displayName="view" projectFiles="true">
           <logicalFolder name="fonts" displayName="fonts" projectFiles="true">
@@ -241,6 +279,56 @@
           <logicalFolder name="PIC" displayName="PIC" projectFiles="true">
             <itemPath>components/I2C/i2c_ports/PIC/i2c_bitbang.c</itemPath>
             <itemPath>components/I2C/i2c_ports/PIC/i2c_driver.c</itemPath>
+          </logicalFolder>
+        </logicalFolder>
+        <logicalFolder name="liblightmodbus"
+                       displayName="liblightmodbus"
+                       projectFiles="true">
+          <logicalFolder name=".github" displayName=".github" projectFiles="true">
+          </logicalFolder>
+          <logicalFolder name="doc" displayName="doc" projectFiles="true">
+            <logicalFolder name="doc" displayName="doc" projectFiles="true">
+              <logicalFolder name="html" displayName="html" projectFiles="true">
+                <logicalFolder name="search" displayName="search" projectFiles="true">
+                </logicalFolder>
+              </logicalFolder>
+              <logicalFolder name="latex" displayName="latex" projectFiles="true">
+              </logicalFolder>
+            </logicalFolder>
+            <logicalFolder name="html" displayName="html" projectFiles="true">
+            </logicalFolder>
+            <logicalFolder name="man" displayName="man" projectFiles="true">
+              <logicalFolder name="man3" displayName="man3" projectFiles="true">
+              </logicalFolder>
+            </logicalFolder>
+          </logicalFolder>
+          <logicalFolder name="include" displayName="include" projectFiles="true">
+            <logicalFolder name="lightmodbus" displayName="lightmodbus" projectFiles="true">
+              <logicalFolder name="addons" displayName="addons" projectFiles="true">
+              </logicalFolder>
+              <logicalFolder name="master" displayName="master" projectFiles="true">
+              </logicalFolder>
+              <logicalFolder name="slave" displayName="slave" projectFiles="true">
+              </logicalFolder>
+            </logicalFolder>
+          </logicalFolder>
+          <logicalFolder name="src" displayName="src" projectFiles="true">
+            <logicalFolder name="addons" displayName="addons" projectFiles="true">
+              <itemPath>components/liblightmodbus/src/addons/examine.c</itemPath>
+            </logicalFolder>
+            <logicalFolder name="master" displayName="master" projectFiles="true">
+              <itemPath>components/liblightmodbus/src/master/mbcoils.c</itemPath>
+              <itemPath>components/liblightmodbus/src/master/mbregs.c</itemPath>
+              <itemPath>components/liblightmodbus/src/master/mpcoils.c</itemPath>
+              <itemPath>components/liblightmodbus/src/master/mpregs.c</itemPath>
+            </logicalFolder>
+            <logicalFolder name="slave" displayName="slave" projectFiles="true">
+              <itemPath>components/liblightmodbus/src/slave/scoils.c</itemPath>
+              <itemPath>components/liblightmodbus/src/slave/sregs.c</itemPath>
+            </logicalFolder>
+            <itemPath>components/liblightmodbus/src/lightmodbus.c</itemPath>
+            <itemPath>components/liblightmodbus/src/master.c</itemPath>
+            <itemPath>components/liblightmodbus/src/slave.c</itemPath>
           </logicalFolder>
         </logicalFolder>
         <logicalFolder name="lvgl" displayName="lvgl" projectFiles="true">
@@ -373,6 +461,7 @@
         <logicalFolder name="controller" displayName="controller" projectFiles="true">
           <itemPath>main/controller/gui.c</itemPath>
           <itemPath>main/controller/controller.c</itemPath>
+          <itemPath>main/controller/modbus_server.c</itemPath>
         </logicalFolder>
         <logicalFolder name="model" displayName="model" projectFiles="true">
           <itemPath>main/model/model.c</itemPath>
@@ -391,6 +480,7 @@
           <itemPath>main/peripherals/spi.c</itemPath>
           <itemPath>main/peripherals/pwm.c</itemPath>
           <itemPath>main/peripherals/gettoniera.c</itemPath>
+          <itemPath>main/peripherals/uart_driver.c</itemPath>
         </logicalFolder>
         <logicalFolder name="view" displayName="view" projectFiles="true">
           <logicalFolder name="fonts" displayName="fonts" projectFiles="true">
@@ -400,6 +490,7 @@
           <logicalFolder name="pages" displayName="pages" projectFiles="true">
             <itemPath>main/view/pages/page_main.c</itemPath>
             <itemPath>main/view/pages/page_temperature_test.c</itemPath>
+            <itemPath>main/view/pages/page_digout_test.c</itemPath>
           </logicalFolder>
           <itemPath>main/view/view.c</itemPath>
           <itemPath>main/view/common.c</itemPath>
@@ -428,11 +519,13 @@
         <platformTool>ICD3PlatformTool</platformTool>
         <languageToolchain>XC16</languageToolchain>
         <languageToolchainVersion>1.36</languageToolchainVersion>
-        <platform>2</platform>
+        <platform>3</platform>
       </toolsSet>
       <packs>
         <pack name="PIC24F-GA-GB_DFP" vendor="Microchip" version="1.1.74"/>
       </packs>
+      <ScriptingSettings>
+      </ScriptingSettings>
       <compileType>
         <linkerTool>
           <linkerLibItems>
@@ -450,6 +543,7 @@
       </compileType>
       <makeCustomizationType>
         <makeCustomizationPreStepEnabled>false</makeCustomizationPreStepEnabled>
+        <makeUseCleanTarget>false</makeUseCleanTarget>
         <makeCustomizationPreStep></makeCustomizationPreStep>
         <makeCustomizationPostStepEnabled>false</makeCustomizationPostStepEnabled>
         <makeCustomizationPostStep></makeCustomizationPostStep>
@@ -473,7 +567,7 @@
         <property key="enable-symbols" value="true"/>
         <property key="enable-unroll-loops" value="false"/>
         <property key="extra-include-directories"
-                  value="main;components\I2C;main\config;components\generic_embedded_libs;main\peripherals;components"/>
+                  value="main;components\I2C;main\config;components\generic_embedded_libs;main\peripherals;components;main\config\mbconf;components\liblightmodbus\include"/>
         <property key="isolate-each-function" value="false"/>
         <property key="keep-inline" value="false"/>
         <property key="oXC16gcc-align-arr" value="false"/>
@@ -490,7 +584,7 @@
         <property key="oXC16gcc-sfr-warn" value="false"/>
         <property key="oXC16gcc-smar-io-lvl" value="1"/>
         <property key="oXC16gcc-smart-io-fmt" value=""/>
-        <property key="optimization-level" value="1"/>
+        <property key="optimization-level" value="0"/>
         <property key="post-instruction-scheduling" value="default"/>
         <property key="pre-instruction-scheduling" value="default"/>
         <property key="preprocessor-macros" value="LV_CONF_INCLUDE_SIMPLE"/>
@@ -577,6 +671,7 @@
         <property key="legacy-libc" value="true"/>
         <property key="mpreserve-all" value="false"/>
         <property key="oXC16glb-macros" value=""/>
+        <property key="omit-pack-options" value="1"/>
         <property key="output-file-format" value="elf"/>
         <property key="preserve-all" value="false"/>
         <property key="preserve-file" value=""/>

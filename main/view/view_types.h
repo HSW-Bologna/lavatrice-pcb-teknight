@@ -30,12 +30,19 @@ typedef struct {
 
 typedef enum {
     VIEW_CONTROLLER_COMMAND_CODE_NOTHING=0,
-    VIEW_CONTROLLER_COMMAND_CODE_UPDATE_PWM
+    VIEW_CONTROLLER_COMMAND_CODE_UPDATE_PWM,
+    VIEW_CONTROLLER_COMMAND_CODE_UPDATE_DIGOUT
 } view_controller_command_code_t;
 
 
 typedef struct {
     view_controller_command_code_t code;
+    union {
+        struct {
+            int output;
+            int value;
+        };
+    };
 } view_controller_command_t;
 
 

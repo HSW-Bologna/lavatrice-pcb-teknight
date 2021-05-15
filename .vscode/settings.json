@@ -4,6 +4,7 @@
         "timer.h": "c",
         "timecheck.h": "c",
         "model.h": "c",
-        "controller.h": "c"
+        "controller.h": "c",
+        "digout.h": "c"
     }
 }

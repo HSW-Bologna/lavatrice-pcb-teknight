@@ -63,4 +63,13 @@ void system_init(void) {
     ANSELB=0;
     ANSELAbits.ANSA1  = 0;
     ANSELBbits.ANSB12 = 1;
+    
+    #define  PPSUnLock                   __builtin_write_OSCCONL(OSCCON & 0xbf) 
+    #define  PPSLock                     __builtin_write_OSCCONL(OSCCON | 0x40)
+
+    PPSUnLock;
+    RPOR2bits.RP5R = 16; //pwm out 2a
+    RPOR7bits.RP14R = 3; //uart1 tx
+    RPINR18bits.U1RXR = 15; //uart1 rx
+    PPSLock;
 }

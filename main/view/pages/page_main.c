@@ -43,7 +43,7 @@ static view_message_t process_page_event(model_t *model, void *arg, pman_event_t
                 lv_label_set_text(page_data.label, "skip destra");
             } else if (event.key_event.code==BUTTON_SKIP_LEFT && event.key_event.event==KEY_CLICK) {
                 lv_label_set_text(page_data.label, "skip sinistra");
-            } else if (event.key_event.code==BUTTON_GLOBE && event.key_event.event==KEY_CLICK) {
+            } else if (event.key_event.code==BUTTON_LINGUA && event.key_event.event==KEY_CLICK) {
                 lv_label_set_text(page_data.label, "globo");
             } else if (event.key_event.code==BUTTON_STOP && event.key_event.event==KEY_CLICK) {
                 lv_label_set_text(page_data.label, "STOP");

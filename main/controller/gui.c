@@ -4,6 +4,7 @@
 #include "gel/timer/timecheck.h"
 #include "peripherals/digout.h"
 #include "peripherals/timer.h"
+#include "peripherals/NT7534.h"
 
 
 
@@ -30,7 +31,8 @@ void controller_manage_gui(model_t *model) {
         }
     }
     
-    if (is_expired(ts_refresh, get_millis(), 10000UL)) {
+    if (is_expired(ts_refresh, get_millis(), 5000UL)) {
+        nt7534_reconfigure();
         lv_obj_invalidate(lv_scr_act());
         ts_refresh = get_millis();
     }

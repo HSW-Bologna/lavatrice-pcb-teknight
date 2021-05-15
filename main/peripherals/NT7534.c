@@ -99,18 +99,17 @@ static uint8_t pagemap[] = { 7, 6, 5, 4, 3, 2, 1, 0 };
  * Initialize the NT7534
  */
 void nt7534_init(void) {
-    
     LCD_D_TRIS=TRIS_OUTPUT;
     LCD_RESET_TRIS=TRIS_OUTPUT;
     LCD_CS_D_TRIS=TRIS_OUTPUT;
     LCD_CS_D_LAT=1;
     
     set_reset(1);
-    __delay_ms(10);
+    __delay_ms(5);
     set_reset(0);
-    __delay_ms(50);
-    set_reset(1);
     __delay_ms(10);
+    set_reset(1);
+    __delay_ms(5);
 
     LCD_CS_D_LAT=0;
     
@@ -129,6 +128,21 @@ void nt7534_init(void) {
     nt7534_command(CMD_DISPLAY_ON);
 
     LCD_CS_D_LAT=1;
+}
+
+void nt7534_reconfigure(void) {
+    LCD_CS_D_LAT=0;
+    nt7534_command(CMD_SET_COLUMN_UPPER);
+    nt7534_command(0xA2);
+    nt7534_command(0xA0);
+    nt7534_command(CMD_SET_COM_NORMAL);
+    nt7534_command(0x24);
+    nt7534_command(0x81);
+    nt7534_command(0x1A);
+    nt7534_command(0x2F);
+    nt7534_command(CMD_DISPLAY_ON);
+    LCD_CS_D_LAT=1;
+
 }
 
 void nt7534_set_px(struct _disp_drv_t * disp_drv, uint8_t * buf, lv_coord_t buf_w, lv_coord_t x, lv_coord_t y, lv_color_t color, lv_opa_t opa)
