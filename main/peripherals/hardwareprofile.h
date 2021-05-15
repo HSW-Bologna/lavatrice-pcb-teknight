@@ -77,7 +77,7 @@
 #define WRITE_PROTECT LATAbits.LATA12
 
 //analogico
-#define  PTC_CHANNEL 8
+#define PTC_CHANNEL 8
 #define PTC_TRIS TRISBbits.TRISB12
 
 //interrupt

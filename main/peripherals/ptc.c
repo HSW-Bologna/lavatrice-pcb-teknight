@@ -36,6 +36,7 @@ static unsigned long temperature_average[NUM_READINGS]={0};
 static int index=0;
 static int first_loop=1;
 
+
 void ptc_init(void) {
     // ASAM disabled; ADDMABM disabled; ADSIDL disabled; DONE disabled; SIMSAM Sequential; FORM Absolute decimal result,
     // unsigned, right-justified; SAMP disabled; SSRC Clearing sample bit ends sampling and starts conversion; AD12B
@@ -92,15 +93,16 @@ unsigned long ptc_read_input(int channel) {
     return result;
 }
 
+
 void ptc_read_temperature(void) {
-    temperature_average[index]= ptc_read_input(PTC_CHANNEL);
+    temperature_average[index] = ptc_read_input(PTC_CHANNEL);
     if (index==NUM_READINGS-1) 
         first_loop=0;
     index=(index+1)%NUM_READINGS;
-   
 }
 
-int ptc_get_temperature(void) {
+
+uint16_t ptc_get_adc_value(void) {
     unsigned long temperature_sum=0;
     unsigned long temp=0;
     int i;
@@ -112,13 +114,19 @@ int ptc_get_temperature(void) {
         return 0;
     }
     else {
-        temp=temperature_sum/num_readings;
-        if (temp<=MINIMUM_AD_VALUE)
-            return MINIMUM_TEMP_VALUE;
-        else if (temp>=MAXIMUM_AD_VALUE)
-            return MAXIMUM_TEMP_VALUE;
-        else
-                return (int) (COEFF_M_TIMES(temp)+COEFF_Q);
+        temp = temperature_sum/num_readings;
+        return (uint16_t)temp;
     }
+}
+
+
+int ptc_get_temperature(void) {
+    uint16_t temp = ptc_get_adc_value();
+    if (temp<=MINIMUM_AD_VALUE)
+        return MINIMUM_TEMP_VALUE;
+    else if (temp>=MAXIMUM_AD_VALUE)
+        return MAXIMUM_TEMP_VALUE;
+    else
+        return (int) (COEFF_M_TIMES(temp)+COEFF_Q);
 }
 

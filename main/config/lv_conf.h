@@ -130,7 +130,7 @@ typedef int16_t lv_coord_t;
  *==================*/
 
 /*1: Enable the Animations */
-#define LV_USE_ANIMATION        0
+#define LV_USE_ANIMATION        1
 #if LV_USE_ANIMATION
 
 /*Declare the type of the user data of animations (can be e.g. `void *`, `int`, `struct`)*/
@@ -492,10 +492,10 @@ typedef void * lv_obj_user_data_t;
 #define LV_USE_LABEL    1
 #if LV_USE_LABEL != 0
 /*Hor, or ver. scroll speed [px/sec] in 'LV_LABEL_LONG_ROLL/ROLL_CIRC' mode*/
-#  define LV_LABEL_DEF_SCROLL_SPEED       25
+#  define LV_LABEL_DEF_SCROLL_SPEED       4
 
 /* Waiting period at beginning/end of animation cycle */
-#  define LV_LABEL_WAIT_CHAR_COUNT        3
+#  define LV_LABEL_WAIT_CHAR_COUNT        2
 
 /*Enable selecting text of the label */
 #  define LV_LABEL_TEXT_SEL               0

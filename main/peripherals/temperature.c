@@ -48,7 +48,7 @@ static const uint8_t CRC_TABLE[256] = {
     0xE6, 0xE1, 0xE8, 0xEF, 0xFA, 0xFD, 0xF4, 0xF3
 };
 
-uint8_t crc8_ccitt(const void * data, size_t size) {
+static uint8_t crc8_ccitt(const void * data, size_t size) {
   uint8_t val = 0;
 
   uint8_t * pos = (uint8_t *) data;
@@ -61,12 +61,13 @@ uint8_t crc8_ccitt(const void * data, size_t size) {
   return val;
 }
 
+
 void temperature_init(void) {
     SPI_CS1_TRIS=TRIS_OUTPUT;
-      
 }
 
-int spi_read_temperature(uint16_t *temperature, uint16_t *humidity) {
+
+int temperature_read(uint16_t *temperature, uint16_t *humidity) {
     int     i;
     uint8_t rec_buf[5];
     SPI_CS1_LAT=0;

@@ -8,7 +8,6 @@
 #include "gettoniera.h"
 #include "hardwareprofile.h"
 #include "gel/debounce/pulsecounter.h"
-#include <pps.h>
 
 static pulse_filter_t filter;
 

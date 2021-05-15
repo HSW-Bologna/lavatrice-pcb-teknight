@@ -26,7 +26,7 @@ uint8_t spi1_master_exchange(uint8_t send, spi_speed_t speed){
         valToSend = send & 0x80;
         SPI_MOSI_LAT = valToSend ? 1 : 0;
         SPI_CLK_LAT   = 0;
-        __delay_us(speed == SPI_SPEED_SLOW ? 10 : 4);
+        __delay_us(speed == SPI_SPEED_SLOW ? 10 : 1);
         
         val      = SPI_MISO_PORT;
         byte = byte | val;
@@ -38,7 +38,7 @@ uint8_t spi1_master_exchange(uint8_t send, spi_speed_t speed){
         }
 
         SPI_CLK_LAT = 1;
-        __delay_us(speed == SPI_SPEED_SLOW ? 10 : 4);
+        __delay_us(speed == SPI_SPEED_SLOW ? 10 : 1);
     }
     SPI_MOSI_LAT = 0;
     return byte;

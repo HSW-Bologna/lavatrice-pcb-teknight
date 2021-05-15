@@ -75,10 +75,7 @@ static view_message_t process_page_event(model_t *model, void *arg, pman_event_t
 
 
 static view_t update_page(model_t *model, void *arg){
-
-    char string[32]={0};
-    snprintf(string, 32, "%i", model->pwm);
-    lv_label_set_text(page_data.label_inputs, string);
+    lv_label_set_text_fmt(page_data.label_inputs, "%i", model->pwm);
     
     return 0;
 }

@@ -4,6 +4,9 @@
 #include <stdint.h>
 #include "gel/keypad/keypad.h"
 
+#define VIEW_EMPTY_MSG ((view_message_t){.vmsg = {.code = VIEW_PAGE_COMMAND_CODE_NOTHING}, .cmsg = {.code = VIEW_CONTROLLER_COMMAND_CODE_NOTHING}})
+
+
 typedef enum {
     VIEW_PAGE_COMMAND_CODE_NOTHING = 0,
     VIEW_PAGE_COMMAND_CODE_REBASE,

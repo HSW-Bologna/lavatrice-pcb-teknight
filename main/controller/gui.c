@@ -9,6 +9,7 @@
 
 void controller_manage_gui(model_t *model) {
     static unsigned long last_invoked = 0;
+    static unsigned long ts_refresh = 0;
 
     view_message_t umsg;
     view_event_t   event;
@@ -27,5 +28,10 @@ void controller_manage_gui(model_t *model) {
         if (event.code == VIEW_EVENT_KEYPAD && event.key_event.event == KEY_CLICK) {
             digout_buzzer_bip(1, 100, 0);
         }
+    }
+    
+    if (is_expired(ts_refresh, get_millis(), 10000UL)) {
+        lv_obj_invalidate(lv_scr_act());
+        ts_refresh = get_millis();
     }
 }

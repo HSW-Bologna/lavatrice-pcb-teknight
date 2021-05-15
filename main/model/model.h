@@ -7,7 +7,11 @@
 typedef struct {
     uint8_t inputs;
     unsigned int impulsi;
-    int temperatura;
+
+    uint16_t ptc_adc;
+    int ptc_temperature;
+    int sht_temperature;
+
     int pwm;
 } model_t ;
 

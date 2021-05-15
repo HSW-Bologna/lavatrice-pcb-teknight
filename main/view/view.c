@@ -40,7 +40,7 @@ view_t view_init(model_t *model, void (*flush_cb)(struct _disp_drv_t *, const lv
 
     pman_init(&pman);
     event_queue_init(&q);
-    return view_change_page(model, &page_main);
+    return view_change_page(model, &page_temperature_test);
 }
 
 

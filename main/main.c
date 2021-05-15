@@ -20,10 +20,11 @@
 #include "controller/gui.h"
 #include "pwoff.h"
 #include "gettoniera.h"
+#include "peripherals/pwm.h"
 
 
 int main(void) {
-    unsigned long ts=0, tskp=0, ts_input=0, ts_temperature=0;
+    unsigned long tskp=0, ts_input=0, ts_temperature=0, ts_spi=0;
     model_t model;
     
     spi_init();
@@ -65,20 +66,24 @@ int main(void) {
            
         }
         
+        
         if (is_expired(ts_temperature, get_millis(), 50)) {
             ptc_read_temperature();
             view_event((view_event_t) {.code = VIEW_EVENT_MODEL_UPDATE});
-            model.temperatura=ptc_get_temperature();
+            model.ptc_adc = ptc_get_adc_value();
+            model.ptc_temperature = ptc_get_temperature();
             ts_temperature=get_millis();
         }
         
         
-        
-        
-        if (is_expired(ts, get_millis(), 1000)) {
-            //test ptc analogico
-            //unsigned long valore=ptc_read_input(PTC_CHANNEL);
-            ts=get_millis();
+        if (is_expired(ts_spi, get_millis(), 500)) {
+            uint16_t temp, hum;
+            
+            if (temperature_read(&temp, &hum) == 0) {
+                model.sht_temperature = temp;
+            }
+            
+            ts_spi=get_millis();
         }
 
        
@@ -94,7 +99,7 @@ int main(void) {
          //controllo buzzer
         digout_buzzer_check(); 
         
-        __delay_us(100);
+        __delay_us(10);
     }
     return 0;
 }
