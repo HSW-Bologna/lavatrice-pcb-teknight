@@ -55,6 +55,10 @@ static view_message_t process_page_event(model_t *model, void *arg, pman_event_t
             if (event.key_event.event == KEY_CLICK) {
                 if (event.key_event.code == BUTTON_SKIP_RIGHT) {
                     msg.vmsg.code = VIEW_PAGE_COMMAND_CODE_SWAP_PAGE;
+                    msg.vmsg.page = &page_pwm1_test;
+                }
+                if (event.key_event.code == BUTTON_SKIP_LEFT) {
+                    msg.vmsg.code = VIEW_PAGE_COMMAND_CODE_SWAP_PAGE;
                     msg.vmsg.page = &page_digout_test;
                 }
             }

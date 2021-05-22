@@ -6,8 +6,9 @@ void model_init(model_t *pmodel) {
     pmodel->impulsi         = 0;
     pmodel->ptc_temperature = 0;
     pmodel->sht_temperature = 0;
-    pmodel->pwm             = 0;
-    pmodel->ptc_adc = 0;
+    pmodel->pwm1            = 0;
+    pmodel->pwm2            = 0;
+    pmodel->ptc_adc         = 0;
     pmodel->outputs         = 0;
 }
 

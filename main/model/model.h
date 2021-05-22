@@ -14,7 +14,8 @@ typedef struct {
     int sht_temperature;
     
 
-    int pwm;
+    int pwm1;
+    int pwm2;
 } model_t ;
 
 

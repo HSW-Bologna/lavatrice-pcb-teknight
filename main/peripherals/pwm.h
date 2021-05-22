@@ -4,6 +4,6 @@
 #include <stdint.h>
 
 void pwm_init(void);
-void pwm_set(uint8_t perc);
+void pwm_set(uint8_t perc, int i);
 
 #endif

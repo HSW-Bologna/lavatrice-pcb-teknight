@@ -495,7 +495,9 @@
             <itemPath>main/view/pages/page_temperature_test.c</itemPath>
             <itemPath>main/view/pages/page_digout_test.c</itemPath>
             <itemPath>main/view/pages/page_digin_test.c</itemPath>
-            <itemPath>main/view/pages/page_pwm_test.c</itemPath>
+            <itemPath>main/view/pages/page_pwm1_test.c</itemPath>
+            <itemPath>main/view/pages/page_pwm2_test.c</itemPath>
+            <itemPath>main/view/pages/page_led_test.c</itemPath>
           </logicalFolder>
           <logicalFolder name="widgets" displayName="widgets" projectFiles="true">
             <itemPath>main/view/widgets/custom_lv_img.c</itemPath>

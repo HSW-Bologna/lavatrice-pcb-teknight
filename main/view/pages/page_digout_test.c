@@ -56,12 +56,12 @@ static view_message_t process_page_event(model_t *model, void *arg, pman_event_t
                 switch (event.key_event.code) {
                     case BUTTON_SKIP_LEFT: {
                         msg.vmsg.code = VIEW_PAGE_COMMAND_CODE_SWAP_PAGE;
-                        msg.vmsg.page = &page_temperature_test;
+                        msg.vmsg.page = &page_digin_test;
                         break;
                     }
                     case BUTTON_SKIP_RIGHT: {
                         msg.vmsg.code = VIEW_PAGE_COMMAND_CODE_SWAP_PAGE;
-                        msg.vmsg.page = &page_digin_test;
+                        msg.vmsg.page = &page_temperature_test;
                         break;
                     }
                     case BUTTON_PLUS: {

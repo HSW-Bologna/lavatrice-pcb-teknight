@@ -32,7 +32,8 @@ void pwm_init(void) {
     CCP1CON3Hbits.POLACE = 0;         // Configure output polarity (Active High)
     CCP1TMRL = 0x0000;                // Initialize timer prior to enable module.
     CCP1PRL = PERIOD;                 // Configure timebase period 
-    CCP1RA = 0x0000;                  // Set the rising edge compare value
+    // CCP1RA = 0x0000;                  // Set the rising edge compare value
+    CCP1RA = 1;
     CCP1RB = 0;                       // Set the falling edge compare value
     CCP1CON1Lbits.CCPON = 1;          // Turn on MCCP module
     
@@ -55,17 +56,21 @@ void pwm_init(void) {
     CCP2CON3Hbits.POLACE = 0;         // Configure output polarity (Active High)
     CCP2TMRL = 0x0000;                // Initialize timer prior to enable module.
     CCP2PRL = PERIOD;                 // Configure timebase period 
-    CCP2RA = 0x0000;                  // Set the rising edge compare value
+    // CCP2RA = 0x0000;                  // Set the rising edge compare value
+    CCP2RA = 1;
     CCP2RB = 0x0000;                  // Set the falling edge compare value
     CCP2CON1Lbits.CCPON = 1;          // Turn on MCCP module
 }
 
-void pwm_set(uint8_t perc) {
+void pwm_set(uint8_t perc, int i) {
     Nop();
     Nop();
     Nop();
 //    uint16_t res = (uint16_t)((unsigned long)PERIOD*(unsigned long)perc)/100;
     uint16_t res = (uint16_t)((unsigned long)PERIOD/100)*perc;
+    if (res==0) {
+        res = 1;
+    }
 
     if (perc == 100)
         res = PERIOD;
@@ -73,8 +78,10 @@ void pwm_set(uint8_t perc) {
     Nop();
     Nop();
     Nop();
-    CCP1RB = res;
-    CCP2RB = res;
+    if (i==1)
+        CCP1RA = res;
+    if (i==2)
+        CCP2RA = res;
     Nop();
     Nop();
     Nop();
