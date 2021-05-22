@@ -24,7 +24,7 @@ static void *create_page(model_t *model, void *extra) {
 
 
 static void open_page(model_t *model, void *data) {
-    view_common_title(lv_scr_act(), "TEST TEMPERATURA");
+    view_common_title(lv_scr_act(), "TEMPERATURA");
 
     lv_obj_t *lblspi = lv_label_create(lv_scr_act(), NULL);
     lv_obj_set_auto_realign(lblspi, 1);
@@ -65,6 +65,9 @@ static view_message_t process_page_event(model_t *model, void *arg, pman_event_t
             msg.vmsg.code = VIEW_PAGE_COMMAND_CODE_UPDATE;
             break;
         }
+        
+        default:
+            break;
     }
 
     return msg;

@@ -73,11 +73,10 @@ unsigned int keyboard_read(void) {
 
 
 keypad_update_t keyboard_manage(unsigned long ts) {
-    unsigned int input=0;
+    //unsigned int input=0;
+    //input=keyboard_read();
+    //debounce_filter(&filter, input, 2);
     
-    input|=keyboard_read();
-    debounce_filter(&filter, input, 2);
-    
-    unsigned int keymap = debounce_value(&filter);
+    unsigned int keymap = keyboard_read();
     return keypad_routine(keyboard, 40, 1500, 100, ts, keymap);
 }

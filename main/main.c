@@ -24,10 +24,11 @@
 #include "uart_driver.h"
 #include "controller/modbus_server.h"
 
+static model_t model;
 
 int main(void) {
     unsigned long tskp=0, ts_input=0, ts_temperature=0, ts_spi=0;
-    model_t model;
+    
     
     system_init();
     spi_init();

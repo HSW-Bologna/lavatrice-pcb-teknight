@@ -82,6 +82,8 @@ static view_message_t process_page_event(model_t *model, void *arg, pman_event_t
             msg.vmsg.code = VIEW_PAGE_COMMAND_CODE_UPDATE;
             break;
         }
+        default:
+            break;
     }
 
     return msg;

@@ -16,5 +16,6 @@ void digout_buzzer_check(void);
 uint8_t rele_get_status(void);
 
 
+
 #endif	
 

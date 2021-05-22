@@ -64,7 +64,6 @@ uint8_t rele_get_status(void) {
     return res;
 }
 
-
 void digout_buzzer_bip(size_t r, unsigned long t_on, unsigned long t_off) {
     repeat = r;
     time_on = t_on;

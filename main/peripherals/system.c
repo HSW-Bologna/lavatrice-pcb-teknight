@@ -23,7 +23,7 @@
 
 // FOSC
 #pragma config POSCMD = NONE            // Primary Oscillator Mode Select bits (Primary Oscillator disabled)
-#pragma config OSCIOFCN = OFF           // OSC2 Pin Function bit (OSC2 is clock output)
+#pragma config OSCIOFCN = ON           // OSC2 Pin Function bit (OSC2 is GPIO)
 #pragma config SOSCSEL = OFF            // SOSC Power Selection Configuration bits (Digital (SCLKI) mode)
 #pragma config PLLSS = PLL_PRI          // PLL Secondary Selection Configuration bit (PLL is fed by the Primary oscillator)
 #pragma config IOL1WAY = ON             // Peripheral pin select configuration bit (Allow only one reconfiguration)

@@ -12,6 +12,7 @@ typedef struct {
     uint16_t ptc_adc;
     int ptc_temperature;
     int sht_temperature;
+    
 
     int pwm;
 } model_t ;

@@ -23,6 +23,6 @@ int view_process_msg(view_page_command_t vmsg, model_t *model);
 void view_event(view_event_t event);
 void view_close_all(void *data);
 
-extern const pman_page_t page_main, page_temperature_test, page_digout_test;
+extern const pman_page_t page_main, page_temperature_test, page_digout_test, page_digin_test, page_pwm_test;
 
 #endif
