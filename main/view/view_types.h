@@ -4,12 +4,15 @@
 #include <stdint.h>
 #include "gel/keypad/keypad.h"
 
-#define VIEW_EMPTY_MSG ((view_message_t){.vmsg = {.code = VIEW_PAGE_COMMAND_CODE_NOTHING}, .cmsg = {.code = VIEW_CONTROLLER_COMMAND_CODE_NOTHING}})
+#define VIEW_EMPTY_MSG                                                                                                 \
+    ((view_message_t){.vmsg = {.code = VIEW_PAGE_COMMAND_CODE_NOTHING},                                                \
+                      .cmsg = {.code = VIEW_CONTROLLER_COMMAND_CODE_NOTHING}})
 
 
 typedef enum {
     VIEW_PAGE_COMMAND_CODE_NOTHING = 0,
     VIEW_PAGE_COMMAND_CODE_REBASE,
+    VIEW_PAGE_COMMAND_CODE_SWAP_PAGE,
     VIEW_PAGE_COMMAND_CODE_CHANGE_PAGE,
     VIEW_PAGE_COMMAND_CODE_CHANGE_PAGE_EXTRA,
     VIEW_PAGE_COMMAND_CODE_BACK,
@@ -29,7 +32,7 @@ typedef struct {
 
 
 typedef enum {
-    VIEW_CONTROLLER_COMMAND_CODE_NOTHING=0,
+    VIEW_CONTROLLER_COMMAND_CODE_NOTHING = 0,
     VIEW_CONTROLLER_COMMAND_CODE_UPDATE_PWM,
     VIEW_CONTROLLER_COMMAND_CODE_UPDATE_DIGOUT
 } view_controller_command_code_t;
@@ -54,10 +57,7 @@ typedef struct {
 typedef uint8_t view_t;
 
 
-typedef enum {
-    VIEW_EVENT_KEYPAD,
-    VIEW_EVENT_MODEL_UPDATE
-} view_event_code_t;
+typedef enum { VIEW_EVENT_KEYPAD, VIEW_EVENT_MODEL_UPDATE } view_event_code_t;
 
 
 typedef struct {

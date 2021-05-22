@@ -4,6 +4,7 @@
 
 #include "model/model.h"
 #include "view/view.h"
+#include "view/images/legacy.h"
 
 
 QUEUE_DECLARATION(event_queue, view_event_t, 8);
@@ -40,7 +41,7 @@ view_t view_init(model_t *model, void (*flush_cb)(struct _disp_drv_t *, const lv
 
     pman_init(&pman);
     event_queue_init(&q);
-    return view_change_page(model, &page_temperature_test);
+    return view_change_page(model, &page_main);
 }
 
 
@@ -81,19 +82,35 @@ int view_get_next_msg(model_t *model, view_message_t *msg, view_event_t *eventco
 
 
 int view_process_msg(view_page_command_t vmsg, model_t *model) {
-    if (vmsg.code == VIEW_PAGE_COMMAND_CODE_CHANGE_PAGE) {
-        view_change_page(model, vmsg.page);
-    } else if (vmsg.code == VIEW_PAGE_COMMAND_CODE_CHANGE_PAGE_EXTRA) {
-        view_change_page_extra(model, vmsg.page, vmsg.extra);
-    } else if (vmsg.code == VIEW_PAGE_COMMAND_CODE_BACK) {
-        pman_back(&pman, model);
-        event_queue_init(&q);
-        // view_event((view_event_t){.code = VIEW_EVENT_CODE_OPEN});
-    } else if (vmsg.code == VIEW_PAGE_COMMAND_CODE_REBASE) {
-        view_rebase_page(model, vmsg.page);
-    } else if (vmsg.code == VIEW_PAGE_COMMAND_CODE_UPDATE) {
-        pman_page_update(&pman, model);
-        return 1;
+    switch (vmsg.code) {
+        case VIEW_PAGE_COMMAND_CODE_CHANGE_PAGE:
+            view_change_page(model, vmsg.page);
+            break;
+
+        case VIEW_PAGE_COMMAND_CODE_CHANGE_PAGE_EXTRA:
+            view_change_page_extra(model, vmsg.page, vmsg.extra);
+            break;
+
+        case VIEW_PAGE_COMMAND_CODE_BACK:
+            pman_back(&pman, model);
+            event_queue_init(&q);
+            break;
+
+        case VIEW_PAGE_COMMAND_CODE_REBASE:
+            view_rebase_page(model, vmsg.page);
+            break;
+
+        case VIEW_PAGE_COMMAND_CODE_SWAP_PAGE:
+            event_queue_init(&q);
+            pman_swap_page(&pman, model, *(pman_page_t *)vmsg.page);
+            break;
+
+        case VIEW_PAGE_COMMAND_CODE_UPDATE:
+            pman_page_update(&pman, model);
+            return 1;
+
+        case VIEW_PAGE_COMMAND_CODE_NOTHING:
+            break;
     }
     return 0;
 }

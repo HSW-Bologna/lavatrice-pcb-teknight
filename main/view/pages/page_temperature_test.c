@@ -6,6 +6,8 @@
 #include "lvgl/lvgl.h"
 #include "view/fonts/legacy_fonts.h"
 #include "view/common.h"
+#include "view/images/legacy.h"
+#include "view/widgets/custom_lv_img.h"
 
 
 static struct {
@@ -36,6 +38,12 @@ static void open_page(model_t *model, void *data) {
     lv_obj_t *lbladc = lv_label_create(lv_scr_act(), lblspi);
     lv_obj_align(lbladc, lblptc, LV_ALIGN_OUT_BOTTOM_LEFT, 0, 4);
     page_data.temp_ptc_adc = lbladc;
+
+    /*
+        lv_obj_t *img = custom_lv_img_create(lv_scr_act(), NULL);
+        custom_lv_img_set_src(img, &legacy_img_insert_coin);
+        lv_obj_align(img, NULL, LV_ALIGN_CENTER, 0, 0);
+        */
 }
 
 
@@ -44,12 +52,12 @@ static view_message_t process_page_event(model_t *model, void *arg, pman_event_t
 
     switch (event.code) {
         case VIEW_EVENT_KEYPAD: {
-             if (event.key_event.event == KEY_CLICK) {
-                if (event.key_event.code==BUTTON_SKIP_RIGHT) {
-                    msg.vmsg.code = VIEW_PAGE_COMMAND_CODE_REBASE;
+            if (event.key_event.event == KEY_CLICK) {
+                if (event.key_event.code == BUTTON_SKIP_RIGHT) {
+                    msg.vmsg.code = VIEW_PAGE_COMMAND_CODE_SWAP_PAGE;
                     msg.vmsg.page = &page_digout_test;
                 }
-             }
+            }
             break;
         }
 

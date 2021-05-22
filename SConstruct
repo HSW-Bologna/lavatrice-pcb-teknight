@@ -29,6 +29,7 @@ PROGRAM = "simulated.exe"
 MAIN = "main"
 COMPONENTS = "components"
 LVGL = "{}/lvgl".format(COMPONENTS)
+LIBLIGHTMODBUS = f"{COMPONENTS}/liblightmodbus"
 
 CFLAGS = [
     "-Wall",
@@ -49,7 +50,8 @@ LIBPATH = [os.path.join(SDLPATH, 'lib')] if SDLPATH else []
 
 CPPPATH = [
     COMPONENTS, f"#{LVGL}/src", f"#{LVGL}", f"#{MAIN}",
-    f"#{MAIN}/config", f"#{MAIN}/simulator", f"#{COMPONENTS}/gel/generic_embedded_libs",
+    f"#{MAIN}/config", f"#{MAIN}/config/mbconf", f"#{MAIN}/simulator", f"#{COMPONENTS}/gel/generic_embedded_libs",
+    f"{LIBLIGHTMODBUS}/include",
     "simulator",
 ]
 
@@ -82,16 +84,19 @@ def main():
     gel_env = env
     gel_selected = ['pagemanager', 'collections',
                     'data_structures', 'keypad', 'debounce']
-    (gel_objects, include) = SConscript(
+    (gel, include) = SConscript(
         f'{COMPONENTS}/generic_embedded_libs/SConscript', exports=['gel_env', 'gel_selected'])
     env['CPPPATH'] += [include]
 
     i2c_env = env
     i2c_selected = ['temperature/SHT3',
                     'temperature/SHT21', 'LTR559ALS', 'dummy']
-    (i2c_objects, include) = SConscript(
+    (i2c, include) = SConscript(
         f'{COMPONENTS}/I2C/SConscript', exports=['i2c_env', 'i2c_selected'])
     env['CPPPATH'] += [include]
+
+    modbus_sources = [str(filename) for filename in Path(
+        f"{LIBLIGHTMODBUS}/src").rglob('*.c')]
 
     sources = [str(filename) for filename in Path('simulator').rglob('*.c')]
     sources += [str(filename) for filename in Path('main/view').rglob('*.c')]
@@ -102,8 +107,8 @@ def main():
                 for filename in Path(f'{LVGL}/src').rglob('*.c')]
     sources += [Glob(f'{LVGL}/*.c')]
 
-    prog = env.Program(PROGRAM, sources + i2c_objects +
-                       gel_objects, LIBPATH=LIBPATH)
+    prog = env.Program(PROGRAM, sources + modbus_sources + i2c +
+                       gel, LIBPATH=LIBPATH)
     PhonyTargets('run', os.path.join(".", PROGRAM), prog, env)
     env.Alias('mingw', prog)
     env.CompilationDatabase('compile_commands.json')

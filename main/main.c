@@ -26,7 +26,7 @@
 
 
 int main(void) {
-    unsigned long tskp=0, ts_input=0, ts_temperature=0, ts_spi=0, ts_uart=0;
+    unsigned long tskp=0, ts_input=0, ts_temperature=0, ts_spi=0;
     model_t model;
     
     system_init();
