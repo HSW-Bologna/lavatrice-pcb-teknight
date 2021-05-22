@@ -47,6 +47,15 @@ static view_message_t process_page_event(model_t *model, void *arg, pman_event_t
                         msg.cmsg.code = VIEW_CONTROLLER_COMMAND_CODE_UPDATE_PWM;
                         break;
                     }
+                    case BUTTON_MINUS: {
+                        if (page_data.speed==0)
+                            page_data.speed = 255;
+                        else 
+                            page_data.speed--;
+                        msg.vmsg.code = VIEW_PAGE_COMMAND_CODE_UPDATE;
+                        msg.cmsg.code = VIEW_CONTROLLER_COMMAND_CODE_UPDATE_PWM;
+                        break;
+                    }
                     case BUTTON_LINGUA: {
                         if (page_data.step==4) {
                             page_data.step=0;
