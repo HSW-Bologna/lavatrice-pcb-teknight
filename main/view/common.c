@@ -3,7 +3,7 @@
 #include "gel/timer/timecheck.h"
 
 
-void view_common_title(lv_obj_t *root, char *str) {
+lv_obj_t *view_common_title(lv_obj_t *root, char *str) {
     lv_obj_t *cont = lv_cont_create(root, NULL);
 
     static lv_style_t style;
@@ -26,6 +26,8 @@ void view_common_title(lv_obj_t *root, char *str) {
     lv_obj_set_width(cont, LV_HOR_RES_MAX - 4);
     lv_obj_align(cont, NULL, LV_ALIGN_IN_TOP_MID, 0, 2);
     lv_obj_align(title, NULL, LV_ALIGN_CENTER, 0, 0);
+
+    return title;
 }
 
 

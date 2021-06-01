@@ -17,10 +17,10 @@ typedef struct {
 } view_common_password_t;
 
 
-void view_common_title(lv_obj_t *root, char *str);
-void view_common_password_add_key(view_common_password_t *inserted, button_t new, unsigned long timestamp);
-int  view_common_check_password(view_common_password_t *inserted, button_t password[static VIEW_PASSWORD_SIZE],
-                                unsigned long timestamp);
-void view_common_password_reset(view_common_password_t *password, unsigned long timestamp);
+lv_obj_t *view_common_title(lv_obj_t *root, char *str);
+void      view_common_password_add_key(view_common_password_t *inserted, button_t new, unsigned long timestamp);
+int       view_common_check_password(view_common_password_t *inserted, button_t password[static VIEW_PASSWORD_SIZE],
+                                     unsigned long timestamp);
+void      view_common_password_reset(view_common_password_t *password, unsigned long timestamp);
 
 #endif

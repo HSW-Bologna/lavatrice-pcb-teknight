@@ -105,6 +105,11 @@ int view_process_msg(view_page_command_t vmsg, model_t *model) {
             pman_swap_page(&pman, model, *(pman_page_t *)vmsg.page);
             break;
 
+        case VIEW_PAGE_COMMAND_CODE_SWAP_PAGE_EXTRA:
+            event_queue_init(&q);
+            pman_swap_page_extra(&pman, model, *(pman_page_t *)vmsg.page, vmsg.extra);
+            break;
+
         case VIEW_PAGE_COMMAND_CODE_UPDATE:
             pman_page_update(&pman, model);
             return 1;

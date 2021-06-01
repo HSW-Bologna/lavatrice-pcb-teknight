@@ -54,8 +54,9 @@ static view_message_t process_page_event(model_t *model, void *arg, pman_event_t
         case VIEW_EVENT_KEYPAD: {
             if (event.key_event.event == KEY_CLICK) {
                 if (event.key_event.code == BUTTON_SKIP_RIGHT) {
-                    msg.vmsg.code = VIEW_PAGE_COMMAND_CODE_SWAP_PAGE;
-                    msg.vmsg.page = &page_pwm1_test;
+                    msg.vmsg.code = VIEW_PAGE_COMMAND_CODE_SWAP_PAGE_EXTRA;
+                    msg.vmsg.page = &page_pwm_test;
+                    msg.vmsg.extra = (void*)(uintptr_t)1;
                 }
                 if (event.key_event.code == BUTTON_SKIP_LEFT) {
                     msg.vmsg.code = VIEW_PAGE_COMMAND_CODE_SWAP_PAGE;

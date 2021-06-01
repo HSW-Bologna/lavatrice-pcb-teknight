@@ -20,16 +20,15 @@ static void *create_page(model_t *model, void *extra) {
 static void open_page(model_t *model, void *data) {
     view_common_title(lv_scr_act(), "TEST INGRESSI");
 
-    lv_obj_t *lblin      = lv_label_create(lv_scr_act(), NULL);
+    lv_obj_t *lblin = lv_label_create(lv_scr_act(), NULL);
     lv_obj_set_auto_realign(lblin, 1);
     lv_obj_align(lblin, NULL, LV_ALIGN_IN_TOP_LEFT, 2, 20);
     page_data.digin_in = lblin;
-    
+
     lv_obj_t *lblstato = lv_label_create(lv_scr_act(), NULL);
     lv_obj_set_auto_realign(lblstato, 1);
     lv_obj_align(lblstato, NULL, LV_ALIGN_IN_TOP_RIGHT, 0, 20);
     page_data.digin_status = lblstato;
-    
 }
 
 static view_message_t process_page_event(model_t *model, void *arg, pman_event_t event) {
@@ -37,14 +36,15 @@ static view_message_t process_page_event(model_t *model, void *arg, pman_event_t
 
     switch (event.code) {
         case VIEW_EVENT_KEYPAD: {
-            
-            if (event.key_event.event == KEY_CLICK && event.key_event.code==BUTTON_SKIP_RIGHT) {
+
+            if (event.key_event.event == KEY_CLICK && event.key_event.code == BUTTON_SKIP_RIGHT) {
                 msg.vmsg.code = VIEW_PAGE_COMMAND_CODE_SWAP_PAGE;
                 msg.vmsg.page = &page_digout_test;
             }
             if (event.key_event.event == KEY_CLICK && event.key_event.code == BUTTON_SKIP_LEFT) {
-                 msg.vmsg.code = VIEW_PAGE_COMMAND_CODE_SWAP_PAGE;
-                msg.vmsg.page = &page_pwm2_test;
+                msg.vmsg.code  = VIEW_PAGE_COMMAND_CODE_SWAP_PAGE_EXTRA;
+                msg.vmsg.page  = &page_pwm_test;
+                msg.vmsg.extra = (void *)(uintptr_t)2;
             }
             break;
         }
@@ -52,10 +52,9 @@ static view_message_t process_page_event(model_t *model, void *arg, pman_event_t
             msg.vmsg.code = VIEW_PAGE_COMMAND_CODE_UPDATE;
             break;
         }
-        
+
         default:
             break;
-        
     }
 
     return msg;
@@ -65,7 +64,7 @@ static view_t update_page(model_t *model, void *arg) {
 
     lv_label_set_text_fmt(page_data.digin_in, "IN:", page_data.digin_in);
     lv_label_set_text_fmt(page_data.digin_status, "%07b", model->inputs);
-    
+
     return 0;
 }
 
