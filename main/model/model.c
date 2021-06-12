@@ -1,4 +1,5 @@
 #include "model.h"
+#include "parmac.h"
 
 
 void model_init(model_t *pmodel) {
@@ -10,19 +11,22 @@ void model_init(model_t *pmodel) {
     pmodel->pwm2            = 0;
     pmodel->ptc_adc         = 0;
     pmodel->outputs         = 0;
+
+    parmac_init(pmodel);
 }
 
 
-//int model_get_input(model_t *pmodel, int input) {
+// int model_get_input(model_t *pmodel, int input) {
 //    return ((pmodel->inputs >> input - 1) & 1);
 //}
 //
-//int model_get_output(model_t *pmodel, int output) {
+// int model_get_output(model_t *pmodel, int output) {
 //    return ((pmodel->outputs >> output) & 1);
 //}
 
-char* model_get_output_status(model_t *pmodel, int output) {
+char *model_get_output_status(model_t *pmodel, int output) {
     if ((pmodel->outputs >> output) & 1)
         return "on";
-    else return "off";
+    else
+        return "off";
 }

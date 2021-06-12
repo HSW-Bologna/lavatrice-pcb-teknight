@@ -82,7 +82,7 @@ def main():
     env.Tool('compilation_db')
 
     gel_env = env
-    gel_selected = ['pagemanager', 'collections',
+    gel_selected = ['pagemanager', 'collections', "parameter",
                     'data_structures', 'keypad', 'debounce']
     (gel, include) = SConscript(
         f'{COMPONENTS}/generic_embedded_libs/SConscript', exports=['gel_env', 'gel_selected'])

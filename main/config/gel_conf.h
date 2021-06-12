@@ -50,6 +50,11 @@ typedef int pid_output_type_t;
  * Parameter
  */
 
-typedef int parameter_user_data_t;
+typedef struct {
+    char *descrizione;
+    void (*format)(char *string, const void *);
+    char **opzioni;
+    char **unita;
+} parameter_user_data_t;
 
 #endif

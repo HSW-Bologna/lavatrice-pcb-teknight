@@ -253,6 +253,9 @@
           <logicalFolder name="pagemanager" displayName="pagemanager" projectFiles="true">
             <itemPath>components/generic_embedded_libs/gel/pagemanager/page_manager.c</itemPath>
           </logicalFolder>
+          <logicalFolder name="parameter" displayName="parameter" projectFiles="true">
+            <itemPath>components/generic_embedded_libs/gel/parameter/parameter.c</itemPath>
+          </logicalFolder>
           <logicalFolder name="pid" displayName="pid" projectFiles="true">
             <itemPath>components/generic_embedded_libs/gel/pid/pid.c</itemPath>
           </logicalFolder>
@@ -465,6 +468,7 @@
         </logicalFolder>
         <logicalFolder name="model" displayName="model" projectFiles="true">
           <itemPath>main/model/model.c</itemPath>
+          <itemPath>main/model/parmac.c</itemPath>
         </logicalFolder>
         <logicalFolder name="peripherals" displayName="peripherals" projectFiles="true">
           <itemPath>main/peripherals/system.c</itemPath>
@@ -497,6 +501,7 @@
             <itemPath>main/view/pages/page_digin_test.c</itemPath>
             <itemPath>main/view/pages/page_pwm_test.c</itemPath>
             <itemPath>main/view/pages/page_led_test.c</itemPath>
+            <itemPath>main/view/pages/page_parmac.c</itemPath>
           </logicalFolder>
           <logicalFolder name="widgets" displayName="widgets" projectFiles="true">
             <itemPath>main/view/widgets/custom_lv_img.c</itemPath>
@@ -525,7 +530,7 @@
         <targetDevice>PIC24FJ256GA705</targetDevice>
         <targetHeader></targetHeader>
         <targetPluginBoard></targetPluginBoard>
-        <platformTool>ICD3PlatformTool</platformTool>
+        <platformTool>noID</platformTool>
         <languageToolchain>XC16</languageToolchain>
         <languageToolchainVersion>1.36</languageToolchainVersion>
         <platform>2</platform>
@@ -575,6 +580,7 @@
         <property key="enable-short-double" value="false"/>
         <property key="enable-symbols" value="true"/>
         <property key="enable-unroll-loops" value="false"/>
+        <property key="expand-pragma-config" value="false"/>
         <property key="extra-include-directories"
                   value="main;components\I2C;main\config;components\generic_embedded_libs;main\peripherals;components;main\config\mbconf;components\liblightmodbus\include"/>
         <property key="isolate-each-function" value="false"/>
@@ -625,6 +631,7 @@
       </C30-AS>
       <C30-CO>
         <property key="coverage-enable" value=""/>
+        <property key="stack-guidance" value="false"/>
       </C30-CO>
       <C30-LD>
         <property key="additional-options-use-response-files" value="false"/>
@@ -728,7 +735,6 @@
         <property key="UART 1" value="true"/>
         <property key="UART 2" value="true"/>
         <property key="debugoptions.useswbreakpoints" value="false"/>
-        <property key="firmware.download.all" value="false"/>
         <property key="hwtoolclock.frcindebug" value="false"/>
         <property key="memories.aux" value="false"/>
         <property key="memories.bootflash" value="false"/>

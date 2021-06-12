@@ -9,6 +9,10 @@
 #define VIEW_PASSWORD_SIZE    5
 #define VIEW_PASSWORD_MINUS                                                                                            \
     ((button_t[VIEW_PASSWORD_SIZE]){BUTTON_STOP, BUTTON_STOP, BUTTON_STOP, BUTTON_MINUS, BUTTON_MINUS})
+#define VIEW_PASSWORD_PLUS                                                                                             \
+    ((button_t[VIEW_PASSWORD_SIZE]){BUTTON_STOP, BUTTON_STOP, BUTTON_STOP, BUTTON_PLUS, BUTTON_PLUS})
+#define VIEW_PASSWORD_RIGHT                                                                                            \
+    ((button_t[VIEW_PASSWORD_SIZE]){BUTTON_STOP, BUTTON_STOP, BUTTON_STOP, BUTTON_SKIP_RIGHT, BUTTON_SKIP_RIGHT})
 
 typedef struct {
     button_t      password[VIEW_PASSWORD_SIZE];
