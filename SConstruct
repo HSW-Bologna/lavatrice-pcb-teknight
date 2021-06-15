@@ -89,8 +89,8 @@ def main():
     env['CPPPATH'] += [include]
 
     i2c_env = env
-    i2c_selected = ['temperature/SHT3',
-                    'temperature/SHT21', 'LTR559ALS', 'dummy']
+    i2c_selected = ['temperature/SHT3', "eeprom/24LC16",
+                    'temperature/SHT21', 'LTR559ALS', "posix"]
     (i2c, include) = SConscript(
         f'{COMPONENTS}/I2C/SConscript', exports=['i2c_env', 'i2c_selected'])
     env['CPPPATH'] += [include]
