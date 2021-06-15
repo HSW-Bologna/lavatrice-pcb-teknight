@@ -15,10 +15,13 @@ static struct {
 
     size_t parameter;
     size_t num_parameters;
+    int par_to_save;
+    
 } page_data;
 
 
 static void *create_page(model_t *model, void *extra) {
+    page_data.par_to_save    = 0;
     return NULL;
 }
 
@@ -68,15 +71,19 @@ static view_message_t process_page_event(model_t *model, void *arg, pman_event_t
                     case BUTTON_MINUS:
                         parmac_operation(page_data.parameter, -1);
                         msg.vmsg.code = VIEW_PAGE_COMMAND_CODE_UPDATE;
+                        page_data.par_to_save=1;
                         break;
 
                     case BUTTON_PLUS:
                         parmac_operation(page_data.parameter, +1);
                         msg.vmsg.code = VIEW_PAGE_COMMAND_CODE_UPDATE;
+                        page_data.par_to_save=1;
                         break;
 
                     case BUTTON_STOP:
                         msg.vmsg.code = VIEW_PAGE_COMMAND_CODE_BACK;
+                        if (page_data.par_to_save) 
+                            msg.cmsg.code = VIEW_CONTROLLER_COMMAND_CODE_PARAMETERS_SAVE;
                         break;
                 }
             }
@@ -96,7 +103,7 @@ static view_message_t process_page_event(model_t *model, void *arg, pman_event_t
 
 static view_t update_page(model_t *pmodel, void *arg) {
     char string[64] = {0};
-
+    
     lv_label_set_text_fmt(page_data.lnum, "Param. %2i/%i", page_data.parameter + 1, page_data.num_parameters);
     lv_label_set_text(page_data.ldesc, parmac_get_description(pmodel, page_data.parameter));
     parmac_format_value(string, page_data.parameter);

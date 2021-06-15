@@ -46,7 +46,12 @@ static view_message_t process_page_event(model_t *model, void *arg, pman_event_t
                 msg.vmsg.page  = &page_pwm_test;
                 msg.vmsg.extra = (void *)(uintptr_t)2;
             }
-            break;
+            if (event.key_event.event == KEY_CLICK && event.key_event.code == BUTTON_STOP) {
+                msg.vmsg.code  = VIEW_PAGE_COMMAND_CODE_SWAP_PAGE;
+                msg.vmsg.page  = &page_main;
+            }
+              break;
+
         }
         case VIEW_EVENT_MODEL_UPDATE: {
             msg.vmsg.code = VIEW_PAGE_COMMAND_CODE_UPDATE;

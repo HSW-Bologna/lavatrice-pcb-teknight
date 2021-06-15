@@ -23,6 +23,7 @@
 #include "peripherals/pwm.h"
 #include "uart_driver.h"
 #include "controller/modbus_server.h"
+#include "controller/controller.h"
 
 static model_t model;
 
@@ -50,6 +51,7 @@ int main(void) {
 
     
     model_init(&model);
+    controller_init(&model);
     view_init(&model, nt7534_flush, nt7534_rounder, nt7534_set_px);
     digout_buzzer_bip(2, 100, 100);
     
@@ -65,7 +67,8 @@ int main(void) {
             }
             if (gettoniera_take_insert()) {
                 view_event((view_event_t) {.code = VIEW_EVENT_MODEL_UPDATE});
-                model.impulsi+=gettoniera_get_count();
+                model.pwoff.credito+=gettoniera_get_count();
+                controller_update_pwoff(&model);
                 gettoniera_reset_count();
             }
             ts_input=get_millis();

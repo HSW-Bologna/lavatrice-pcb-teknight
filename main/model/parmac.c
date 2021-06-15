@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include "gel/parameter/parameter.h"
 #include "model.h"
+#include "parmac.h"
 
 #define NUM_PARAMETERS 2
 
@@ -14,7 +15,7 @@ static void formatta(char *string, const void *arg);
 static parameter_handle_t parameters[NUM_PARAMETERS];
 
 
-void parmac_init(model_t *p) {
+void parmac_init(model_t *p, int reset) {
 #define FINT(desc) ((parameter_user_data_t){desc, formatta, NULL, NULL})
 
     size_t i = 0;
@@ -23,7 +24,9 @@ void parmac_init(model_t *p) {
     parameters[i++] = PARAMETER_C99(PARAMETER_TYPE_UINT8, &p->pars.livello_accesso,      NULL, NULL, 0, 2, 0, 1, AL_TECH,     FINT("Livello accesso"),   NULL, NULL);
     // clang-format on
 
-    parameter_reset_to_defaults(parameters, NUM_PARAMETERS);
+    parameter_check_ranges(parameters, NUM_PARAMETERS);
+    if (reset) 
+        parameter_reset_to_defaults(parameters, NUM_PARAMETERS);
 }
 
 

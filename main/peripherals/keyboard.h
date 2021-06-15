@@ -16,6 +16,7 @@ typedef enum {
     BUTTON_LINGUA,
     BUTTON_MENU,
     BUTTON_STOP,
+    BUTTON_STOP_MENU
 } button_t;
 
 void            keyboard_init(void);

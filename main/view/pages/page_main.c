@@ -28,7 +28,6 @@ static void open_page(model_t *model, void *data) {
     lv_obj_t *label = lv_label_create(lv_scr_act(), NULL);
     view_common_password_reset(&page_data.password, get_millis());
 
-    lv_label_set_text(label, "Pagina principale");
     lv_obj_set_pos(label, 10, 10);
     page_data.label = label;
 
@@ -57,8 +56,12 @@ static view_message_t process_page_event(model_t *model, void *arg, pman_event_t
                     break;
                 }
             }
-
-            if (event.key_event.code == BUTTON_SKIP_RIGHT && event.key_event.event == KEY_CLICK) {
+            
+            if (event.key_event.code == BUTTON_PLAY && event.key_event.event == KEY_CLICK) {
+                msg.vmsg.code = VIEW_PAGE_COMMAND_CODE_CHANGE_PAGE;
+                msg.vmsg.page = &page_info;
+            }
+            else if (event.key_event.code == BUTTON_SKIP_RIGHT && event.key_event.event == KEY_CLICK) {
                 lv_label_set_text(page_data.label, "skip destra");
             } else if (event.key_event.code == BUTTON_SKIP_LEFT && event.key_event.event == KEY_CLICK) {
                 lv_label_set_text(page_data.label, "skip sinistra");
@@ -79,7 +82,6 @@ static view_message_t process_page_event(model_t *model, void *arg, pman_event_t
                 //                    msg.cmsg.code = VIEW_CONTROLLER_COMMAND_CODE_UPDATE_PWM;
                 //                }
             }
-            msg.vmsg.code = VIEW_PAGE_COMMAND_CODE_UPDATE;
             break;
         }
         case VIEW_EVENT_MODEL_UPDATE: {
@@ -95,7 +97,7 @@ static view_message_t process_page_event(model_t *model, void *arg, pman_event_t
 
 
 static view_t update_page(model_t *model, void *arg) {
-
+    lv_label_set_text_fmt(page_data.label_inputs, "%i", model->pwoff.credito);
     return 0;
 }
 
