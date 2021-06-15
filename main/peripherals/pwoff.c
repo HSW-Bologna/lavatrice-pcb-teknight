@@ -26,8 +26,14 @@ void pwoff_init(void) {
     IEC1bits.IOCIE   = 1; /* Interrupt enable bit globale */
 }
 
-
+void pwoff_interrupt_enable(int i) {
+    IEC1bits.IOCIE   = i; 
+}
 
 void __attribute__((interrupt, no_auto_psv)) _IOCInterrupt() {
+    controller_save_pwoff();
+    __delay_ms(2000);
     IFS1bits.IOCIF = 0;
 }
+
+

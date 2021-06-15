@@ -126,6 +126,12 @@ void nt7534_init(void) {
     nt7534_command(CMD_SET_VOLUME_FIRST);
     nt7534_command(CMD_SET_PAGE);
     nt7534_command(0x1A);
+    nt7534_command(0xA2);
+    nt7534_command(0xA0);
+    nt7534_command(0x24);
+    nt7534_command(0x81);
+    nt7534_command(0x1A);
+    nt7534_command(0x2F);
     nt7534_command(CMD_DISPLAY_ON);
 
     LCD_CS_D_LAT = 1;
