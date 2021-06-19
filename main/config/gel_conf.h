@@ -8,8 +8,8 @@
  * Page manager
  */
 #define PMAN_NAVIGATION_DEPTH 4
-#define PMAN_VIEW_NULL 0
-#define PMAN_DATA_NULL NULL
+#define PMAN_VIEW_NULL        0
+#define PMAN_DATA_NULL        NULL
 
 typedef view_message_t pman_message_t;
 
@@ -51,7 +51,7 @@ typedef int pid_output_type_t;
  */
 
 typedef struct {
-    char *descrizione;
+    const char **descrizione;
     void (*format)(char *string, const void *);
     char **opzioni;
     char **unita;

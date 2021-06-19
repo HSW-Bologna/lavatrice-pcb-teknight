@@ -5,44 +5,74 @@
 #include <stdlib.h>
 #include "lvgl/lvgl.h"
 
-#define PARS_SERIALIZED_SIZE 4
+#define PARS_SERIALIZED_SIZE  6
 #define PWOFF_SERIALIZED_SIZE 4
+
+
+typedef enum {
+    PROGRAM_CALDO = 0,
+    PROGRAM_MEDIO,
+    PROGRAM_TIEPIDO,
+    PROGRAM_FREDDO,
+    PROGRAM_LANA,
+    NUM_PROGRAMS,
+} program_t;
+
 
 typedef struct {
     uint16_t credito;
 } pwoff_data_t;
 
 typedef struct {
-    uint8_t      inputs;
-    uint8_t      outputs;
+    uint8_t  inputs;
+    uint8_t  outputs;
     uint16_t ptc_adc;
     int      ptc_temperature;
     int      sht_temperature;
 
-    int pwm1;
-    int pwm2;
+    int     pwm1;
+    int     pwm2;
+    uint8_t lingua_temporanea;
 
     struct {
+        uint8_t lingua;
         uint8_t modello;
         uint8_t livello_accesso;
-    } pars;
-    
-    uint32_t    mem_free_size;
-    uint8_t     mem_frag_pct;
-    uint32_t    mem_low;
-        
+        uint8_t tempo_tasto_stop;
+        uint8_t tempo_uscita_pagine;
+        uint8_t logo;
+        uint8_t ritorno_lingua;
+        uint8_t tempo_ritardo_antipiega;
+        uint8_t tempo_max_durata_antipiega;
+        uint8_t numero_max_giri_antipiega;
+        uint8_t tempo_giro_antipiega;
+        uint8_t tempo_pausa_antipiega;
+        uint8_t velocita_antipiega;
+        uint8_t temperatura_massima;
+    } pmac;
+
+    struct {
+        uint8_t tipo_asciugatura;
+    } pciclo;
+
+    struct {
+        uint8_t  used_percentage;
+        uint8_t  frag_percentage;
+        uint32_t low_watermark;
+    } lvgl_mem;
+
     pwoff_data_t pwoff;
-    
+
 } model_t;
 
-void model_init(model_t *pmodel);
-// int model_get_input(model_t *pmodel, int input);
-// int model_get_output(model_t *pmodel, int output);
-char *model_get_output_status(model_t *pmodel, int output);
+void   model_init(model_t *pmodel);
+char * model_get_output_status(model_t *pmodel, int output);
 size_t model_pars_serialize(model_t *pmodel, uint8_t buff[static PARS_SERIALIZED_SIZE]);
 size_t model_pars_deserialize(model_t *pmodel, uint8_t *buff);
 size_t model_pwoff_serialize(model_t *pmodel, uint8_t buff[static PWOFF_SERIALIZED_SIZE]);
 size_t model_pwoff_deserialize(model_t *pmodel, uint8_t *buff);
-void model_mem_data(model_t *pmodel, lv_mem_monitor_t *mem);
+void   model_mem_data(model_t *pmodel, lv_mem_monitor_t *mem);
+size_t model_get_lingua(model_t *pmodel);
+void model_cambia_lingua(model_t *pmodel);
 
 #endif

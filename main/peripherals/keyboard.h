@@ -21,5 +21,6 @@ typedef enum {
 
 void            keyboard_init(void);
 keypad_update_t keyboard_manage(unsigned long ts);
+void            keyboard_reset(void);
 
 #endif

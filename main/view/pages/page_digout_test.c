@@ -8,20 +8,17 @@
 #include "view/common.h"
 
 static struct {
-    lv_obj_t *digout_out;
-    lv_obj_t *digout_status;
-    lv_obj_t *auto_off;
-    int       digout_index;
+    lv_obj_t * digout_out;
+    lv_obj_t * digout_status;
+    lv_obj_t * auto_off;
+    int        digout_index;
     lv_task_t *task;
-    int time;
+    int        time;
 } page_data;
 
-void timer_task(lv_task_t * task) {
-    view_event((view_event_t) {.code=VIEW_EVENT_TIMER});
-}
 
 static void *create_page(model_t *model, void *extra) {
-    page_data.task = lv_task_create(timer_task, 1000, LV_TASK_PRIO_OFF, NULL);
+    page_data.task = view_common_register_timer(1000);
     return NULL;
 }
 
@@ -38,8 +35,8 @@ static void open_page(model_t *model, void *data) {
     lv_obj_set_auto_realign(lblstato, 1);
     lv_obj_align(lblstato, NULL, LV_ALIGN_IN_TOP_RIGHT, 0, 20);
     page_data.digout_status = lblstato;
-    
-    page_data.time = 5;
+
+    page_data.time   = 5;
     lv_obj_t *lbloff = lv_label_create(lv_scr_act(), NULL);
     lv_obj_set_auto_realign(lbloff, 1);
     lv_obj_align(lbloff, NULL, LV_ALIGN_IN_LEFT_MID, 0, 20);
@@ -71,7 +68,7 @@ static view_message_t process_page_event(model_t *model, void *arg, pman_event_t
                         msg.cmsg.code = VIEW_CONTROLLER_COMMAND_CODE_DIGOUT_TURNOFF;
                         lv_task_set_prio(page_data.task, LV_TASK_PRIO_OFF);
                         lv_task_reset(page_data.task);
-                        page_data.time=5;
+                        page_data.time = 5;
                         break;
                     }
                     case BUTTON_MINUS: {
@@ -81,7 +78,7 @@ static view_message_t process_page_event(model_t *model, void *arg, pman_event_t
                         msg.cmsg.code = VIEW_CONTROLLER_COMMAND_CODE_DIGOUT_TURNOFF;
                         lv_task_set_prio(page_data.task, LV_TASK_PRIO_OFF);
                         lv_task_reset(page_data.task);
-                        page_data.time=5;
+                        page_data.time = 5;
                         break;
                     }
                     case BUTTON_STOP: {
@@ -90,7 +87,7 @@ static view_message_t process_page_event(model_t *model, void *arg, pman_event_t
                         msg.cmsg.value  = 0;
                         lv_task_set_prio(page_data.task, LV_TASK_PRIO_OFF);
                         lv_task_reset(page_data.task);
-                        page_data.time=5;
+                        page_data.time = 5;
                         break;
                     }
                     case BUTTON_LINGUA: {
@@ -109,15 +106,15 @@ static view_message_t process_page_event(model_t *model, void *arg, pman_event_t
             msg.vmsg.code = VIEW_PAGE_COMMAND_CODE_UPDATE;
             break;
         }
-        
+
         case VIEW_EVENT_TIMER: {
             msg.vmsg.code = VIEW_PAGE_COMMAND_CODE_UPDATE;
             page_data.time--;
-            if (page_data.time==0) {
+            if (page_data.time == 0) {
                 msg.cmsg.code = VIEW_CONTROLLER_COMMAND_CODE_DIGOUT_TURNOFF;
                 lv_task_set_prio(page_data.task, LV_TASK_PRIO_OFF);
                 lv_task_reset(page_data.task);
-                page_data.time=5;
+                page_data.time = 5;
             }
             break;
         }
@@ -130,10 +127,9 @@ static view_message_t process_page_event(model_t *model, void *arg, pman_event_t
 static view_t update_page(model_t *model, void *arg) {
 
     lv_label_set_text_fmt(page_data.digout_out, "output: %i", page_data.digout_index);
-    lv_label_set_text_fmt(page_data.digout_status, "%s",
-                              model_get_output_status(model, page_data.digout_index-1));
+    lv_label_set_text_fmt(page_data.digout_status, "%s", model_get_output_status(model, page_data.digout_index - 1));
     lv_label_set_text_fmt(page_data.auto_off, "T.AUTO-OFF[%isec]", page_data.time);
-    
+
     return 0;
 }
 

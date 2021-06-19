@@ -13,6 +13,8 @@
     ((button_t[VIEW_PASSWORD_SIZE]){BUTTON_STOP, BUTTON_STOP, BUTTON_STOP, BUTTON_PLUS, BUTTON_PLUS})
 #define VIEW_PASSWORD_RIGHT                                                                                            \
     ((button_t[VIEW_PASSWORD_SIZE]){BUTTON_STOP, BUTTON_STOP, BUTTON_STOP, BUTTON_SKIP_RIGHT, BUTTON_SKIP_RIGHT})
+#define VIEW_PASSWORD_LEFT                                                                                             \
+    ((button_t[VIEW_PASSWORD_SIZE]){BUTTON_STOP, BUTTON_STOP, BUTTON_STOP, BUTTON_SKIP_LEFT, BUTTON_SKIP_LEFT})
 
 typedef struct {
     button_t      password[VIEW_PASSWORD_SIZE];
@@ -21,10 +23,11 @@ typedef struct {
 } view_common_password_t;
 
 
-lv_obj_t *view_common_title(lv_obj_t *root, char *str);
-void      view_common_password_add_key(view_common_password_t *inserted, button_t new, unsigned long timestamp);
-int       view_common_check_password(view_common_password_t *inserted, button_t password[static VIEW_PASSWORD_SIZE],
-                                     unsigned long timestamp);
-void      view_common_password_reset(view_common_password_t *password, unsigned long timestamp);
+lv_obj_t * view_common_title(lv_obj_t *root, char *str);
+void       view_common_password_add_key(view_common_password_t *inserted, button_t new, unsigned long timestamp);
+int        view_common_check_password(view_common_password_t *inserted, button_t password[static VIEW_PASSWORD_SIZE],
+                                      unsigned long timestamp);
+void       view_common_password_reset(view_common_password_t *password, unsigned long timestamp);
+lv_task_t *view_common_register_timer(unsigned long period);
 
 #endif

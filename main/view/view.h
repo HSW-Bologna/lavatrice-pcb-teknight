@@ -11,7 +11,8 @@
 view_t view_init(model_t *model, void (*flush_cb)(struct _disp_drv_t *, const lv_area_t *, lv_color_t *),
                  void (*rounder_cb)(struct _disp_drv_t *, lv_area_t *),
                  void (*set_px_cb)(struct _disp_drv_t *, uint8_t *, lv_coord_t, lv_coord_t, lv_coord_t, lv_color_t,
-                                   lv_opa_t));
+                                   lv_opa_t),
+                 void (*reset_input)(void));
 
 view_t view_change_page_extra(model_t *model, const pman_page_t *page, void *extra);
 view_t view_change_page(model_t *model, const pman_page_t *page);
@@ -22,6 +23,6 @@ void   view_event(view_event_t event);
 void   view_close_all(void *data);
 
 extern const pman_page_t page_main, page_temperature_test, page_digout_test, page_digin_test, page_pwm_test,
-    page_led_test, page_parmac, page_info;
+    page_led_test, page_parmac, page_info, page_scelta_programma;
 
 #endif

@@ -8,10 +8,10 @@
 
 static struct {
     lv_obj_t *label;
-    
 } page_data;
 
 static void *create_page(model_t *model, void *extra) {
+    (void)page_data;
     return NULL;
 }
 

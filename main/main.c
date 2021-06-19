@@ -12,7 +12,6 @@
 #include "i2c_ports/PIC/i2c_driver.h"
 #include "i2c_ports/PIC/i2c_bitbang.h"
 #include "i2c_common/i2c_common.h"
-#include "i2c_devices/eeprom/24LC16.h"
 #include "peripherals/timer.h"
 #include "gel/timer/timecheck.h"
 #include "model/model.h"
@@ -52,7 +51,7 @@ int main(void) {
     
     model_init(&model);
     controller_init(&model);
-    view_init(&model, nt7534_flush, nt7534_rounder, nt7534_set_px);
+    view_init(&model, nt7534_flush, nt7534_rounder, nt7534_set_px, keyboard_reset);
     digout_buzzer_bip(2, 100, 100);
     
     

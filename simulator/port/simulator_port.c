@@ -9,8 +9,6 @@ void pwm_set(uint8_t perc) {}
 
 void digout_buzzer_set_off(void) {}
 
-int digout_buzzer_is_set(void) {}
-
 uint8_t rele_get_status(void) {
     return 0;
 }
@@ -35,3 +33,5 @@ void uart_clean_rx_buffer() {}
 
 
 void nt7534_reconfigure() {}
+
+void pwoff_interrupt_enable(int i) {}

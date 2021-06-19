@@ -1,19 +1,34 @@
 #include <SDL2/SDL.h>
 #include "peripherals/keyboard.h"
 
-const uint8_t *keystates = NULL;
+const uint8_t *keystates     = NULL;
+static int     ignore_events = 0;
+
 
 static keypad_key_t keyboard[] = {
-    KEYPAD_KEY(0x01, BUTTON_SKIP_RIGHT), KEYPAD_KEY(0x02, BUTTON_PADLOCK),
-    KEYPAD_KEY(0x04, BUTTON_SKIP_LEFT),  KEYPAD_KEY(0x8, BUTTON_MINUS),
-    KEYPAD_KEY(0x10, BUTTON_PLAY),       KEYPAD_KEY(0x20, BUTTON_PLUS),
-    KEYPAD_KEY(0x40, BUTTON_LINGUA),      KEYPAD_KEY(0x80, BUTTON_MENU),
-    KEYPAD_KEY(0x100, BUTTON_STOP),      KEYPAD_NULL_KEY,
+    KEYPAD_KEY(0x01, BUTTON_SKIP_RIGHT),
+    KEYPAD_KEY(0x02, BUTTON_PADLOCK),
+    KEYPAD_KEY(0x04, BUTTON_SKIP_LEFT),
+    KEYPAD_KEY(0x8, BUTTON_MINUS),
+    KEYPAD_KEY(0x10, BUTTON_PLAY),
+    KEYPAD_KEY(0x20, BUTTON_PLUS),
+    KEYPAD_KEY(0x40, BUTTON_LINGUA),
+    KEYPAD_KEY(0x80, BUTTON_MENU),
+    KEYPAD_KEY(0x110, BUTTON_STOP_MENU),
+    KEYPAD_KEY(0x100, BUTTON_STOP),
+    KEYPAD_NULL_KEY,
 };
+
+
+void keyboard_reset(void) {
+    ignore_events = 1;
+}
+
 
 void keyboard_init(void) {
     keystates = SDL_GetKeyboardState(NULL);
 }
+
 
 static unsigned int keyboard_read(void) {
     static unsigned int input = 0;
@@ -66,5 +81,13 @@ static unsigned int keyboard_read(void) {
 
 keypad_update_t keyboard_manage(unsigned long ts) {
     unsigned int keymap = keyboard_read();
-    return keypad_routine(keyboard, 40, 1500, 100, ts, keymap);
+    if (ignore_events) {
+        if (keymap == 0) {
+            ignore_events = 0;
+            keypad_reset_keys(keyboard);
+        }
+        return (keypad_update_t){.event = KEY_NOTHING};
+    } else {
+        return keypad_routine(keyboard, 40, 1500, 100, ts, keymap);
+    }
 }

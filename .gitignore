@@ -1,3 +1,4 @@
+__pycache__
 *.dll
 .sconsign.dblite
 compile_commands.json
@@ -26,3 +27,4 @@ funclist
 nbproject/Makefile-*
 disassembly/
 *.map
+tmp

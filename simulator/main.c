@@ -26,7 +26,8 @@ int main(int argc, char *argv[]) {
     keyboard_init();
 
     model_init(&model);
-    view_init(&model, monitor_flush, NULL, NULL);
+    controller_init(&model);
+    view_init(&model, monitor_flush, NULL, NULL, keyboard_reset);
 
     for (;;) {
         controller_manage_gui(&model);

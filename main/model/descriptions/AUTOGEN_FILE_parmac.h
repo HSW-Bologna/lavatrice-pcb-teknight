@@ -1,0 +1,13 @@
+#ifndef AUTOGEN_FILE_PARMAC_H_INCLUDED
+#define AUTOGEN_FILE_PARMAC_H_INCLUDED
+
+typedef enum {
+    PARMAC_DESCRIPTIONS_LINGUA = 0,
+    PARMAC_DESCRIPTIONS_MODELLO,
+    PARMAC_DESCRIPTIONS_LIVELLO_ACCESSO,
+    PARMAC_DESCRIPTIONS_LOGO,
+} parmac_descriptions_t;
+
+extern const char *parmac_descriptions[4][2];
+
+#endif

@@ -2,8 +2,9 @@
 #include "gel/parameter/parameter.h"
 #include "model.h"
 #include "parmac.h"
+#include "descriptions/AUTOGEN_FILE_parmac.h"
 
-#define NUM_PARAMETERS 2
+#define NUM_PARAMETERS 4
 
 #define AL_USER 0x01
 #define AL_TECH 0x02
@@ -16,16 +17,18 @@ static parameter_handle_t parameters[NUM_PARAMETERS];
 
 
 void parmac_init(model_t *p, int reset) {
-#define FINT(desc) ((parameter_user_data_t){desc, formatta, NULL, NULL})
+#define FINT(i) ((parameter_user_data_t){parmac_descriptions[i], formatta, NULL, NULL})
 
     size_t i = 0;
     // clang-format off
-    parameters[i++] = PARAMETER_C99(PARAMETER_TYPE_UINT8, &p->pars.modello,              NULL, NULL, 0, 5, 0, 1, AL_USER,     FINT("Modello"),           NULL, NULL);
-    parameters[i++] = PARAMETER_C99(PARAMETER_TYPE_UINT8, &p->pars.livello_accesso,      NULL, NULL, 0, 2, 0, 1, AL_TECH,     FINT("Livello accesso"),   NULL, NULL);
+    parameters[i++] = PARAMETER_C99(PARAMETER_TYPE_UINT8, &p->pmac.lingua,               NULL, NULL, 0, 1, 0, 1, AL_USER,     FINT(PARMAC_DESCRIPTIONS_LINGUA),               NULL, NULL);
+    parameters[i++] = PARAMETER_C99(PARAMETER_TYPE_UINT8, &p->pmac.modello,              NULL, NULL, 0, 5, 0, 1, AL_USER,     FINT(PARMAC_DESCRIPTIONS_MODELLO),              NULL, NULL);
+    parameters[i++] = PARAMETER_C99(PARAMETER_TYPE_UINT8, &p->pmac.logo,                 NULL, NULL, 0, 5, 0, 1, AL_TECH,     FINT(PARMAC_DESCRIPTIONS_LOGO),                 NULL, NULL);
+    parameters[i++] = PARAMETER_C99(PARAMETER_TYPE_UINT8, &p->pmac.livello_accesso,      NULL, NULL, 0, 2, 0, 1, AL_TECH,     FINT(PARMAC_DESCRIPTIONS_LIVELLO_ACCESSO),      NULL, NULL);
     // clang-format on
 
     parameter_check_ranges(parameters, NUM_PARAMETERS);
-    if (reset) 
+    if (reset)
         parameter_reset_to_defaults(parameters, NUM_PARAMETERS);
 }
 
@@ -40,7 +43,7 @@ const char *parmac_get_description(const model_t *pmodel, size_t parameter) {
     parameter_user_data_t data =
         parameter_get_user_data(parameter_get_handle(parameters, NUM_PARAMETERS, parameter, AL_USER | AL_TECH));
 
-    return data.descrizione;
+    return data.descrizione[pmodel->pmac.lingua];
 }
 
 

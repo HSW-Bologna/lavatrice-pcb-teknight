@@ -39,11 +39,6 @@ static void open_page(model_t *model, void *data) {
     lv_obj_align(lbladc, lblptc, LV_ALIGN_OUT_BOTTOM_LEFT, 0, 4);
     page_data.temp_ptc_adc = lbladc;
 
-    /*
-        lv_obj_t *img = custom_lv_img_create(lv_scr_act(), NULL);
-        custom_lv_img_set_src(img, &legacy_img_insert_coin);
-        lv_obj_align(img, NULL, LV_ALIGN_CENTER, 0, 0);
-        */
 }
 
 

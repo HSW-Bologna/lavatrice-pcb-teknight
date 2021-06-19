@@ -1,6 +1,7 @@
 import os
 import multiprocessing
 from pathlib import Path
+import tools.meta.csv2carray as csv2carray
 
 #
 # FUNCTIONS
@@ -27,9 +28,27 @@ def PhonyTargets(
 MINGW = 'mingw' in COMMAND_LINE_TARGETS
 PROGRAM = "simulated.exe"
 MAIN = "main"
+ASSETS = "assets"
 COMPONENTS = "components"
-LVGL = "{}/lvgl".format(COMPONENTS)
+LVGL = f"{COMPONENTS}/lvgl"
 LIBLIGHTMODBUS = f"{COMPONENTS}/liblightmodbus"
+
+PARMAC_DESCRIPTIONS = f"{MAIN}/model/descriptions"
+STRING_TRANSLATIONS = f"{MAIN}/view/intl"
+
+TRANSLATIONS = [
+    {
+        "res": [f"{PARMAC_DESCRIPTIONS}/AUTOGEN_FILE_parmac.c", f"{PARMAC_DESCRIPTIONS}/AUTOGEN_FILE_parmac.h"],
+        "input": f"{ASSETS}/translations/parmac",
+        "output": PARMAC_DESCRIPTIONS,
+    },
+    {
+        "res": [f"{STRING_TRANSLATIONS}/AUTOGEN_FILE_strings.c", f"{STRING_TRANSLATIONS}/AUTOGEN_FILE_strings.h"],
+        "input": f"{ASSETS}/translations/strings",
+        "output": STRING_TRANSLATIONS
+    },
+]
+
 
 CFLAGS = [
     "-Wall",
@@ -49,7 +68,7 @@ SDLPATH = ARGUMENTS.get('sdl', None)
 LIBPATH = [os.path.join(SDLPATH, 'lib')] if SDLPATH else []
 
 CPPPATH = [
-    COMPONENTS, f"#{LVGL}/src", f"#{LVGL}", f"#{MAIN}",
+    f"#{COMPONENTS}", f"#{LVGL}/src", f"#{LVGL}", f"#{MAIN}",
     f"#{MAIN}/config", f"#{MAIN}/config/mbconf", f"#{MAIN}/simulator", f"#{COMPONENTS}/gel/generic_embedded_libs",
     f"{LIBLIGHTMODBUS}/include",
     "simulator",
@@ -81,9 +100,18 @@ def main():
     env = Environment(**env_options, tools=['mingw'] if MINGW else None)
     env.Tool('compilation_db')
 
+    translations = []
+    for translation in TRANSLATIONS:
+        def operation(t):
+            return lambda target, source, env: csv2carray.main(t["input"], t["output"])
+
+        env.Command(
+            translation["res"], Glob(f"{translation['input']}/*.csv"), operation(translation))
+        translations += translation["res"]
+
     gel_env = env
-    gel_selected = ['pagemanager', 'collections', "parameter",
-                    'data_structures', 'keypad', 'debounce']
+    gel_selected = ["pagemanager", "collections", "parameter",
+                    "data_structures", "keypad", "debounce", "crc"]
     (gel, include) = SConscript(
         f'{COMPONENTS}/generic_embedded_libs/SConscript', exports=['gel_env', 'gel_selected'])
     env['CPPPATH'] += [include]
@@ -106,12 +134,18 @@ def main():
     sources += [str(filename)
                 for filename in Path(f'{LVGL}/src').rglob('*.c')]
     sources += [Glob(f'{LVGL}/*.c')]
+    sources += [t for t in translations if t not in sources]
+    # remove duplicates
+    sources = list(dict.fromkeys([x for x in sources if x]))
 
     prog = env.Program(PROGRAM, sources + modbus_sources + i2c +
                        gel, LIBPATH=LIBPATH)
     PhonyTargets('run', os.path.join(".", PROGRAM), prog, env)
-    env.Alias('mingw', prog)
-    env.CompilationDatabase('compile_commands.json')
+    env.Alias("mingw", prog)
+    env.Alias("intl", translations)
+    compileDB = env.CompilationDatabase('compile_commands.json')
+    env.Default(prog)
+    env.Default(compileDB)
 
 
 main()

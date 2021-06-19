@@ -24,6 +24,7 @@ typedef struct _GSYMBOL /* One table entry */
 
 
 extern const GSYMBOL legacy_img_insert_coin;
+extern const GSYMBOL legacy_img_programs;
 
 
 #endif
