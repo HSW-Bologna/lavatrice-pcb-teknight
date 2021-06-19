@@ -6,13 +6,13 @@
         {
             "label": "Build (Windows)",
             "type": "shell",
-            "command": "scons mingw",
+            "command": "scons compile_commands.json mingw",
             "problemMatcher": []
         },
         {
             "label": "Run (Windows)",
             "type": "shell",
-            "command": "scons mingw run",
+            "command": "scons compile_commands.json mingw run",
             "problemMatcher": []
         },
         {

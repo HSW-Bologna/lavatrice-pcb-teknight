@@ -40,7 +40,6 @@ typedef int pid_output_type_t;
  * Wear leveling
  */
 
-#define WL_BLOCK_SIZE 4
 
 // funzione scrivi blocco
 // 1 no blocco

@@ -1,9 +1,11 @@
 #include <assert.h>
+#include "gel/timer/stopwatch.h"
 #include "model.h"
 #include "parmac.h"
 #include "gel/crc/crc16-ccitt.h"
 #include "gel/serializer/serializer.h"
 #include "lv_conf.h"
+#include "peripherals/timer.h"
 
 
 void model_init(model_t *pmodel) {
@@ -15,6 +17,9 @@ void model_init(model_t *pmodel) {
     pmodel->pwm2            = 0;
     pmodel->ptc_adc         = 0;
     pmodel->outputs         = 0;
+
+    pmodel->status.stato    = 0;
+    stopwatch_init(&pmodel->status.stopwatch);
 
     pmodel->lvgl_mem.frag_percentage = 0;
     pmodel->lvgl_mem.used_percentage = 0;
@@ -110,4 +115,16 @@ size_t model_get_lingua(model_t *pmodel) {
 
 void model_cambia_lingua(model_t *pmodel) {
     pmodel->lingua_temporanea = (pmodel->lingua_temporanea + 1) % 2;
+}
+
+stato_t model_get_stato(model_t *pmodel) {
+    return pmodel->status.stato;
+}
+
+void model_cambia_stato(model_t *pmodel, int res) {
+    pmodel->status.stato = res;
+}
+
+unsigned long model_get_stato_timer(model_t *pmodel) {
+    return stopwatch_get_remaining(&pmodel->status.stopwatch, get_millis());
 }

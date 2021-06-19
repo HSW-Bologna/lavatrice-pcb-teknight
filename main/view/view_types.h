@@ -3,6 +3,7 @@
 
 #include <stdint.h>
 #include "gel/keypad/keypad.h"
+#include "view/view_types.h"
 
 #define VIEW_EMPTY_MSG                                                                                                 \
     ((view_message_t){.vmsg = {.code = VIEW_PAGE_COMMAND_CODE_NOTHING},                                                \
@@ -37,7 +38,9 @@ typedef enum {
     VIEW_CONTROLLER_COMMAND_CODE_UPDATE_PWM,
     VIEW_CONTROLLER_COMMAND_CODE_UPDATE_DIGOUT,
     VIEW_CONTROLLER_COMMAND_CODE_DIGOUT_TURNOFF,
-    VIEW_CONTROLLER_COMMAND_CODE_PARAMETERS_SAVE
+    VIEW_CONTROLLER_COMMAND_CODE_PARAMETERS_SAVE,
+    VIEW_CONTROLLER_COMMAND_CODE_STATO_START,
+    VIEW_CONTROLLER_COMMAND_CODE_STATO_STOP
 } view_controller_command_code_t;
 
 
@@ -60,7 +63,7 @@ typedef struct {
 typedef uint8_t view_t;
 
 
-typedef enum { VIEW_EVENT_KEYPAD, VIEW_EVENT_MODEL_UPDATE, VIEW_EVENT_TIMER} view_event_code_t;
+typedef enum { VIEW_EVENT_KEYPAD, VIEW_EVENT_MODEL_UPDATE, VIEW_EVENT_TIMER, VIEW_EVENT_STATO_UPDATE } view_event_code_t;
 
 
 typedef struct {

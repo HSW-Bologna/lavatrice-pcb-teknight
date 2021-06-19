@@ -110,8 +110,8 @@ def main():
         translations += translation["res"]
 
     gel_env = env
-    gel_selected = ["pagemanager", "collections", "parameter",
-                    "data_structures", "keypad", "debounce", "crc"]
+    gel_selected = ["pagemanager", "collections", "parameter", "timer",
+                    "data_structures", "keypad", "debounce", "crc", "wearleveling"]
     (gel, include) = SConscript(
         f'{COMPONENTS}/generic_embedded_libs/SConscript', exports=['gel_env', 'gel_selected'])
     env['CPPPATH'] += [include]
@@ -134,7 +134,7 @@ def main():
     sources += [str(filename)
                 for filename in Path(f'{LVGL}/src').rglob('*.c')]
     sources += [Glob(f'{LVGL}/*.c')]
-    sources += [t for t in translations if t not in sources]
+    #sources += [t for t in translations if t not in sources]
     # remove duplicates
     sources = list(dict.fromkeys([x for x in sources if x]))
 

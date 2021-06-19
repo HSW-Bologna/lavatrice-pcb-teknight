@@ -23,6 +23,7 @@
 #include "uart_driver.h"
 #include "controller/modbus_server.h"
 #include "controller/controller.h"
+#include "controller/stato.h"
 
 static model_t model;
 
@@ -58,6 +59,7 @@ int main(void) {
     for(;;) {
         controller_manage_gui(&model);
         modbus_server_manage();
+        controller_manage_stato(&model);
         
         if (is_expired(ts_input, get_millis(), 2)) {
             if (digin_take_reading()) {

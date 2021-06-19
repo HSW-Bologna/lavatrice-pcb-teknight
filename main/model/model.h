@@ -4,6 +4,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include "lvgl/lvgl.h"
+#include "gel/timer/stopwatch.h"
 
 #define PARS_SERIALIZED_SIZE  6
 #define PWOFF_SERIALIZED_SIZE 4
@@ -17,6 +18,11 @@ typedef enum {
     PROGRAM_LANA,
     NUM_PROGRAMS,
 } program_t;
+
+typedef enum {
+    STATO_OFF = 0,
+    STATO_ON,
+} stato_t;
 
 
 typedef struct {
@@ -52,6 +58,11 @@ typedef struct {
     } pmac;
 
     struct {
+        stato_t stato;
+        stopwatch_t stopwatch;
+    } status;
+
+    struct {
         uint8_t tipo_asciugatura;
     } pciclo;
 
@@ -74,5 +85,8 @@ size_t model_pwoff_deserialize(model_t *pmodel, uint8_t *buff);
 void   model_mem_data(model_t *pmodel, lv_mem_monitor_t *mem);
 size_t model_get_lingua(model_t *pmodel);
 void model_cambia_lingua(model_t *pmodel);
+stato_t model_get_stato(model_t *pmodel);
+void model_cambia_stato(model_t *pmodel, int res);
+unsigned long model_get_stato_timer(model_t *pmodel);
 
 #endif
