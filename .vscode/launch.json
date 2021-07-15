@@ -8,6 +8,7 @@
             "name": "(gdb) Launch",
             "type": "cppdbg",
             "request": "launch",
+            "preLaunchTask": "Build",
             "program": "${workspaceFolder}/simulated.exe",
             "args": [],
             "stopAtEntry": false,

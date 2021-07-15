@@ -31,6 +31,10 @@ static int read_block(size_t block_num, uint8_t *buffer, size_t len);
 static int write_block(size_t block_num, uint8_t marker, uint8_t *buffer, size_t len);
 static int controller_start_check(void);
 
+
+#define WEARLEVELING 1
+
+
 void controller_process_msg(view_controller_command_t *msg, model_t *pmodel) {
     switch (msg->code) {
         case VIEW_CONTROLLER_COMMAND_CODE_UPDATE_PWM: {
@@ -86,6 +90,7 @@ void controller_process_msg(view_controller_command_t *msg, model_t *pmodel) {
     }
 }
 
+
 void controller_init(model_t *pmodel) {
     wearleveling_init(&memory, read_block, write_block, read_marker, WL_BLOCK_NUM);
     
@@ -103,18 +108,25 @@ void controller_init(model_t *pmodel) {
         parmac_init(pmodel, 0);
 
         uint8_t pwoff_data[PWOFF_SERIALIZED_SIZE] = {0};
+#ifdef WEARLEVELING
+        wearleveling_read(&memory, pwoff_data, PWOFF_SERIALIZED_SIZE);
+#else
         EE24CL16_SEQUENTIAL_READ(eeprom_driver, PWOFF_DATA_ADDRESS, pwoff_data, PWOFF_SERIALIZED_SIZE);
-        //wearleveling_read(&memory, pwoff_data, PWOFF_SERIALIZED_SIZE);
+#endif
         model_pwoff_deserialize(pmodel, pwoff_data);
         controller_update_pwoff(pmodel);
     }
+    
+    pwoff_set_callback(controller_save_pwoff);
 }
+
 
 void controller_save_pars(model_t *pmodel) {
     uint8_t data[PARS_SERIALIZED_SIZE] = {0};
     size_t  i                          = model_pars_serialize(pmodel, data);
     EE24LC16_SEQUENTIAL_WRITE(eeprom_driver, PAR_START_ADDRESS, data, i);
 }
+
 
 size_t controller_update_pwoff(model_t *pmodel) {
     pwoff_interrupt_enable(0);
@@ -123,10 +135,15 @@ size_t controller_update_pwoff(model_t *pmodel) {
     return i;
 }
 
+
 void controller_save_pwoff(void) {
+    #ifdef WEARLEVELING
+    wearleveling_write(&memory, pwoff_data, PWOFF_SERIALIZED_SIZE);
+#else
     EE24LC16_SEQUENTIAL_WRITE(eeprom_driver, PWOFF_DATA_ADDRESS, pwoff_data, PWOFF_SERIALIZED_SIZE);
-    //wearleveling_write(&memory, pwoff_data, PWOFF_SERIALIZED_SIZE);
+#endif
 }
+
 
 static int read_marker(size_t block_num, uint8_t *marker) {
     if (block_num > (WL_BLOCK_NUM-1)) {
@@ -146,20 +163,24 @@ static int read_block(size_t block_num, uint8_t *buffer, size_t len) {
 }
 
 static int write_block(size_t block_num, uint8_t marker, uint8_t *buffer, size_t len) {
-    uint8_t intermediate_buffer[len + 1];
     
      if (block_num > (WL_BLOCK_NUM-1)) {
         return 1;
     }
-    
-//    intermediate_buffer[0] = marker;
-//    memcpy(&intermediate_buffer[1], buffer, len);
-//    EE24LC16_SEQUENTIAL_WRITE(eeprom_driver, WL_MARKER_ADDRESS(block_num), intermediate_buffer, len+1);
 
+#ifdef WEARLEVELING
+    uint8_t intermediate_buffer[len + 1];
+
+    intermediate_buffer[0] = marker;
+    memcpy(&intermediate_buffer[1], buffer, len);
+    EE24LC16_SEQUENTIAL_WRITE(eeprom_driver, WL_MARKER_ADDRESS(block_num), intermediate_buffer, len+1);
+#else
     EE24LC16_SEQUENTIAL_WRITE(eeprom_driver, WL_MARKER_ADDRESS(block_num), &marker, 1);
     EE24LC16_SEQUENTIAL_WRITE(eeprom_driver, WL_DATA_ADDRESS(block_num), buffer, len);
+#endif
     return 0;   
 }
+
 
 static int controller_start_check(void) {
     uint8_t buff = 0;

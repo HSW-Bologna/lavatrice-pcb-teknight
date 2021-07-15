@@ -6,9 +6,13 @@
  */
 
 
-#include "xc.h"
+#include <xc.h>
+#include <string.h>
 #include "hardwareprofile.h"
 #include "pwoff.h"
+
+
+static void (*pwoff_callback)(void) = NULL;
 
 
 void pwoff_init(void) {
@@ -26,13 +30,25 @@ void pwoff_init(void) {
     IEC1bits.IOCIE   = 1; /* Interrupt enable bit globale */
 }
 
+
+
+void pwoff_set_callback(void (*cb)(void)) {
+    pwoff_interrupt_enable(0);
+    pwoff_callback = cb;
+    pwoff_interrupt_enable(1);    
+}
+
+
 void pwoff_interrupt_enable(int i) {
     IEC1bits.IOCIE   = i; 
 }
 
+
 void __attribute__((interrupt, no_auto_psv)) _IOCInterrupt() {
-    controller_save_pwoff();
-    __delay_ms(2000);
+    if (pwoff_callback != NULL) {
+        pwoff_callback();
+        __delay_ms(2000);
+    }
     IFS1bits.IOCIF = 0;
 }
 

@@ -4,21 +4,21 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "Build (Windows)",
+            "label": "Build",
             "type": "shell",
-            "command": "scons compile_commands.json mingw",
+            "command": "scons",
             "problemMatcher": []
         },
         {
-            "label": "Run (Windows)",
+            "label": "Run",
             "type": "shell",
-            "command": "scons compile_commands.json mingw run",
+            "command": "scons run",
             "problemMatcher": []
         },
         {
             "label": "Clean (Windows)",
             "type": "shell",
-            "command": "scons mingw -c",
+            "command": "scons -c",
             "problemMatcher": []
         }
     ]

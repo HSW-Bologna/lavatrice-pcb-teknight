@@ -18,7 +18,7 @@ void model_init(model_t *pmodel) {
     pmodel->ptc_adc         = 0;
     pmodel->outputs         = 0;
 
-    pmodel->status.stato    = 0;
+    pmodel->status.stato = 0;
     stopwatch_init(&pmodel->status.stopwatch);
 
     pmodel->lvgl_mem.frag_percentage = 0;
@@ -126,5 +126,5 @@ void model_cambia_stato(model_t *pmodel, int res) {
 }
 
 unsigned long model_get_stato_timer(model_t *pmodel) {
-    return stopwatch_get_remaining(&pmodel->status.stopwatch, get_millis());
+    return stopwatch_get_remaining(&pmodel->status.stopwatch, get_millis()) / 1000UL;
 }

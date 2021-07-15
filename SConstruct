@@ -2,6 +2,7 @@ import os
 import multiprocessing
 from pathlib import Path
 import tools.meta.csv2carray as csv2carray
+import platform
 
 #
 # FUNCTIONS
@@ -25,7 +26,7 @@ def PhonyTargets(
 # BUILD CONFIGURATION
 #
 
-MINGW = 'mingw' in COMMAND_LINE_TARGETS
+MINGW = platform.system() == "Windows"
 PROGRAM = "simulated.exe"
 MAIN = "main"
 ASSETS = "assets"
@@ -141,11 +142,13 @@ def main():
     prog = env.Program(PROGRAM, sources + modbus_sources + i2c +
                        gel, LIBPATH=LIBPATH)
     PhonyTargets('run', os.path.join(".", PROGRAM), prog, env)
-    env.Alias("mingw", prog)
     env.Alias("intl", translations)
     compileDB = env.CompilationDatabase('compile_commands.json')
+
+    env.NoClean(translations)
+    env.Depends(prog, "intl")
+    env.Depends(prog, compileDB)
     env.Default(prog)
-    env.Default(compileDB)
 
 
 main()

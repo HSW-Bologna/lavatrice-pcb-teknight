@@ -35,3 +35,5 @@ void uart_clean_rx_buffer() {}
 void nt7534_reconfigure() {}
 
 void pwoff_interrupt_enable(int i) {}
+
+void pwoff_set_callback(void (*cb)()) {}

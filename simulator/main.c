@@ -9,6 +9,7 @@
 #include "view/view.h"
 #include "controller/gui.h"
 #include "controller/controller.h"
+#include "controller/stato.h"
 #include "simulator_utils.h"
 #include "gel/keypad/keypad.h"
 #include "gel/timer/timecheck.h"
@@ -31,6 +32,7 @@ int main(int argc, char *argv[]) {
 
     for (;;) {
         controller_manage_gui(&model);
+        controller_manage_stato(&model);
 
         if (is_expired(tskp, get_millis(), 5)) {
             keypad_update_t update = keyboard_manage(get_millis());
