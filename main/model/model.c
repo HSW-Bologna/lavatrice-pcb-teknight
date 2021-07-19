@@ -26,7 +26,6 @@ void model_init(model_t *pmodel) {
     pmodel->lvgl_mem.low_watermark   = LV_MEM_SIZE;
 }
 
-
 // int model_get_input(model_t *pmodel, int input) {
 //    return ((pmodel->inputs >> input - 1) & 1);
 //}
@@ -46,14 +45,77 @@ size_t model_pars_serialize(model_t *pmodel, uint8_t buff[static PARS_SERIALIZED
     size_t i = 2, j = 0;
 
     for (j = 0; j < NUM_CICLI; j++) {
-        i += serialize_uint8(&buff[i], pmodel->pciclo[j].tipo_asciugatura);
+        i += serialize_uint8(&buff[i], pmodel->pciclo[j].tipo_asciugatura_m_a);
         i += serialize_uint8(&buff[i], pmodel->pciclo[j].tempo_durata_asciugatura);
+        i += serialize_uint8(&buff[i], pmodel->pciclo[j].abilita_attesa_temperatura);
+        i += serialize_uint8(&buff[i], pmodel->pciclo[j].abilita_inversione_asciugatura);
+        i += serialize_uint8(&buff[i], pmodel->pciclo[j].tempo_giro_asciugatura);
+        i += serialize_uint8(&buff[i], pmodel->pciclo[j].tempo_pausa_asciugatura);
+        i += serialize_uint8(&buff[i], pmodel->pciclo[j].velocita_asciugatura);
+        i += serialize_uint8(&buff[i], pmodel->pciclo[j].temperatura_aria_1);
+        i += serialize_uint8(&buff[i], pmodel->pciclo[j].abilita_raffreddamento);
+        i += serialize_uint8(&buff[i], pmodel->pciclo[j].tipo_raffreddamento_m_a);
+        i += serialize_uint8(&buff[i], pmodel->pciclo[j].tempo_durata_raffreddamento);
+        i += serialize_uint8(&buff[i], pmodel->pciclo[j].abilita_inversione_raffreddamento);
+        i += serialize_uint8(&buff[i], pmodel->pciclo[j].tempo_giro_raffreddamento);
+        i += serialize_uint8(&buff[i], pmodel->pciclo[j].tempo_pausa_raffreddamento);   
     }
 
-    i += serialize_uint8(&buff[i], pmodel->pmac.modello);
+    i += serialize_uint8(&buff[i], pmodel->pmac.tempo_azzeramento_ciclo_stop);
+    i += serialize_uint8(&buff[i], pmodel->pmac.abilita_visualizzazione_temperatura);
+    i += serialize_uint8(&buff[i], pmodel->pmac.tipo_pausa_asciugatura);
+    i += serialize_uint8(&buff[i], pmodel->pmac.tempo_gettone_1);
+    i += serialize_uint8(&buff[i], pmodel->pmac.abilita_gettoniera);
+    i += serialize_uint8(&buff[i], pmodel->pmac.abilita_stop_tempo_ciclo);
+    i += serialize_uint8(&buff[i], pmodel->pmac.tempo_uscita_pagine);
+    i += serialize_uint8(&buff[i], pmodel->pmac.tipo_visualizzazione_gettone_moneta_cassa);
+    i += serialize_uint8(&buff[i], pmodel->pmac.temperatura_max_1_in);
+    i += serialize_uint8(&buff[i], pmodel->pmac.temperatura_sicurezza_1);
+    i += serialize_uint8(&buff[i], pmodel->pmac.tempo_allarme_temperatura_1);
     i += serialize_uint8(&buff[i], pmodel->pmac.lingua);
-    i += serialize_uint8(&buff[i], pmodel->pmac.logo);
-    i += serialize_uint8(&buff[i], pmodel->pmac.livello_accesso);
+    i += serialize_uint8(&buff[i], pmodel->pmac.stringa_ditta_visualizzata);
+    i += serialize_uint8(&buff[i], pmodel->pmac.abilita_tasto_menu);
+    i += serialize_uint8(&buff[i], pmodel->pmac.lingua_max);
+    i += serialize_uint8(&buff[i], pmodel->pmac.abilita_gas);
+    i += serialize_uint8(&buff[i], pmodel->pmac.numero_gettoni_consenso);
+    i += serialize_uint8(&buff[i], pmodel->pmac.allarme_inverter_off_on);
+    i += serialize_uint8(&buff[i], pmodel->pmac.allarme_filtro_off_on);
+    i += serialize_uint8(&buff[i], pmodel->pmac.velocita_min_lavoro);
+    i += serialize_uint8(&buff[i], pmodel->pmac.velocita_max_lavoro);
+    i += serialize_uint8(&buff[i], pmodel->pmac.abilita_visualizzazione_cicli_totali);
+    i += serialize_uint8(&buff[i], pmodel->pmac.numero_cicli_manutenzione);
+    i += serialize_uint8(&buff[i], pmodel->pmac.tempo_cadenza_avviso_manutenzione);
+    i += serialize_uint8(&buff[i], pmodel->pmac.tempo_durata_avviso_manutenzione);
+    i += serialize_uint8(&buff[i], pmodel->pmac.numero_tentativi_reset_gas);
+    i += serialize_uint8(&buff[i], pmodel->pmac.tempo_attesa_azzeramento_ciclo);
+    i += serialize_uint8(&buff[i], pmodel->pmac.tempo_reset_lingua);
+    i += serialize_uint8(&buff[i], pmodel->pmac.percentuale_velocita_min_ventola);
+    i += serialize_uint8(&buff[i], pmodel->pmac.percentuale_anticipo_temperatura_ventola);
+    i += serialize_uint8(&buff[i], pmodel->pmac.abilita_parametri_ridotti);
+    i += serialize_uint8(&buff[i], pmodel->pmac.abilita_autoavvio);
+    i += serialize_uint8(&buff[i], pmodel->pmac.tempo_attesa_partenza_ciclo);
+    i += serialize_uint8(&buff[i], pmodel->pmac.abilita_antipiega);
+    i += serialize_uint8(&buff[i], pmodel->pmac.tempo_ritardo_antipiega);
+    i += serialize_uint8(&buff[i], pmodel->pmac.tempo_max_antipiega);
+    i += serialize_uint8(&buff[i], pmodel->pmac.tempo_cadenza_antipiega);
+    i += serialize_uint8(&buff[i], pmodel->pmac.numero_cicli_max_antipiega);
+    i += serialize_uint8(&buff[i], pmodel->pmac.tempo_giro_antipiega);
+    i += serialize_uint8(&buff[i], pmodel->pmac.tempo_pausa_antipiega);
+    i += serialize_uint8(&buff[i], pmodel->pmac.velocita_antipiega);
+    i += serialize_uint8(&buff[i], pmodel->pmac.tempo_gettone_min_sec);
+    i += serialize_uint8(&buff[i], pmodel->pmac.tempo_allarme_flusso_aria);
+    i += serialize_uint8(&buff[i], pmodel->pmac.modello_macchina);
+    i += serialize_uint8(&buff[i], pmodel->pmac.sonda_temperatura_in_out);
+    i += serialize_uint8(&buff[i], pmodel->pmac.tempo_azzeramento_ciclo_pausa);
+    i += serialize_uint8(&buff[i], pmodel->pmac.temperatura_max_1_out);
+    i += serialize_uint8(&buff[i], pmodel->pmac.temperatura_sicurezza_1_out);
+    i += serialize_uint8(&buff[i], pmodel->pmac.tempo_antigelo);
+    i += serialize_uint8(&buff[i], pmodel->pmac.abilita_blocco_no_aria);
+    i += serialize_uint8(&buff[i], pmodel->pmac.tipo_out_macchina_occupata);
+    i += serialize_uint8(&buff[i], pmodel->pmac.abilita_reset_gas_esteso);
+    i += serialize_uint8(&buff[i], pmodel->pmac.temperatura_raffreddo_allarme);
+    i += serialize_uint8(&buff[i], pmodel->pmac.macchina_libera_off_on);
+    //i += serialize_uint8(&buff[i], pmodel->pmac.temperatura_stop_tempo_ciclo);
     unsigned short crc = crc16_ccitt(&buff[2], i - 2, 0);
     serialize_uint16_be(&buff[0], crc);
     assert(i == PARS_SERIALIZED_SIZE);
@@ -68,14 +130,76 @@ size_t model_pars_deserialize(model_t *pmodel, uint8_t *buff) {
         return -1;
     } else {
         for (j = 0; j < NUM_CICLI; j++) {
-            i += deserialize_uint8(&pmodel->pciclo[j].tipo_asciugatura, &buff[i]);
+            i += deserialize_uint8(&pmodel->pciclo[j].tipo_asciugatura_m_a, &buff[i]);
             i += deserialize_uint8(&pmodel->pciclo[j].tempo_durata_asciugatura, &buff[i]);
+            i += deserialize_uint8(&pmodel->pciclo[j].abilita_attesa_temperatura, &buff[i]);
+            i += deserialize_uint8(&pmodel->pciclo[j].abilita_inversione_asciugatura, &buff[i]);
+            i += deserialize_uint8(&pmodel->pciclo[j].tempo_giro_asciugatura, &buff[i]);
+            i += deserialize_uint8(&pmodel->pciclo[j].tempo_pausa_asciugatura, &buff[i]);
+            i += deserialize_uint8(&pmodel->pciclo[j].velocita_asciugatura, &buff[i]);
+            i += deserialize_uint8(&pmodel->pciclo[j].temperatura_aria_1, &buff[i]);
+            i += deserialize_uint8(&pmodel->pciclo[j].abilita_raffreddamento, &buff[i]);
+            i += deserialize_uint8(&pmodel->pciclo[j].tipo_raffreddamento_m_a, &buff[i]);
+            i += deserialize_uint8(&pmodel->pciclo[j].tempo_durata_raffreddamento, &buff[i]);
+            i += deserialize_uint8(&pmodel->pciclo[j].abilita_inversione_raffreddamento, &buff[i]);
+            i += deserialize_uint8(&pmodel->pciclo[j].tempo_giro_raffreddamento, &buff[i]);
+            i += deserialize_uint8(&pmodel->pciclo[j].tempo_pausa_raffreddamento, &buff[i]);
         }
 
-        i += deserialize_uint8(&pmodel->pmac.modello, &buff[i]);
+        i += deserialize_uint8(&pmodel->pmac.tempo_azzeramento_ciclo_stop, &buff[i]);
+        i += deserialize_uint8(&pmodel->pmac.abilita_visualizzazione_temperatura, &buff[i]);
+        i += deserialize_uint8(&pmodel->pmac.tipo_pausa_asciugatura, &buff[i]);
+        i += deserialize_uint8(&pmodel->pmac.tempo_gettone_1, &buff[i]);
+        i += deserialize_uint8(&pmodel->pmac.abilita_gettoniera, &buff[i]);
+        i += deserialize_uint8(&pmodel->pmac.abilita_stop_tempo_ciclo, &buff[i]);
+        i += deserialize_uint8(&pmodel->pmac.tempo_uscita_pagine, &buff[i]);
+        i += deserialize_uint8(&pmodel->pmac.tipo_visualizzazione_gettone_moneta_cassa, &buff[i]);
+        i += deserialize_uint8(&pmodel->pmac.temperatura_max_1_in, &buff[i]);
+        i += deserialize_uint8(&pmodel->pmac.temperatura_sicurezza_1, &buff[i]);
+        i += deserialize_uint8(&pmodel->pmac.tempo_allarme_temperatura_1, &buff[i]);
         i += deserialize_uint8(&pmodel->pmac.lingua, &buff[i]);
-        i += deserialize_uint8(&pmodel->pmac.logo, &buff[i]);
-        i += deserialize_uint8(&pmodel->pmac.livello_accesso, &buff[i]);
+        i += deserialize_uint8(&pmodel->pmac.stringa_ditta_visualizzata, &buff[i]);
+        i += deserialize_uint8(&pmodel->pmac.abilita_tasto_menu, &buff[i]);
+        i += deserialize_uint8(&pmodel->pmac.lingua_max, &buff[i]);
+        i += deserialize_uint8(&pmodel->pmac.abilita_gas, &buff[i]);
+        i += deserialize_uint8(&pmodel->pmac.numero_gettoni_consenso, &buff[i]);
+        i += deserialize_uint8(&pmodel->pmac.allarme_inverter_off_on, &buff[i]);
+        i += deserialize_uint8(&pmodel->pmac.allarme_filtro_off_on, &buff[i]);
+        i += deserialize_uint8(&pmodel->pmac.velocita_min_lavoro, &buff[i]);
+        i += deserialize_uint8(&pmodel->pmac.velocita_max_lavoro, &buff[i]);
+        i += deserialize_uint8(&pmodel->pmac.abilita_visualizzazione_cicli_totali, &buff[i]);
+        i += deserialize_uint8(&pmodel->pmac.numero_cicli_manutenzione, &buff[i]);
+        i += deserialize_uint8(&pmodel->pmac.tempo_cadenza_avviso_manutenzione, &buff[i]);
+        i += deserialize_uint8(&pmodel->pmac.tempo_durata_avviso_manutenzione, &buff[i]);
+        i += deserialize_uint8(&pmodel->pmac.numero_tentativi_reset_gas, &buff[i]);
+        i += deserialize_uint8(&pmodel->pmac.tempo_attesa_azzeramento_ciclo, &buff[i]);
+        i += deserialize_uint8(&pmodel->pmac.tempo_reset_lingua, &buff[i]);
+        i += deserialize_uint8(&pmodel->pmac.percentuale_velocita_min_ventola, &buff[i]);
+        i += deserialize_uint8(&pmodel->pmac.percentuale_anticipo_temperatura_ventola, &buff[i]);
+        i += deserialize_uint8(&pmodel->pmac.abilita_parametri_ridotti, &buff[i]);
+        i += deserialize_uint8(&pmodel->pmac.abilita_autoavvio, &buff[i]);
+        i += deserialize_uint8(&pmodel->pmac.tempo_attesa_partenza_ciclo, &buff[i]);
+        i += deserialize_uint8(&pmodel->pmac.abilita_antipiega, &buff[i]);
+        i += deserialize_uint8(&pmodel->pmac.tempo_max_antipiega, &buff[i]);
+        i += deserialize_uint8(&pmodel->pmac.tempo_cadenza_antipiega, &buff[i]);
+        i += deserialize_uint8(&pmodel->pmac.numero_cicli_max_antipiega, &buff[i]);
+        i += deserialize_uint8(&pmodel->pmac.tempo_giro_antipiega, &buff[i]);
+        i += deserialize_uint8(&pmodel->pmac.tempo_pausa_antipiega, &buff[i]);
+        i += deserialize_uint8(&pmodel->pmac.velocita_antipiega, &buff[i]);
+        i += deserialize_uint8(&pmodel->pmac.tempo_gettone_min_sec, &buff[i]);
+        i += deserialize_uint8(&pmodel->pmac.tempo_allarme_flusso_aria, &buff[i]);
+        i += deserialize_uint8(&pmodel->pmac.modello_macchina, &buff[i]);
+        i += deserialize_uint8(&pmodel->pmac.sonda_temperatura_in_out, &buff[i]);
+        i += deserialize_uint8(&pmodel->pmac.tempo_azzeramento_ciclo_pausa, &buff[i]);
+        i += deserialize_uint8(&pmodel->pmac.temperatura_max_1_out, &buff[i]);
+        i += deserialize_uint8(&pmodel->pmac.temperatura_sicurezza_1_out, &buff[i]);
+        i += deserialize_uint8(&pmodel->pmac.tempo_antigelo, &buff[i]);
+        i += deserialize_uint8(&pmodel->pmac.abilita_blocco_no_aria, &buff[i]);
+        i += deserialize_uint8(&pmodel->pmac.tipo_out_macchina_occupata, &buff[i]);
+        i += deserialize_uint8(&pmodel->pmac.abilita_reset_gas_esteso, &buff[i]);
+        i += deserialize_uint8(&pmodel->pmac.temperatura_raffreddo_allarme, &buff[i]);
+        i += deserialize_uint8(&pmodel->pmac.macchina_libera_off_on, &buff[i]);
+        // i += deserialize_uint8(&pmodel->pmac.temperatura_stop_tempo_ciclo, &buff[i]);
 
         pmodel->lingua_temporanea = pmodel->pmac.lingua;
     }

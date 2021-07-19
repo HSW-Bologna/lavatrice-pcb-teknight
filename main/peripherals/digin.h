@@ -5,6 +5,14 @@ typedef enum {
     DIGIN_IN1=0, DIGIN_IN2, DIGIN_IN3, DIGIN_IN4, DIGIN_IN5, DIGIN_IN6, DIGIN_IN7
 } digin_t ;
 
+#define OBLO_APERTO DIGIN_IN1
+#define EMERGENZA_STOP DIGIN_IN2
+#define FLUSSO_ARIA DIGIN_IN3
+#define ALLARME_INVERTER DIGIN_IN4
+#define GETTONE1 DIGIN_IN5
+#define FILTRO_APERTO DIGIN_IN6
+#define BLOCCO_BRUCIATORE DIGIN_IN7
+
 void digin_init(void);
 int digin_get(digin_t digin);
 int digin_take_reading(void);

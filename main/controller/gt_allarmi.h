@@ -1,0 +1,4 @@
+#ifndef GT_ALLARMI_H_INCLUDED
+#define	GT_ALLARMI_H_INCLUDED
+
+#endif

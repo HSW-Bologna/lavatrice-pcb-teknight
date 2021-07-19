@@ -102,6 +102,7 @@ static view_message_t process_page_event(model_t *model, void *arg, pman_event_t
                         break;
                 }
             }
+            default:
             break;
         }
 

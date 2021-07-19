@@ -59,7 +59,8 @@ int main(void) {
     for(;;) {
         controller_manage_gui(&model);
         modbus_server_manage();
-        controller_manage_stato(&model);
+        //controller_manage_stato(&model);
+        ClrWdt();
         
         if (is_expired(ts_input, get_millis(), 2)) {
             if (digin_take_reading()) {

@@ -35,7 +35,7 @@ static void open_page(model_t *model, void *data) {
     };
     view_common_title(lv_scr_act(), view_intl_get_string(model, cicli[page_data.ciclo]));
 
-    page_data.num_parameters = parciclo_get_tot_parameters(page_data.ciclo);
+    page_data.num_parameters = parciclo_get_tot_parameters(page_data.ciclo, model);
     page_data.parameter      = 0;
 
     lv_obj_t *lnum = lv_label_create(lv_scr_act(), NULL);
@@ -75,13 +75,13 @@ static view_message_t process_page_event(model_t *model, void *arg, pman_event_t
                         break;
 
                     case BUTTON_MINUS:
-                        parciclo_operation(page_data.parameter, page_data.ciclo, -1);
+                        parciclo_operation(page_data.parameter, page_data.ciclo, -1, model);
                         msg.vmsg.code         = VIEW_PAGE_COMMAND_CODE_UPDATE;
                         page_data.par_to_save = 1;
                         break;
 
                     case BUTTON_PLUS:
-                        parciclo_operation(page_data.parameter, page_data.ciclo, +1);
+                        parciclo_operation(page_data.parameter, page_data.ciclo, +1, model);
                         msg.vmsg.code         = VIEW_PAGE_COMMAND_CODE_UPDATE;
                         page_data.par_to_save = 1;
                         break;
@@ -113,7 +113,7 @@ static view_t update_page(model_t *pmodel, void *arg) {
 
     lv_label_set_text_fmt(page_data.lnum, "Param. %2i/%i", page_data.parameter + 1, page_data.num_parameters);
     lv_label_set_text(page_data.ldesc, parciclo_get_description(pmodel, page_data.ciclo, page_data.parameter));
-    parciclo_format_value(string, page_data.ciclo, page_data.parameter);
+    parciclo_format_value(string, page_data.ciclo, page_data.parameter, pmodel);
     lv_label_set_text(page_data.lval, string);
     return 0;
 }
