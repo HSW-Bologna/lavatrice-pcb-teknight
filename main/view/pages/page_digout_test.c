@@ -97,6 +97,9 @@ static view_message_t process_page_event(model_t *model, void *arg, pman_event_t
                         lv_task_set_prio(page_data.task, LV_TASK_PRIO_MID);
                         break;
                     }
+                    
+                    default:
+                        break;
                 }
             }
             break;

@@ -43,7 +43,13 @@ char *model_get_output_status(model_t *pmodel, int output) {
 }
 
 size_t model_pars_serialize(model_t *pmodel, uint8_t buff[static PARS_SERIALIZED_SIZE]) {
-    size_t i = 2;
+    size_t i = 2, j = 0;
+
+    for (j = 0; j < NUM_CICLI; j++) {
+        i += serialize_uint8(&buff[i], pmodel->pciclo[j].tipo_asciugatura);
+        i += serialize_uint8(&buff[i], pmodel->pciclo[j].tempo_durata_asciugatura);
+    }
+
     i += serialize_uint8(&buff[i], pmodel->pmac.modello);
     i += serialize_uint8(&buff[i], pmodel->pmac.lingua);
     i += serialize_uint8(&buff[i], pmodel->pmac.logo);
@@ -55,12 +61,17 @@ size_t model_pars_serialize(model_t *pmodel, uint8_t buff[static PARS_SERIALIZED
 }
 
 size_t model_pars_deserialize(model_t *pmodel, uint8_t *buff) {
-    size_t   i = 0;
+    size_t   i = 0, j = 0;
     uint16_t crc;
     i += deserialize_uint16_be(&crc, &buff[i]);
     if (crc != crc16_ccitt(&buff[2], PARS_SERIALIZED_SIZE - 2, 0)) {
         return -1;
     } else {
+        for (j = 0; j < NUM_CICLI; j++) {
+            i += deserialize_uint8(&pmodel->pciclo[j].tipo_asciugatura, &buff[i]);
+            i += deserialize_uint8(&pmodel->pciclo[j].tempo_durata_asciugatura, &buff[i]);
+        }
+
         i += deserialize_uint8(&pmodel->pmac.modello, &buff[i]);
         i += deserialize_uint8(&pmodel->pmac.lingua, &buff[i]);
         i += deserialize_uint8(&pmodel->pmac.logo, &buff[i]);

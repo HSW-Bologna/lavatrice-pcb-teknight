@@ -23,7 +23,7 @@ typedef struct {
 } view_common_password_t;
 
 
-lv_obj_t * view_common_title(lv_obj_t *root, char *str);
+lv_obj_t * view_common_title(lv_obj_t *root, const char *str);
 void       view_common_password_add_key(view_common_password_t *inserted, button_t new, unsigned long timestamp);
 int        view_common_check_password(view_common_password_t *inserted, button_t password[static VIEW_PASSWORD_SIZE],
                                       unsigned long timestamp);

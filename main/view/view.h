@@ -23,6 +23,6 @@ void   view_event(view_event_t event);
 void   view_close_all(void *data);
 
 extern const pman_page_t page_main, page_temperature_test, page_digout_test, page_digin_test, page_pwm_test,
-    page_led_test, page_parmac, page_info, page_scelta_programma;
+    page_led_test, page_parmac, page_info, page_scelta_programma, page_parciclo;
 
 #endif

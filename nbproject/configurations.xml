@@ -525,6 +525,7 @@
           </logicalFolder>
           <itemPath>main/model/model.c</itemPath>
           <itemPath>main/model/parmac.c</itemPath>
+          <itemPath>main/model/parciclo.c</itemPath>
         </logicalFolder>
         <logicalFolder name="peripherals" displayName="peripherals" projectFiles="true">
           <itemPath>main/peripherals/system.c</itemPath>
@@ -566,6 +567,7 @@
             <itemPath>main/view/pages/page_parmac.c</itemPath>
             <itemPath>main/view/pages/page_info.c</itemPath>
             <itemPath>main/view/pages/page_scelta_programma.c</itemPath>
+            <itemPath>main/view/pages/page_parciclo.c</itemPath>
           </logicalFolder>
           <logicalFolder name="widgets" displayName="widgets" projectFiles="true">
             <itemPath>main/view/widgets/custom_lv_img.c</itemPath>
@@ -595,7 +597,7 @@
         <targetDevice>PIC24FJ256GA705</targetDevice>
         <targetHeader></targetHeader>
         <targetPluginBoard></targetPluginBoard>
-        <platformTool>ICD3PlatformTool</platformTool>
+        <platformTool>noID</platformTool>
         <languageToolchain>XC16</languageToolchain>
         <languageToolchainVersion>1.36</languageToolchainVersion>
         <platform>2</platform>
@@ -800,7 +802,6 @@
         <property key="UART 1" value="true"/>
         <property key="UART 2" value="true"/>
         <property key="debugoptions.useswbreakpoints" value="false"/>
-        <property key="firmware.download.all" value="false"/>
         <property key="hwtoolclock.frcindebug" value="false"/>
         <property key="memories.aux" value="false"/>
         <property key="memories.bootflash" value="false"/>

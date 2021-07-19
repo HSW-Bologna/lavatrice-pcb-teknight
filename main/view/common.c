@@ -6,7 +6,7 @@
 static void timer_task(lv_task_t * task);
 
 
-lv_obj_t *view_common_title(lv_obj_t *root, char *str) {
+lv_obj_t *view_common_title(lv_obj_t *root, const char *str) {
     lv_obj_t *cont = lv_cont_create(root, NULL);
 
     static lv_style_t style;
@@ -20,7 +20,7 @@ lv_obj_t *view_common_title(lv_obj_t *root, char *str) {
     lv_obj_set_style(cont, &style);
 
     lv_obj_t *title = lv_label_create(cont, NULL);
-    lv_label_set_align(title, LV_LABEL_ALIGN_LEFT);
+    lv_label_set_align(title, LV_LABEL_ALIGN_CENTER);
     lv_label_set_long_mode(title, LV_LABEL_LONG_CROP);
     lv_label_set_text(title, str);
     lv_obj_set_width(title, LV_HOR_RES_MAX - 4);

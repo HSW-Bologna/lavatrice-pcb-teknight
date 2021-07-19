@@ -16,6 +16,7 @@ def main(indir, outdir):
             csvreader = csv.reader(f, delimiter=',', skipinitialspace=True)
             arrayname = os.path.basename(csvfile).replace(".csv", "")
             tmp = {}
+            csvreader.__next__() # Drop the first line
             for line in csvreader:
                 if len(line) < 2:
                     print("Devono esserci almeno due colonne (la prima e' per l'enum)")

@@ -2,6 +2,7 @@
 #include "view/view_types.h"
 #include "model/model.h"
 #include "model/parmac.h"
+#include "model/parciclo.h"
 #include "controller.h"
 #include "peripherals/pwm.h"
 #include "peripherals/digout.h"
@@ -97,6 +98,7 @@ void controller_init(model_t *pmodel) {
     if (!controller_start_check()) {
         uint8_t data[PARS_SERIALIZED_SIZE] = {0};
         parmac_init(pmodel, 1);
+        parciclo_init(pmodel, 1);
         uint8_t check_byte = CHECK_BYTE;
         EE24LC16_SEQUENTIAL_WRITE(eeprom_driver, CHECK_BYTE_ADDRESS, &check_byte, 1);
         size_t i = model_pars_serialize(pmodel, data);
@@ -106,6 +108,7 @@ void controller_init(model_t *pmodel) {
         EE24CL16_SEQUENTIAL_READ(eeprom_driver, PAR_START_ADDRESS, data, PARS_SERIALIZED_SIZE);
         model_pars_deserialize(pmodel, data);
         parmac_init(pmodel, 0);
+        parciclo_init(pmodel, 0);
 
         uint8_t pwoff_data[PWOFF_SERIALIZED_SIZE] = {0};
 #ifdef WEARLEVELING

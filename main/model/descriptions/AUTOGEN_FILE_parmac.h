@@ -6,8 +6,10 @@ typedef enum {
     PARMAC_DESCRIPTIONS_MODELLO,
     PARMAC_DESCRIPTIONS_LIVELLO_ACCESSO,
     PARMAC_DESCRIPTIONS_LOGO,
+    PARMAC_DESCRIPTIONS_TIPO_ASCIUGATURA,
+    PARMAC_DESCRIPTIONS_TEMPO_DURATA,
 } parmac_descriptions_t;
 
-extern const char *parmac_descriptions[4][2];
+extern const char *parmac_descriptions[6][2];
 
 #endif
