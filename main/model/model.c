@@ -6,17 +6,22 @@
 #include "gel/serializer/serializer.h"
 #include "lv_conf.h"
 #include "peripherals/timer.h"
+#include "gel/parameter/parameter.h"
+
+
+parameter_handle_t parameters[MAX_PARAMETER_CHUNK];
 
 
 void model_init(model_t *pmodel) {
-    pmodel->inputs          = 0;
-    pmodel->pwoff.credito   = 0;
-    pmodel->ptc_temperature = 0;
-    pmodel->sht_temperature = 0;
-    pmodel->pwm1            = 0;
-    pmodel->pwm2            = 0;
-    pmodel->ptc_adc         = 0;
-    pmodel->outputs         = 0;
+    pmodel->inputs            = 0;
+    pmodel->pwoff.credito     = 0;
+    pmodel->ptc_temperature   = 0;
+    pmodel->sht_temperature   = 0;
+    pmodel->pwm1              = 0;
+    pmodel->pwm2              = 0;
+    pmodel->ptc_adc           = 0;
+    pmodel->outputs           = 0;
+    pmodel->lingua_temporanea = 0;
 
     pmodel->status.stato = 0;
     stopwatch_init(&pmodel->status.stopwatch);
@@ -58,7 +63,7 @@ size_t model_pars_serialize(model_t *pmodel, uint8_t buff[static PARS_SERIALIZED
         i += serialize_uint8(&buff[i], pmodel->pciclo[j].tempo_durata_raffreddamento);
         i += serialize_uint8(&buff[i], pmodel->pciclo[j].abilita_inversione_raffreddamento);
         i += serialize_uint8(&buff[i], pmodel->pciclo[j].tempo_giro_raffreddamento);
-        i += serialize_uint8(&buff[i], pmodel->pciclo[j].tempo_pausa_raffreddamento);   
+        i += serialize_uint8(&buff[i], pmodel->pciclo[j].tempo_pausa_raffreddamento);
     }
 
     i += serialize_uint8(&buff[i], pmodel->pmac.tempo_azzeramento_ciclo_stop);
@@ -115,7 +120,7 @@ size_t model_pars_serialize(model_t *pmodel, uint8_t buff[static PARS_SERIALIZED
     i += serialize_uint8(&buff[i], pmodel->pmac.abilita_reset_gas_esteso);
     i += serialize_uint8(&buff[i], pmodel->pmac.temperatura_raffreddo_allarme);
     i += serialize_uint8(&buff[i], pmodel->pmac.macchina_libera_off_on);
-    //i += serialize_uint8(&buff[i], pmodel->pmac.temperatura_stop_tempo_ciclo);
+    // i += serialize_uint8(&buff[i], pmodel->pmac.temperatura_stop_tempo_ciclo);
     unsigned short crc = crc16_ccitt(&buff[2], i - 2, 0);
     serialize_uint16_be(&buff[0], crc);
     assert(i == PARS_SERIALIZED_SIZE);
@@ -180,6 +185,7 @@ size_t model_pars_deserialize(model_t *pmodel, uint8_t *buff) {
         i += deserialize_uint8(&pmodel->pmac.abilita_autoavvio, &buff[i]);
         i += deserialize_uint8(&pmodel->pmac.tempo_attesa_partenza_ciclo, &buff[i]);
         i += deserialize_uint8(&pmodel->pmac.abilita_antipiega, &buff[i]);
+        i += deserialize_uint8(&pmodel->pmac.tempo_ritardo_antipiega, &buff[i]);
         i += deserialize_uint8(&pmodel->pmac.tempo_max_antipiega, &buff[i]);
         i += deserialize_uint8(&pmodel->pmac.tempo_cadenza_antipiega, &buff[i]);
         i += deserialize_uint8(&pmodel->pmac.numero_cicli_max_antipiega, &buff[i]);

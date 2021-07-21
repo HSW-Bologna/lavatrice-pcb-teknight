@@ -6,6 +6,5 @@
  */
 
 
-#include "xc.h"
 #include "gt_macchina_occupata.h"
 

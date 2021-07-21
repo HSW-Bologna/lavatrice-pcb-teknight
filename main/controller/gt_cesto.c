@@ -6,5 +6,4 @@
  */
 
 
-#include "xc.h"
 #include "gt_cesto.h"

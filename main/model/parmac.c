@@ -4,15 +4,16 @@
 #include "parmac.h"
 #include "descriptions/AUTOGEN_FILE_parmac.h"
 
-#define NUM_PARAMETERS 56
-#define AL_USER 0x01
-#define AL_TECH 0x02
+#define NUM_PARAMETERS MAX_PARAMETER_CHUNK
+#define NUM_CHUNKS (NUM_PARAMETERS/MAX_PARAMETER_CHUNK)
 
+#define AL_USER        0x01
+#define AL_TECH        0x02
 
-static void formatta(char *string, const void *arg);
+extern parameter_handle_t parameters[];
+
+static void    formatta(char *string, const void *arg);
 static uint8_t get_livello_accesso(uint8_t parametri_ridotti);
-
-static parameter_handle_t parameters[NUM_PARAMETERS];
 
 void parmac_init(model_t *p, int reset) {
 #define FINT(i) ((parameter_user_data_t){parmac_descriptions[i], formatta, NULL, NULL})
@@ -84,27 +85,30 @@ void parmac_init(model_t *p, int reset) {
     }
 }
 
-void parmac_operation(size_t parameter, int op,model_t *pmodel) {
-    parameter_operator(parameter_get_handle(parameters, NUM_PARAMETERS, parameter, get_livello_accesso(pmodel->pmac.abilita_parametri_ridotti) ), op);
+void parmac_operation(size_t parameter, int op, model_t *pmodel) {
+    parameter_operator(parameter_get_handle(parameters, NUM_PARAMETERS, parameter,
+                                            get_livello_accesso(pmodel->pmac.abilita_parametri_ridotti)),
+                       op);
 }
 
 const char *parmac_get_description(const model_t *pmodel, size_t parameter) {
     (void)pmodel;
-    parameter_user_data_t data =
-        parameter_get_user_data(parameter_get_handle(parameters, NUM_PARAMETERS, parameter, get_livello_accesso(pmodel->pmac.abilita_parametri_ridotti) ));
+    parameter_user_data_t data = parameter_get_user_data(parameter_get_handle(
+        parameters, NUM_PARAMETERS, parameter, get_livello_accesso(pmodel->pmac.abilita_parametri_ridotti)));
 
     return data.descrizione[pmodel->pmac.lingua];
 }
 
 void parmac_format_value(char *string, size_t parameter, model_t *pmodel) {
-    parameter_handle_t *  par  = parameter_get_handle(parameters, NUM_PARAMETERS, parameter, get_livello_accesso(pmodel->pmac.abilita_parametri_ridotti) );
+    parameter_handle_t *  par  = parameter_get_handle(parameters, NUM_PARAMETERS, parameter,
+                                                   get_livello_accesso(pmodel->pmac.abilita_parametri_ridotti));
     parameter_user_data_t data = parameter_get_user_data(par);
 
     data.format(string, par);
 }
 
 size_t parmac_get_tot_parameters(model_t *pmodel) {
-    return parameter_get_count(parameters, NUM_PARAMETERS, get_livello_accesso(pmodel->pmac.abilita_parametri_ridotti) );
+    return parameter_get_count(parameters, NUM_PARAMETERS, get_livello_accesso(pmodel->pmac.abilita_parametri_ridotti));
 }
 
 static void formatta(char *string, const void *arg) {

@@ -6,7 +6,6 @@
  */
 
 
-#include "xc.h"
 #include "gt_riscaldamento.h"
 
 

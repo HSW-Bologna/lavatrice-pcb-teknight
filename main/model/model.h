@@ -6,8 +6,9 @@
 #include "lvgl/lvgl.h"
 #include "gel/timer/stopwatch.h"
 
-#define PARS_SERIALIZED_SIZE  (6 + 2*NUM_CICLI)
+#define PARS_SERIALIZED_SIZE  126
 #define PWOFF_SERIALIZED_SIZE 4
+#define MAX_PARAMETER_CHUNK   54
 
 typedef enum {
     CICLO_CALDO = 0,
@@ -108,12 +109,13 @@ typedef struct {
     uint16_t ptc_adc;
     int      ptc_temperature;
     int      sht_temperature;
+    size_t   parchunk;
 
     int     pwm1;
     int     pwm2;
     uint8_t lingua_temporanea;
 
-    parmac_t pmac;
+    parmac_t   pmac;
     parciclo_t pciclo[NUM_CICLI];
 
     struct {
