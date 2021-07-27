@@ -5,9 +5,10 @@
 
 
 void        parmac_init(model_t *p, int reset);
-size_t parmac_get_tot_parameters(model_t *pmodel);
-const char *parmac_get_description(const model_t *pmodel, size_t parameter);
-void parmac_format_value(char *string, size_t parameter, model_t *pmodel);
-void parmac_operation(size_t parameter, int op,model_t *pmodel);
+void        parmac_setup(model_t *p, size_t chunk, int reset);
+size_t      parmac_get_tot_parameters(uint8_t al);
+void        parmac_format_value(model_t *pmodel, char *string, size_t parameter, uint8_t al);
+const char *parmac_get_description(model_t *pmodel, size_t parameter, uint8_t al);
+void        parmac_operation(model_t *pmodel, size_t parameter, int op, uint8_t al);
 
 #endif

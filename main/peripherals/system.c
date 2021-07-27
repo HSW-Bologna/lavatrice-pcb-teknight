@@ -30,9 +30,9 @@
 #pragma config FCKSM = CSDCMD           // Clock Switching Mode bits (Both Clock switching and Fail-safe Clock Monitor are disabled)
 
 // FWDT
-#pragma config WDTPS = PS256            // Watchdog Timer Postscaler bits (1:256)
+#pragma config WDTPS = PS512            // Watchdog Timer Postscaler bits (1:512)
 #pragma config FWPSA = PR128            // Watchdog Timer Prescaler bit (1:128)
-#pragma config FWDTEN = ON              // Watchdog Timer Enable bits (WDT Disabled)
+#pragma config FWDTEN = ON              // Watchdog Timer Enable bits (WDT Enabled)
 #pragma config WINDIS = OFF             // Watchdog Timer Window Enable bit (Watchdog Timer in Non-Window mode)
 #pragma config WDTWIN = WIN25           // Watchdog Timer Window Select bits (WDT Window is 25% of WDT period)
 #pragma config WDTCMX = WDTCLK          // WDT MUX Source Select bits (WDT clock source is determined by the WDTCLK Configuration bits)

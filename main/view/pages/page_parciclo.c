@@ -24,12 +24,12 @@ static struct {
 static void *create_page(model_t *model, void *extra) {
     page_data.par_to_save = 0;
     page_data.ciclo       = (tipo_ciclo_t)(uintptr_t)extra;
-    parciclo_init(model, page_data.ciclo, 0);
     return NULL;
 }
 
 
 static void open_page(model_t *model, void *data) {
+    parciclo_init(model, page_data.ciclo, 0);
     strings_t cicli[] = {
         STRINGS_PROGRAMMA_CALDO,  STRINGS_PROGRAMMA_MEDIO, STRINGS_PROGRAMMA_TIEPIDO,
         STRINGS_PROGRAMMA_FREDDO, STRINGS_PROGRAMMA_LANA,

@@ -8,7 +8,7 @@
 
 #define PARS_SERIALIZED_SIZE  126
 #define PWOFF_SERIALIZED_SIZE 4
-#define MAX_PARAMETER_CHUNK   54
+#define MAX_PARAMETER_CHUNK   14
 
 typedef enum {
     CICLO_CALDO = 0,
