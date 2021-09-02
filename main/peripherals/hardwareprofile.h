@@ -92,5 +92,4 @@
 #define  UART_RX_TRIS TRISBbits.TRISB15
 #define  UART_TX_TRIS TRISBbits.TRISB14
 
-
 #endif

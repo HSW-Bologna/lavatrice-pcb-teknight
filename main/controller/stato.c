@@ -1,4 +1,5 @@
 #include "stato.h"
+
 #include "gel/timer/stopwatch.h"
 #include "model/model.h"
 #include "view/view.h"
@@ -37,7 +38,7 @@ void controller_stato_event(model_t *pmodel, stato_event_code_t event) {
 
 void controller_manage_stato(model_t *pmodel) {
     if (stopwatch_is_timer_reached(&pmodel->status.stopwatch, get_millis())) {
-        model_cambia_stato(pmodel,STATO_OFF);
+        model_cambia_stato(pmodel,STATO_FERMO);
         view_event((view_event_t){.code = VIEW_EVENT_STATO_UPDATE});
     }
 }
@@ -53,7 +54,7 @@ static int stato_off_entry(model_t *pmodel) {
 static int stato_off_event_manager(model_t *pmodel, stato_event_code_t event) {
     switch (event) {
         case STATO_EVENT_START:
-            return STATO_ON;
+            return STATO_MARCIA;
 
         default:
             break;
@@ -73,7 +74,7 @@ static int stato_on_entry(model_t *pmodel) {
 static int stato_on_event_manager(model_t *pmodel, stato_event_code_t event) {
     switch (event) {
         case STATO_EVENT_STOP:
-            return STATO_OFF;
+            return STATO_FERMO;
 
         default:
             break;

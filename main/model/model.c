@@ -24,7 +24,7 @@ void model_init(model_t *pmodel) {
     pmodel->lingua_temporanea = 0;
 
     pmodel->status.stato = 0;
-    stopwatch_init(&pmodel->status.stopwatch);
+   
 
     pmodel->lvgl_mem.frag_percentage = 0;
     pmodel->lvgl_mem.used_percentage = 0;
@@ -46,7 +46,8 @@ char *model_get_output_status(model_t *pmodel, int output) {
         return "off";
 }
 
-size_t model_pars_serialize(model_t *pmodel, uint8_t buff[static PARS_SERIALIZED_SIZE]) {
+size_t model_pars_serialize(model_t *pmodel, uint8_t buff[static PARS_SERIALIZED_SIZE])
+{
     size_t i = 2, j = 0;
 
     for (j = 0; j < NUM_CICLI; j++) {
@@ -64,6 +65,7 @@ size_t model_pars_serialize(model_t *pmodel, uint8_t buff[static PARS_SERIALIZED
         i += serialize_uint8(&buff[i], pmodel->pciclo[j].abilita_inversione_raffreddamento);
         i += serialize_uint8(&buff[i], pmodel->pciclo[j].tempo_giro_raffreddamento);
         i += serialize_uint8(&buff[i], pmodel->pciclo[j].tempo_pausa_raffreddamento);
+        i += serialize_uint8(&buff[i], pmodel->pciclo[j].abilita_antipiega);
     }
 
     i += serialize_uint8(&buff[i], pmodel->pmac.tempo_azzeramento_ciclo_stop);
@@ -73,7 +75,7 @@ size_t model_pars_serialize(model_t *pmodel, uint8_t buff[static PARS_SERIALIZED
     i += serialize_uint8(&buff[i], pmodel->pmac.abilita_gettoniera);
     i += serialize_uint8(&buff[i], pmodel->pmac.abilita_stop_tempo_ciclo);
     i += serialize_uint8(&buff[i], pmodel->pmac.tempo_uscita_pagine);
-    i += serialize_uint8(&buff[i], pmodel->pmac.tipo_visualizzazione_gettone_moneta_cassa);
+    i += serialize_uint8(&buff[i], pmodel->pmac.tipo_visualizzazione_get_mon_cas);
     i += serialize_uint8(&buff[i], pmodel->pmac.temperatura_max_1_in);
     i += serialize_uint8(&buff[i], pmodel->pmac.temperatura_sicurezza_1);
     i += serialize_uint8(&buff[i], pmodel->pmac.tempo_allarme_temperatura_1);
@@ -99,7 +101,6 @@ size_t model_pars_serialize(model_t *pmodel, uint8_t buff[static PARS_SERIALIZED
     i += serialize_uint8(&buff[i], pmodel->pmac.abilita_parametri_ridotti);
     i += serialize_uint8(&buff[i], pmodel->pmac.abilita_autoavvio);
     i += serialize_uint8(&buff[i], pmodel->pmac.tempo_attesa_partenza_ciclo);
-    i += serialize_uint8(&buff[i], pmodel->pmac.abilita_antipiega);
     i += serialize_uint8(&buff[i], pmodel->pmac.tempo_ritardo_antipiega);
     i += serialize_uint8(&buff[i], pmodel->pmac.tempo_max_antipiega);
     i += serialize_uint8(&buff[i], pmodel->pmac.tempo_cadenza_antipiega);
@@ -149,6 +150,7 @@ size_t model_pars_deserialize(model_t *pmodel, uint8_t *buff) {
             i += deserialize_uint8(&pmodel->pciclo[j].abilita_inversione_raffreddamento, &buff[i]);
             i += deserialize_uint8(&pmodel->pciclo[j].tempo_giro_raffreddamento, &buff[i]);
             i += deserialize_uint8(&pmodel->pciclo[j].tempo_pausa_raffreddamento, &buff[i]);
+            i += deserialize_uint8(&pmodel->pciclo[j].abilita_antipiega, &buff[i]);
         }
 
         i += deserialize_uint8(&pmodel->pmac.tempo_azzeramento_ciclo_stop, &buff[i]);
@@ -158,7 +160,7 @@ size_t model_pars_deserialize(model_t *pmodel, uint8_t *buff) {
         i += deserialize_uint8(&pmodel->pmac.abilita_gettoniera, &buff[i]);
         i += deserialize_uint8(&pmodel->pmac.abilita_stop_tempo_ciclo, &buff[i]);
         i += deserialize_uint8(&pmodel->pmac.tempo_uscita_pagine, &buff[i]);
-        i += deserialize_uint8(&pmodel->pmac.tipo_visualizzazione_gettone_moneta_cassa, &buff[i]);
+        i += deserialize_uint8(&pmodel->pmac.tipo_visualizzazione_get_mon_cas, &buff[i]);
         i += deserialize_uint8(&pmodel->pmac.temperatura_max_1_in, &buff[i]);
         i += deserialize_uint8(&pmodel->pmac.temperatura_sicurezza_1, &buff[i]);
         i += deserialize_uint8(&pmodel->pmac.tempo_allarme_temperatura_1, &buff[i]);
@@ -184,7 +186,6 @@ size_t model_pars_deserialize(model_t *pmodel, uint8_t *buff) {
         i += deserialize_uint8(&pmodel->pmac.abilita_parametri_ridotti, &buff[i]);
         i += deserialize_uint8(&pmodel->pmac.abilita_autoavvio, &buff[i]);
         i += deserialize_uint8(&pmodel->pmac.tempo_attesa_partenza_ciclo, &buff[i]);
-        i += deserialize_uint8(&pmodel->pmac.abilita_antipiega, &buff[i]);
         i += deserialize_uint8(&pmodel->pmac.tempo_ritardo_antipiega, &buff[i]);
         i += deserialize_uint8(&pmodel->pmac.tempo_max_antipiega, &buff[i]);
         i += deserialize_uint8(&pmodel->pmac.tempo_cadenza_antipiega, &buff[i]);
@@ -267,5 +268,91 @@ void model_cambia_stato(model_t *pmodel, int res) {
 }
 
 unsigned long model_get_stato_timer(model_t *pmodel) {
-    return stopwatch_get_remaining(&pmodel->status.stopwatch, get_millis()) / 1000UL;
+   return stopwatch_get_remaining(&pmodel->status.stopwatch, get_millis()) / 1000UL;
+}
+
+
+parciclo_t *model_ciclo_corrente(model_t *pmodel) {
+    return &pmodel->pciclo[pmodel->status.ciclo];
+}
+
+/* -------------------------------------------------------------------------- */
+/*                                                                            */
+/*  Set / Get STATO MACCHINA                                                  */
+/*                                                                            */
+/* ------------------------------------------------------------------------- */
+
+void model_set_status_stopped(model_t *p)
+{
+    p->status.stato = STATO_STOPPED;
+}
+int model_get_status_stopped(model_t *p)
+{
+    return p->status.stato==STATO_STOPPED;
+}
+int model_get_status_not_stopped(model_t *p)
+{
+    return p->status.stato!=STATO_STOPPED;
+}
+
+
+
+void model_set_status_work(model_t *p)
+{
+    if (model_get_status_pause(p)) {
+        stopwatch_start(&p->status.stopwatch, get_millis());
+    }
+    else {
+         stopwatch_init(&p->status.stopwatch);
+        stopwatch_setngo(&p->status.stopwatch,p->pciclo[p->status.ciclo].tempo_durata_asciugatura*1000UL,get_millis());
+
+    }
+    p->status.stato = STATO_WORK;
+
+}
+int model_get_status_work(model_t *p)
+{
+    return p->status.stato==STATO_WORK;
+}
+int model_get_status_not_work(model_t *p)
+{
+    return p->status.stato!=STATO_WORK;
+}
+
+void model_set_status_pause(model_t *p)
+{
+    p->status.stato = STATO_PAUSE;
+    
+    stopwatch_pause(&p->status.stopwatch, get_millis());
+}
+int model_get_status_pause(model_t *p)
+{
+    return p->status.stato==STATO_PAUSE;
+}
+int model_get_status_not_pause(model_t *p)
+{
+    return p->status.stato!=STATO_PAUSE;
+}
+
+
+
+void model_set_status_step_nul(model_t *p)
+{
+    p->status.stato_step = STATO_STEP_NUL;
+}
+void model_set_status_step_asc(model_t *p)
+{
+    p->status.stato_step = STATO_STEP_ASC;
+}
+void model_set_status_step_raf(model_t *p)
+{
+    p->status.stato_step = STATO_STEP_RAF;
+}
+void model_set_status_step_anr(model_t *p)
+{
+    p->status.stato_step = STATO_STEP_ANT;
+}
+int model_get_status_step(model_t *p)
+{
+    return p->status.stato_step;
 }

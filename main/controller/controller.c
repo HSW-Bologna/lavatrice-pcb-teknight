@@ -48,11 +48,11 @@ void controller_process_msg(view_controller_command_t *msg, model_t *pmodel) {
         }
 
         case VIEW_CONTROLLER_COMMAND_CODE_UPDATE_DIGOUT: {
-            rele_set(msg->output - 1, msg->value);
+            rele_update(msg->output - 1, msg->value);
             int i = 0;
             for (i = 0; i < 6; i++) {
                 if (i != (msg->output) - 1)
-                    rele_set(i, 0);
+                    rele_update(i, 0);
             }
             pmodel->outputs = rele_get_status();
 
@@ -63,7 +63,7 @@ void controller_process_msg(view_controller_command_t *msg, model_t *pmodel) {
         case VIEW_CONTROLLER_COMMAND_CODE_DIGOUT_TURNOFF: {
             int i = 0;
             for (i = 0; i < 6; i++) {
-                rele_set(i, 0);
+                rele_update(i, 0);
                 pmodel->outputs = rele_get_status();
             }
 
@@ -75,17 +75,7 @@ void controller_process_msg(view_controller_command_t *msg, model_t *pmodel) {
             controller_save_pars(pmodel);
             break;
         }
-
-        case VIEW_CONTROLLER_COMMAND_CODE_STATO_START: {
-            controller_stato_event(pmodel, STATO_EVENT_START);
-            break;
-        }
-
-        case VIEW_CONTROLLER_COMMAND_CODE_STATO_STOP: {
-            controller_stato_event(pmodel, STATO_EVENT_STOP);
-            break;
-        }
-
+        
         case VIEW_CONTROLLER_COMMAND_CODE_NOTHING:
             break;
     }

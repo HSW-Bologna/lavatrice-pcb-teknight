@@ -1,14 +1,15 @@
 #ifndef MODEL_H_INCLUDED
 #define MODEL_H_INCLUDED
 
+
 #include <stdint.h>
 #include <stdlib.h>
 #include "lvgl/lvgl.h"
 #include "gel/timer/stopwatch.h"
 
-#define PARS_SERIALIZED_SIZE  126
+#define PARS_SERIALIZED_SIZE  130
 #define PWOFF_SERIALIZED_SIZE 4
-#define MAX_PARAMETER_CHUNK   14
+#define MAX_PARAMETER_CHUNK   15
 
 typedef enum {
     CICLO_CALDO = 0,
@@ -27,7 +28,7 @@ typedef struct {
     uint8_t abilita_gettoniera;
     uint8_t abilita_stop_tempo_ciclo;
     uint8_t tempo_uscita_pagine;
-    uint8_t tipo_visualizzazione_gettone_moneta_cassa;
+    uint8_t tipo_visualizzazione_get_mon_cas;
     uint8_t temperatura_max_1_in;
     uint8_t temperatura_sicurezza_1;
     uint8_t tempo_allarme_temperatura_1;
@@ -53,7 +54,6 @@ typedef struct {
     uint8_t abilita_parametri_ridotti;
     uint8_t abilita_autoavvio;
     uint8_t tempo_attesa_partenza_ciclo;
-    uint8_t abilita_antipiega;
     uint8_t tempo_ritardo_antipiega;
     uint8_t tempo_max_antipiega;
     uint8_t tempo_cadenza_antipiega;
@@ -92,24 +92,34 @@ typedef struct {
     uint8_t abilita_inversione_raffreddamento;
     uint8_t tempo_giro_raffreddamento;
     uint8_t tempo_pausa_raffreddamento;
+    uint8_t abilita_antipiega;
 } parciclo_t;
 
 typedef enum {
-    STATO_OFF = 0,
-    STATO_ON,
+    STATO_STOPPED = 0,
+    STATO_PAUSE,
+    STATO_WORK,
 } stato_t;
+
+typedef enum {
+    STATO_STEP_NUL = 0,
+    STATO_STEP_ASC,
+    STATO_STEP_RAF,
+    STATO_STEP_ANT,
+} stato_step_t;
 
 typedef struct {
     uint16_t credito;
 } pwoff_data_t;
 
 typedef struct {
-    uint8_t  inputs;
-    uint8_t  outputs;
+    uint8_t inputs;
+    uint8_t outputs;
     uint16_t ptc_adc;
-    int      ptc_temperature;
-    int      sht_temperature;
-    size_t   parchunk;
+    int     ptc_temperature;
+    int     sht_temperature;
+    int     sht_umidity;
+    size_t  parchunk;
 
     int     pwm1;
     int     pwm2;
@@ -119,8 +129,29 @@ typedef struct {
     parciclo_t pciclo[NUM_CICLI];
 
     struct {
-        stato_t     stato;
-        stopwatch_t stopwatch;
+        tipo_ciclo_t    ciclo;
+        stato_t         stato;
+        uint8_t         sottostato;
+        stato_step_t    stato_step;
+        uint8_t         f_in_test;
+        uint8_t         f_no_gt_all;
+        uint8_t         f_start_ok;
+        uint8_t         f_ok_gettone;
+        uint8_t         f_ventilazione;
+        uint8_t         f_ava_ind;
+        uint8_t         nf_ava_ind;
+        uint8_t         f_anti_piega;
+        uint8_t         nf_anti_piega;
+        uint8_t         ct_anti_piega_max;
+        uint8_t         cnro_c_anti_piega_max;
+        uint8_t         f_all;
+        uint8_t         n_allarme;
+        uint8_t         f_errore_ram_ko;
+        uint8_t         f_all_emergenza;
+        uint8_t         f_all_inverter;
+        uint8_t         f_all_filtro_aperto;
+        uint8_t         f_all_blocco_bruciatore;
+        stopwatch_t     stopwatch;
     } status;
 
     struct {
@@ -145,5 +176,26 @@ void          model_cambia_lingua(model_t *pmodel);
 stato_t       model_get_stato(model_t *pmodel);
 void          model_cambia_stato(model_t *pmodel, int res);
 unsigned long model_get_stato_timer(model_t *pmodel);
+parciclo_t  *model_ciclo_corrente(model_t *pmodel);
+
+
+
+void model_set_status_stopped(model_t *p);
+int model_get_status_stopped(model_t *p);
+int model_get_status_not_stopped(model_t *p);
+
+void model_set_status_pause(model_t *p);
+int model_get_status_pause(model_t *p);
+int model_get_status_not_pause(model_t *p);
+
+void model_set_status_work(model_t *p);
+int model_get_status_work(model_t *p);
+int model_get_status_not_work(model_t *p);
+
+void model_set_status_step_nul(model_t *p);
+void model_set_status_step_asc(model_t *p);
+void model_set_status_step_raf(model_t *p);
+void set_status_step_ant(model_t *p);
+int model_get_status_step(model_t *p);
 
 #endif

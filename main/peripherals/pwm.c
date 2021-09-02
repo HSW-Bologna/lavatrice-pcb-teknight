@@ -1,5 +1,6 @@
 #include "hardwareprofile.h"
 #include "pwm.h"
+#include <xc.h>
 
 #define PERIOD (0xFFFF/16)
 

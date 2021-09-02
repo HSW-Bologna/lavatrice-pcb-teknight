@@ -15,7 +15,7 @@
 
 #include <stdint.h>
 #ifndef PC_SIMULATOR
-typedef uint16_t uintptr_t;
+#define uintptr_t uint16_t
 #endif
 
 /*====================

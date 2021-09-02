@@ -1,9 +1,25 @@
-const char *strings[6][2] = {
+const char *strings[22][2] = {
     {"Scelta programma", "Choose program", },
+    {"al  lavoro", "al  lavoro", },
+    {"pausa lavoro", "pausa lavoro", },
     {"CALDO", "HOT", },
     {"MEDIO", "WARM", },
     {"TIEPIDO", "LUKEWARM", },
     {"FREDDO", "COLD", },
     {"LANA", "WHOOL", },
+    {"OBLO' APERTO", "OBLO' APERTO", },
+    {"STOP EMERGENZA", "STOP EMERGENZA", },
+    {"NO TEMPERATURA 1", "NO TEMPERATURA 1", },
+    {"*  RAM   KO  *", "*  RAM   KO  *", },
+    {"INVERTER KO", "INVERTER KO", },
+    {"FILTRO  APERTO", "FILTRO  APERTO", },
+    {"BLOCC.BRUCIATORE", "BLOCC.BRUCIATORE", },
+    {"ALL.SONDA TEMP.1", "ALL.SONDA TEMP.1", },
+    {"NO  ARIA", "NO  ARIA", },
+    {"ANTIPIEGA  !", "ANTIPIEGA  !", },
+    {"DRY  CONTROL", "DRY  CONTROL", },
+    {"TEMPERATURA ALTA", "TEMPERATURA ALTA", },
+    {"ANOMALIA  ARIA", "ANOMALIA  ARIA", },
+    {"MANUTENZIONE !", "MANUTENZIONE !", },
 };
 

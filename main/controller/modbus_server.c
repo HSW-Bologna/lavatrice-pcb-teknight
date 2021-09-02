@@ -23,6 +23,6 @@ void modbus_server_manage(void) {
     if (err==MODBUS_OK || err==MODBUS_ERROR_EXCEPTION) {
         uart_async_write(slave.response.frame, slave.response.length);
         uart_clean_rx_buffer();
-        rele_set(RELE_1,coils[0]);
+        rele_update(RELE_1,coils[0]);
     }
 }

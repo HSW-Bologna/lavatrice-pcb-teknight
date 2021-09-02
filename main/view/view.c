@@ -6,6 +6,8 @@
 #include "view/view.h"
 #include "view/images/legacy.h"
 
+#define BUFFER_SIZE (256*3)
+
 
 QUEUE_DECLARATION(event_queue, view_event_t, 8);
 QUEUE_DEFINITION(event_queue, view_event_t);
@@ -25,11 +27,11 @@ view_t view_init(model_t *model, void (*flush_cb)(struct _disp_drv_t *, const lv
 
     static lv_disp_buf_t disp_buf;
 #ifdef PC_SIMULATOR
-    static uint8_t gbuf[256 * 8];
+    static uint8_t gbuf[BUFFER_SIZE * 8];
 #else
-    static uint8_t gbuf[256];
+    static uint8_t gbuf[BUFFER_SIZE];
 #endif
-    lv_disp_buf_init(&disp_buf, gbuf, NULL, 256 * 8);
+    lv_disp_buf_init(&disp_buf, gbuf, NULL, BUFFER_SIZE * 8);
     lv_disp_drv_t disp_drv;
     lv_disp_drv_init(&disp_drv);
     disp_drv.buffer     = &disp_buf;

@@ -29,5 +29,6 @@ int        view_common_check_password(view_common_password_t *inserted, button_t
                                       unsigned long timestamp);
 void       view_common_password_reset(view_common_password_t *password, unsigned long timestamp);
 lv_task_t *view_common_register_timer(unsigned long period);
+int view_common_check_password_started(view_common_password_t *inserted);
 
 #endif

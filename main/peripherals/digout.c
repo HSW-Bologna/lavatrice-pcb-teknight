@@ -27,7 +27,9 @@ void digout_init(void) {
     RELE6_TRIS=TRIS_OUTPUT;
     BUZZER_TRIS = TRIS_OUTPUT;
 }
-void rele_set(rele_t rele, int val) {
+
+
+void rele_update(rele_t rele, int val) {
     val = val > 0;
     switch(rele) {
         case RELE_1 :
@@ -92,4 +94,15 @@ void digout_buzzer_check(void) {
         BUZZER_LAT=0;
     }
     
+}
+
+
+void clear_digout_all (void)
+{
+    RELE1_LAT = 0;
+    RELE2_LAT = 0;
+    RELE3_LAT = 0;
+    RELE4_LAT = 0;
+    RELE5_LAT = 0;
+    RELE6_LAT = 0;
 }

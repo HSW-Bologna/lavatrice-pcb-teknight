@@ -32,7 +32,6 @@ const char *parmac_descriptions[68][2] = {
     {"AB.PAR.MAC.RIDOT", "AB.PAR.MAC.RIDOT", },
     {"AB. AUTOAVVIO", "AB. AUTOAVVIO", },
     {"T.INIBIZ.RIL T2", "T.INIBIZ.RIL T2", },
-    {"AB. ANTIPIEGA", "AB. ANTIPIEGA", },
     {"T.RITARDO ANTIP.", "T.RITARDO ANTIP.", },
     {"T.MAX DURAT.ANTI", "T.MAX DURAT.ANTI", },
     {"T.CADENZA ANTIP.", "T.CADENZA ANTIP.", },
@@ -67,5 +66,6 @@ const char *parmac_descriptions[68][2] = {
     {"AB.INVERSIONE RA", "AB.INVERSIONE RA", },
     {"T.GIRO CESTO RAF", "T.GIRO CESTO RAF", },
     {"T.PAUSA CESTO RA", "T.PAUSA CESTO RA", },
+    {"ABIL. ANTIPIEGA", "ABIL. ANTIPIEGA", },
 };
 

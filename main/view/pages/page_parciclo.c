@@ -59,7 +59,7 @@ static view_message_t process_page_event(model_t *model, void *arg, pman_event_t
 
     switch (event.code) {
         case VIEW_EVENT_KEYPAD: {
-            if (event.key_event.event == KEY_CLICK) {
+            if (event.key_event.event == KEY_CLICK || event.key_event.event == KEY_LONGPRESS) {
                 switch (event.key_event.code) {
                     case BUTTON_SKIP_LEFT:
                         if (page_data.parameter > 0) {

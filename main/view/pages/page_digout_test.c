@@ -52,11 +52,13 @@ static view_message_t process_page_event(model_t *model, void *arg, pman_event_t
             if (event.key_event.event == KEY_CLICK) {
                 switch (event.key_event.code) {
                     case BUTTON_SKIP_LEFT: {
+                        msg.cmsg.code = VIEW_CONTROLLER_COMMAND_CODE_DIGOUT_TURNOFF;
                         msg.vmsg.code = VIEW_PAGE_COMMAND_CODE_SWAP_PAGE;
                         msg.vmsg.page = &page_digin_test;
                         break;
                     }
                     case BUTTON_SKIP_RIGHT: {
+                        msg.cmsg.code = VIEW_CONTROLLER_COMMAND_CODE_DIGOUT_TURNOFF;
                         msg.vmsg.code = VIEW_PAGE_COMMAND_CODE_SWAP_PAGE;
                         msg.vmsg.page = &page_temperature_test;
                         break;
@@ -64,6 +66,8 @@ static view_message_t process_page_event(model_t *model, void *arg, pman_event_t
                     case BUTTON_PLUS: {
                         if (page_data.digout_index < 6)
                             page_data.digout_index++;
+                        else
+                            page_data.digout_index = 1;
                         msg.vmsg.code = VIEW_PAGE_COMMAND_CODE_UPDATE;
                         msg.cmsg.code = VIEW_CONTROLLER_COMMAND_CODE_DIGOUT_TURNOFF;
                         lv_task_set_prio(page_data.task, LV_TASK_PRIO_OFF);
@@ -74,6 +78,8 @@ static view_message_t process_page_event(model_t *model, void *arg, pman_event_t
                     case BUTTON_MINUS: {
                         if (page_data.digout_index > 1)
                             page_data.digout_index--;
+                        else
+                            page_data.digout_index = 6;
                         msg.vmsg.code = VIEW_PAGE_COMMAND_CODE_UPDATE;
                         msg.cmsg.code = VIEW_CONTROLLER_COMMAND_CODE_DIGOUT_TURNOFF;
                         lv_task_set_prio(page_data.task, LV_TASK_PRIO_OFF);

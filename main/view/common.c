@@ -71,6 +71,27 @@ int view_common_check_password(view_common_password_t *inserted, button_t passwo
 }
 
 
+int view_common_check_password_started(view_common_password_t *inserted) {
+    size_t i = 0;
+    int found = 0;
+    
+    for (i = 0; i < VIEW_PASSWORD_SIZE; i++) {
+        if (inserted->password[(inserted->index + i) % VIEW_PASSWORD_SIZE] != BUTTON_STOP) {
+            if (found > 0 && found < 3) {
+                return 0;
+            } 
+        } else {
+            found++;
+            if (found >= 3) {
+                return 1;
+            }
+        }
+    }
+    
+    return 0;
+}
+
+
 lv_task_t *view_common_register_timer(unsigned long period) {
     return lv_task_create(timer_task, period, LV_TASK_PRIO_OFF, NULL);
 }
