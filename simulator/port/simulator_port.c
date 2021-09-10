@@ -37,3 +37,5 @@ void nt7534_reconfigure() {}
 void pwoff_interrupt_enable(int i) {}
 
 void pwoff_set_callback(void (*cb)()) {}
+
+void rele_update(rele_t rele, int val) {}

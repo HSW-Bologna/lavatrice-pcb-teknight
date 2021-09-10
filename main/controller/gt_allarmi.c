@@ -16,8 +16,7 @@
 /******************************************************************************/
 
 #include "gt_allarmi.h"
-#include "digin.h"
-#include <xc.h>
+#include "peripherals/digin.h"
 
 
 /*----------------------------------------------------------------------------*/
@@ -366,6 +365,5 @@ void gt_allarmi (model_t *p)
     
     if (p->status.n_allarme != 0)
     {
-        Nop();
     }
 }

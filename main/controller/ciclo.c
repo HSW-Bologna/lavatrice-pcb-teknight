@@ -7,7 +7,6 @@
 
 #include "controller/ciclo.h"
 #include "model/model.h"
-#include <xc.h>
 
 extern stopwatch_t ct_moto_cesto;
 extern stopwatch_t ct_oblo_open_close_on;
@@ -21,8 +20,6 @@ extern stopwatch_t ct_anti_piega_pausa;
 
 void gt_ciclo(model_t *p, uint32_t timestamp)
 {
-    Nop();
-    
     if (model_get_status_stopped(p))
     {
         stopwatch_init(&ct_moto_cesto);

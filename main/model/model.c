@@ -24,6 +24,7 @@ void model_init(model_t *pmodel) {
     pmodel->lingua_temporanea = 0;
 
     pmodel->status.stato = 0;
+    pmodel->status.n_allarme = 0;
    
 
     pmodel->lvgl_mem.frag_percentage = 0;

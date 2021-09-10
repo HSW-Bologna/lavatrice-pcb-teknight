@@ -18,15 +18,11 @@
 #include "controller/gt_ventilazione.h"
 #include "model/model.h"
 
-#include <xc.h>
-
 
 
 // ************************************************************************** //
 void gt_ventilazione(model_t *p, unsigned long timestamp)
 {
-    Nop();
-    
     return;
     
     

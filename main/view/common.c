@@ -1,9 +1,13 @@
+#include <assert.h>
 #include "common.h"
-
 #include "gel/timer/timecheck.h"
 
 
-static void timer_task(lv_task_t * task);
+static void timer_task(lv_task_t *task);
+static int  find_password_start(view_common_password_t *password);
+
+
+static const button_t preamble[3]                          = {BUTTON_STOP, BUTTON_STOP, BUTTON_STOP};
 
 
 lv_obj_t *view_common_title(lv_obj_t *root, const char *str) {
@@ -39,14 +43,14 @@ void view_common_password_add_key(view_common_password_t *inserted, button_t new
         view_common_password_reset(inserted, timestamp);
     }
     inserted->password[inserted->index] = new;
-    inserted->index                     = (inserted->index + 1) % VIEW_PASSWORD_SIZE;
+    inserted->index                     = (inserted->index + 1) % VIEW_PASSWORD_MAX_SIZE;
     inserted->last_timestamp            = timestamp;
 }
 
 
 void view_common_password_reset(view_common_password_t *inserted, unsigned long timestamp) {
     size_t i = 0;
-    for (i = 0; i < VIEW_PASSWORD_SIZE; i++) {
+    for (i = 0; i < VIEW_PASSWORD_MAX_SIZE; i++) {
         inserted->password[i] = BUTTON_NONE;
     }
     inserted->index          = 0;
@@ -54,41 +58,37 @@ void view_common_password_reset(view_common_password_t *inserted, unsigned long 
 }
 
 
-int view_common_check_password(view_common_password_t *inserted, button_t password[static VIEW_PASSWORD_SIZE],
+int view_common_check_password(view_common_password_t *inserted, button_t *password, size_t length,
                                unsigned long timestamp) {
     if (is_expired(inserted->last_timestamp, timestamp, VIEW_PASSWORD_TIMEOUT)) {
         view_common_password_reset(inserted, timestamp);
         return 0;
+    } else if (length + sizeof(preamble) / sizeof(preamble[0]) > VIEW_PASSWORD_MAX_SIZE) {
+        return 0;
     }
 
+
     size_t i = 0;
-    for (i = 0; i < VIEW_PASSWORD_SIZE; i++) {
-        if (inserted->password[(inserted->index + i) % VIEW_PASSWORD_SIZE] != password[i]) {
+
+    int res = find_password_start(inserted);
+    if (res < 0) {
+        return 0;
+    }
+
+    size_t start = (size_t)res;
+    for (i = 0; i < length; i++) {
+        if (inserted->password[(start + i) % VIEW_PASSWORD_MAX_SIZE] != password[i]) {
             return 0;
         }
     }
+
     return 1;
 }
 
 
 int view_common_check_password_started(view_common_password_t *inserted) {
-    size_t i = 0;
-    int found = 0;
-    
-    for (i = 0; i < VIEW_PASSWORD_SIZE; i++) {
-        if (inserted->password[(inserted->index + i) % VIEW_PASSWORD_SIZE] != BUTTON_STOP) {
-            if (found > 0 && found < 3) {
-                return 0;
-            } 
-        } else {
-            found++;
-            if (found >= 3) {
-                return 1;
-            }
-        }
-    }
-    
-    return 0;
+    int res = find_password_start(inserted);
+    return res >= 0;
 }
 
 
@@ -97,7 +97,31 @@ lv_task_t *view_common_register_timer(unsigned long period) {
 }
 
 
-static void timer_task(lv_task_t * task) {
+static void timer_task(lv_task_t *task) {
     (void)task;
-    view_event((view_event_t) {.code=VIEW_EVENT_TIMER});
+    view_event((view_event_t){.code = VIEW_EVENT_TIMER});
+}
+
+
+static int find_password_start(view_common_password_t *password) {
+    int    result = -1;
+    size_t i = 0, start = 0;
+
+    for (start = 0; start < VIEW_PASSWORD_MAX_SIZE; start++) {
+        int found = 1;
+
+        for (i = 0; i < sizeof(preamble) / sizeof(preamble[0]); i++) {
+            if (password->password[(start + i) % VIEW_PASSWORD_MAX_SIZE] != preamble[i]) {
+                found = 0;
+                break;
+            }
+        }
+
+        if (found) {
+            result = start + 3;
+            // Do not break this cycle; we consider the latest possible password
+        }
+    }
+
+    return result;
 }
