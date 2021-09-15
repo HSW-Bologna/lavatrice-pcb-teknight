@@ -69,26 +69,17 @@
                        displayName="liblightmodbus"
                        projectFiles="true">
           <logicalFolder name=".github" displayName=".github" projectFiles="true">
+            <logicalFolder name="workflows" displayName="workflows" projectFiles="true">
+            </logicalFolder>
+          </logicalFolder>
+          <logicalFolder name="doc" displayName="doc" projectFiles="true">
+            <logicalFolder name="doxygen-awesome-css"
+                           displayName="doxygen-awesome-css"
+                           projectFiles="true">
+            </logicalFolder>
           </logicalFolder>
           <logicalFolder name="include" displayName="include" projectFiles="true">
             <logicalFolder name="lightmodbus" displayName="lightmodbus" projectFiles="true">
-              <logicalFolder name="addons" displayName="addons" projectFiles="true">
-                <itemPath>components/liblightmodbus/include/lightmodbus/addons/examine.h</itemPath>
-              </logicalFolder>
-              <logicalFolder name="master" displayName="master" projectFiles="true">
-                <itemPath>components/liblightmodbus/include/lightmodbus/master/mbcoils.h</itemPath>
-                <itemPath>components/liblightmodbus/include/lightmodbus/master/mbregs.h</itemPath>
-                <itemPath>components/liblightmodbus/include/lightmodbus/master/mpcoils.h</itemPath>
-                <itemPath>components/liblightmodbus/include/lightmodbus/master/mpregs.h</itemPath>
-              </logicalFolder>
-              <logicalFolder name="slave" displayName="slave" projectFiles="true">
-                <itemPath>components/liblightmodbus/include/lightmodbus/slave/scoils.h</itemPath>
-                <itemPath>components/liblightmodbus/include/lightmodbus/slave/sregs.h</itemPath>
-              </logicalFolder>
-              <itemPath>components/liblightmodbus/include/lightmodbus/lightmodbus.h</itemPath>
-              <itemPath>components/liblightmodbus/include/lightmodbus/master.h</itemPath>
-              <itemPath>components/liblightmodbus/include/lightmodbus/parser.h</itemPath>
-              <itemPath>components/liblightmodbus/include/lightmodbus/slave.h</itemPath>
             </logicalFolder>
           </logicalFolder>
           <logicalFolder name="src" displayName="src" projectFiles="true">
@@ -341,56 +332,6 @@
             <itemPath>components/I2C/i2c_ports/PIC/i2c_driver.c</itemPath>
           </logicalFolder>
         </logicalFolder>
-        <logicalFolder name="liblightmodbus"
-                       displayName="liblightmodbus"
-                       projectFiles="true">
-          <logicalFolder name=".github" displayName=".github" projectFiles="true">
-          </logicalFolder>
-          <logicalFolder name="doc" displayName="doc" projectFiles="true">
-            <logicalFolder name="doc" displayName="doc" projectFiles="true">
-              <logicalFolder name="html" displayName="html" projectFiles="true">
-                <logicalFolder name="search" displayName="search" projectFiles="true">
-                </logicalFolder>
-              </logicalFolder>
-              <logicalFolder name="latex" displayName="latex" projectFiles="true">
-              </logicalFolder>
-            </logicalFolder>
-            <logicalFolder name="html" displayName="html" projectFiles="true">
-            </logicalFolder>
-            <logicalFolder name="man" displayName="man" projectFiles="true">
-              <logicalFolder name="man3" displayName="man3" projectFiles="true">
-              </logicalFolder>
-            </logicalFolder>
-          </logicalFolder>
-          <logicalFolder name="include" displayName="include" projectFiles="true">
-            <logicalFolder name="lightmodbus" displayName="lightmodbus" projectFiles="true">
-              <logicalFolder name="addons" displayName="addons" projectFiles="true">
-              </logicalFolder>
-              <logicalFolder name="master" displayName="master" projectFiles="true">
-              </logicalFolder>
-              <logicalFolder name="slave" displayName="slave" projectFiles="true">
-              </logicalFolder>
-            </logicalFolder>
-          </logicalFolder>
-          <logicalFolder name="src" displayName="src" projectFiles="true">
-            <logicalFolder name="addons" displayName="addons" projectFiles="true">
-              <itemPath>components/liblightmodbus/src/addons/examine.c</itemPath>
-            </logicalFolder>
-            <logicalFolder name="master" displayName="master" projectFiles="true">
-              <itemPath>components/liblightmodbus/src/master/mbcoils.c</itemPath>
-              <itemPath>components/liblightmodbus/src/master/mbregs.c</itemPath>
-              <itemPath>components/liblightmodbus/src/master/mpcoils.c</itemPath>
-              <itemPath>components/liblightmodbus/src/master/mpregs.c</itemPath>
-            </logicalFolder>
-            <logicalFolder name="slave" displayName="slave" projectFiles="true">
-              <itemPath>components/liblightmodbus/src/slave/scoils.c</itemPath>
-              <itemPath>components/liblightmodbus/src/slave/sregs.c</itemPath>
-            </logicalFolder>
-            <itemPath>components/liblightmodbus/src/lightmodbus.c</itemPath>
-            <itemPath>components/liblightmodbus/src/master.c</itemPath>
-            <itemPath>components/liblightmodbus/src/slave.c</itemPath>
-          </logicalFolder>
-        </logicalFolder>
         <logicalFolder name="lvgl" displayName="lvgl" projectFiles="true">
           <logicalFolder name=".github" displayName=".github" projectFiles="true">
             <logicalFolder name="ISSUE_TEMPLATE"
@@ -516,6 +457,7 @@
             </logicalFolder>
           </logicalFolder>
         </logicalFolder>
+        <itemPath>main/config/lightmodbus-impl.c</itemPath>
       </logicalFolder>
       <logicalFolder name="main" displayName="main" projectFiles="true">
         <logicalFolder name="controller" displayName="controller" projectFiles="true">
@@ -699,10 +641,12 @@
         <property key="optimization-level" value="0"/>
         <property key="post-instruction-scheduling" value="default"/>
         <property key="pre-instruction-scheduling" value="default"/>
-        <property key="preprocessor-macros" value="LV_CONF_INCLUDE_SIMPLE"/>
+        <property key="preprocessor-macros"
+                  value="LV_CONF_INCLUDE_SIMPLE;GEL_IGNORE_TIME_TYPECHECK"/>
         <property key="scalar-model" value="default"/>
         <property key="use-cci" value="false"/>
         <property key="use-iar" value="false"/>
+        <appendMe value="-std=c99"/>
       </C30>
       <C30-AR>
         <property key="additional-options-chop-files" value="false"/>
@@ -783,6 +727,7 @@
         <property key="legacy-libc" value="true"/>
         <property key="mpreserve-all" value="false"/>
         <property key="oXC16glb-macros" value=""/>
+        <property key="omit-pack-options" value="1"/>
         <property key="output-file-format" value="elf"/>
         <property key="preserve-all" value="false"/>
         <property key="preserve-file" value=""/>
@@ -941,78 +886,6 @@
         <property key="programoptions.testmodeentrymethod" value="VDDFirst"/>
         <property key="voltagevalue" value="3.25"/>
       </ICD4Tool>
-      <Tool>
-        <property key="ADC 1" value="true"/>
-        <property key="AutoSelectMemRanges" value="auto"/>
-        <property key="CLC 1" value="true"/>
-        <property key="CLC 2" value="true"/>
-        <property key="COMPARATOR" value="true"/>
-        <property key="CRC" value="true"/>
-        <property key="CTMU" value="true"/>
-        <property key="DMA" value="true"/>
-        <property key="Freeze All Other Peripherals" value="true"/>
-        <property key="I2C 1" value="true"/>
-        <property key="I2C 2" value="true"/>
-        <property key="INPUT CAPTURE 1" value="true"/>
-        <property key="INPUT CAPTURE 2" value="true"/>
-        <property key="INPUT CAPTURE 3" value="true"/>
-        <property key="IOC" value="true"/>
-        <property key="LVD" value="true"/>
-        <property key="MCCP/SCCP 1" value="true"/>
-        <property key="MCCP/SCCP 2" value="true"/>
-        <property key="MCCP/SCCP 3" value="true"/>
-        <property key="MCCP/SCCP 4" value="true"/>
-        <property key="OSC" value="true"/>
-        <property key="OUTPUT COMPARE 1" value="true"/>
-        <property key="OUTPUT COMPARE 2" value="true"/>
-        <property key="OUTPUT COMPARE 3" value="true"/>
-        <property key="PMP" value="true"/>
-        <property key="REFO" value="true"/>
-        <property key="RTCC" value="true"/>
-        <property key="SPI 1" value="true"/>
-        <property key="SPI 2" value="true"/>
-        <property key="SPI 3" value="true"/>
-        <property key="SecureSegment.SegmentProgramming" value="FullChipProgramming"/>
-        <property key="TIMER 1" value="true"/>
-        <property key="TIMER 2" value="true"/>
-        <property key="TIMER 3" value="true"/>
-        <property key="ToolFirmwareFilePath"
-                  value="Press to browse for a specific firmware version"/>
-        <property key="ToolFirmwareOption.UseLatestFirmware" value="true"/>
-        <property key="UART 1" value="true"/>
-        <property key="UART 2" value="true"/>
-        <property key="debugoptions.useswbreakpoints" value="false"/>
-        <property key="hwtoolclock.frcindebug" value="false"/>
-        <property key="memories.aux" value="false"/>
-        <property key="memories.bootflash" value="false"/>
-        <property key="memories.configurationmemory" value="true"/>
-        <property key="memories.configurationmemory2" value="true"/>
-        <property key="memories.dataflash" value="true"/>
-        <property key="memories.eeprom" value="true"/>
-        <property key="memories.flashdata" value="true"/>
-        <property key="memories.id" value="true"/>
-        <property key="memories.instruction.ram" value="true"/>
-        <property key="memories.instruction.ram.ranges"
-                  value="${memories.instruction.ram.ranges}"/>
-        <property key="memories.programmemory" value="true"/>
-        <property key="memories.programmemory.ranges" value="0-2aeff"/>
-        <property key="poweroptions.powerenable" value="false"/>
-        <property key="programoptions.donoteraseauxmem" value="false"/>
-        <property key="programoptions.eraseb4program" value="true"/>
-        <property key="programoptions.preservedataflash" value="false"/>
-        <property key="programoptions.preservedataflash.ranges" value=""/>
-        <property key="programoptions.preserveeeprom" value="false"/>
-        <property key="programoptions.preserveeeprom.ranges" value=""/>
-        <property key="programoptions.preserveprogram.ranges" value=""/>
-        <property key="programoptions.preserveprogramrange" value="false"/>
-        <property key="programoptions.preserveuserid" value="false"/>
-        <property key="programoptions.programcalmem" value="false"/>
-        <property key="programoptions.programuserotp" value="false"/>
-        <property key="programoptions.testmodeentrymethod" value="VDDFirst"/>
-        <property key="programoptions.usehighvoltageonmclr" value="false"/>
-        <property key="programoptions.uselvpprogramming" value="false"/>
-        <property key="voltagevalue" value="3.25"/>
-      </Tool>
       <item path="components/generic_embedded_libs/gel/pid/pid.c"
             ex="true"
             overriding="false">
