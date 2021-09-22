@@ -69,26 +69,17 @@
                        displayName="liblightmodbus"
                        projectFiles="true">
           <logicalFolder name=".github" displayName=".github" projectFiles="true">
+            <logicalFolder name="workflows" displayName="workflows" projectFiles="true">
+            </logicalFolder>
+          </logicalFolder>
+          <logicalFolder name="doc" displayName="doc" projectFiles="true">
+            <logicalFolder name="doxygen-awesome-css"
+                           displayName="doxygen-awesome-css"
+                           projectFiles="true">
+            </logicalFolder>
           </logicalFolder>
           <logicalFolder name="include" displayName="include" projectFiles="true">
             <logicalFolder name="lightmodbus" displayName="lightmodbus" projectFiles="true">
-              <logicalFolder name="addons" displayName="addons" projectFiles="true">
-                <itemPath>components/liblightmodbus/include/lightmodbus/addons/examine.h</itemPath>
-              </logicalFolder>
-              <logicalFolder name="master" displayName="master" projectFiles="true">
-                <itemPath>components/liblightmodbus/include/lightmodbus/master/mbcoils.h</itemPath>
-                <itemPath>components/liblightmodbus/include/lightmodbus/master/mbregs.h</itemPath>
-                <itemPath>components/liblightmodbus/include/lightmodbus/master/mpcoils.h</itemPath>
-                <itemPath>components/liblightmodbus/include/lightmodbus/master/mpregs.h</itemPath>
-              </logicalFolder>
-              <logicalFolder name="slave" displayName="slave" projectFiles="true">
-                <itemPath>components/liblightmodbus/include/lightmodbus/slave/scoils.h</itemPath>
-                <itemPath>components/liblightmodbus/include/lightmodbus/slave/sregs.h</itemPath>
-              </logicalFolder>
-              <itemPath>components/liblightmodbus/include/lightmodbus/lightmodbus.h</itemPath>
-              <itemPath>components/liblightmodbus/include/lightmodbus/master.h</itemPath>
-              <itemPath>components/liblightmodbus/include/lightmodbus/parser.h</itemPath>
-              <itemPath>components/liblightmodbus/include/lightmodbus/slave.h</itemPath>
             </logicalFolder>
           </logicalFolder>
           <logicalFolder name="src" displayName="src" projectFiles="true">
@@ -341,56 +332,6 @@
             <itemPath>components/I2C/i2c_ports/PIC/i2c_driver.c</itemPath>
           </logicalFolder>
         </logicalFolder>
-        <logicalFolder name="liblightmodbus"
-                       displayName="liblightmodbus"
-                       projectFiles="true">
-          <logicalFolder name=".github" displayName=".github" projectFiles="true">
-          </logicalFolder>
-          <logicalFolder name="doc" displayName="doc" projectFiles="true">
-            <logicalFolder name="doc" displayName="doc" projectFiles="true">
-              <logicalFolder name="html" displayName="html" projectFiles="true">
-                <logicalFolder name="search" displayName="search" projectFiles="true">
-                </logicalFolder>
-              </logicalFolder>
-              <logicalFolder name="latex" displayName="latex" projectFiles="true">
-              </logicalFolder>
-            </logicalFolder>
-            <logicalFolder name="html" displayName="html" projectFiles="true">
-            </logicalFolder>
-            <logicalFolder name="man" displayName="man" projectFiles="true">
-              <logicalFolder name="man3" displayName="man3" projectFiles="true">
-              </logicalFolder>
-            </logicalFolder>
-          </logicalFolder>
-          <logicalFolder name="include" displayName="include" projectFiles="true">
-            <logicalFolder name="lightmodbus" displayName="lightmodbus" projectFiles="true">
-              <logicalFolder name="addons" displayName="addons" projectFiles="true">
-              </logicalFolder>
-              <logicalFolder name="master" displayName="master" projectFiles="true">
-              </logicalFolder>
-              <logicalFolder name="slave" displayName="slave" projectFiles="true">
-              </logicalFolder>
-            </logicalFolder>
-          </logicalFolder>
-          <logicalFolder name="src" displayName="src" projectFiles="true">
-            <logicalFolder name="addons" displayName="addons" projectFiles="true">
-              <itemPath>components/liblightmodbus/src/addons/examine.c</itemPath>
-            </logicalFolder>
-            <logicalFolder name="master" displayName="master" projectFiles="true">
-              <itemPath>components/liblightmodbus/src/master/mbcoils.c</itemPath>
-              <itemPath>components/liblightmodbus/src/master/mbregs.c</itemPath>
-              <itemPath>components/liblightmodbus/src/master/mpcoils.c</itemPath>
-              <itemPath>components/liblightmodbus/src/master/mpregs.c</itemPath>
-            </logicalFolder>
-            <logicalFolder name="slave" displayName="slave" projectFiles="true">
-              <itemPath>components/liblightmodbus/src/slave/scoils.c</itemPath>
-              <itemPath>components/liblightmodbus/src/slave/sregs.c</itemPath>
-            </logicalFolder>
-            <itemPath>components/liblightmodbus/src/lightmodbus.c</itemPath>
-            <itemPath>components/liblightmodbus/src/master.c</itemPath>
-            <itemPath>components/liblightmodbus/src/slave.c</itemPath>
-          </logicalFolder>
-        </logicalFolder>
         <logicalFolder name="lvgl" displayName="lvgl" projectFiles="true">
           <logicalFolder name=".github" displayName=".github" projectFiles="true">
             <logicalFolder name="ISSUE_TEMPLATE"
@@ -538,6 +479,11 @@
         </logicalFolder>
       </logicalFolder>
       <logicalFolder name="main" displayName="main" projectFiles="true">
+        <logicalFolder name="config" displayName="config" projectFiles="true">
+          <logicalFolder name="mbconf" displayName="mbconf" projectFiles="true">
+          </logicalFolder>
+          <itemPath>main/config/lightmodbus-impl.c</itemPath>
+        </logicalFolder>
         <logicalFolder name="controller" displayName="controller" projectFiles="true">
           <itemPath>main/controller/gui.c</itemPath>
           <itemPath>main/controller/controller.c</itemPath>
@@ -729,10 +675,12 @@
         <property key="optimization-level" value="0"/>
         <property key="post-instruction-scheduling" value="default"/>
         <property key="pre-instruction-scheduling" value="default"/>
-        <property key="preprocessor-macros" value="LV_CONF_INCLUDE_SIMPLE"/>
+        <property key="preprocessor-macros"
+                  value="LV_CONF_INCLUDE_SIMPLE;GEL_IGNORE_TIME_TYPECHECK"/>
         <property key="scalar-model" value="default"/>
         <property key="use-cci" value="false"/>
         <property key="use-iar" value="false"/>
+        <appendMe value="-std=c99"/>
       </C30>
       <C30-AR>
         <property key="additional-options-chop-files" value="false"/>
@@ -813,6 +761,7 @@
         <property key="legacy-libc" value="true"/>
         <property key="mpreserve-all" value="false"/>
         <property key="oXC16glb-macros" value=""/>
+        <property key="omit-pack-options" value="1"/>
         <property key="output-file-format" value="elf"/>
         <property key="preserve-all" value="false"/>
         <property key="preserve-file" value=""/>
@@ -1048,10 +997,34 @@
       <item path="components/SPI/spi_ports/dummy/dummy_spi_port.c"
             ex="true"
             overriding="false">
+        <C30>
+        </C30>
+        <C30-AR>
+        </C30-AR>
+        <C30-AS>
+        </C30-AS>
+        <C30-CO>
+        </C30-CO>
+        <C30-LD>
+        </C30-LD>
+        <C30Global>
+        </C30Global>
       </item>
       <item path="components/SPI/spi_ports/esp-idf/esp_idf_spi_port.c"
             ex="true"
             overriding="false">
+        <C30>
+        </C30>
+        <C30-AR>
+        </C30-AR>
+        <C30-AS>
+        </C30-AS>
+        <C30-CO>
+        </C30-CO>
+        <C30-LD>
+        </C30-LD>
+        <C30Global>
+        </C30Global>
       </item>
       <item path="components/generic_embedded_libs/gel/pid/pid.c"
             ex="true"
