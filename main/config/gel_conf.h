@@ -52,8 +52,8 @@ typedef int pid_output_type_t;
 typedef struct {
     const char **descrizione;
     void (*format)(char *string, const void *);
-    char **opzioni;
-    char **unita;
+    size_t *opzioni;
+    char ** unita;
 } parameter_user_data_t;
 
 #endif

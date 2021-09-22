@@ -516,6 +516,26 @@
             </logicalFolder>
           </logicalFolder>
         </logicalFolder>
+        <logicalFolder name="SPI" displayName="SPI" projectFiles="true">
+          <logicalFolder name="spi_common" displayName="spi_common" projectFiles="true">
+            <itemPath>components/SPI/spi_common/spi_common.c</itemPath>
+          </logicalFolder>
+          <logicalFolder name="spi_devices" displayName="spi_devices" projectFiles="true">
+            <logicalFolder name="io" displayName="io" projectFiles="true">
+              <logicalFolder name="MCP23S08" displayName="MCP23S08" projectFiles="true">
+                <itemPath>components/SPI/spi_devices/io/MCP23S08/mcp23s08.c</itemPath>
+              </logicalFolder>
+            </logicalFolder>
+          </logicalFolder>
+          <logicalFolder name="spi_ports" displayName="spi_ports" projectFiles="true">
+            <logicalFolder name="dummy" displayName="dummy" projectFiles="true">
+              <itemPath>components/SPI/spi_ports/dummy/dummy_spi_port.c</itemPath>
+            </logicalFolder>
+            <logicalFolder name="esp-idf" displayName="esp-idf" projectFiles="true">
+              <itemPath>components/SPI/spi_ports/esp-idf/esp_idf_spi_port.c</itemPath>
+            </logicalFolder>
+          </logicalFolder>
+        </logicalFolder>
       </logicalFolder>
       <logicalFolder name="main" displayName="main" projectFiles="true">
         <logicalFolder name="controller" displayName="controller" projectFiles="true">
@@ -556,6 +576,10 @@
           <itemPath>main/peripherals/gettoniera.c</itemPath>
           <itemPath>main/peripherals/uart_driver.c</itemPath>
           <itemPath>main/peripherals/traps.c</itemPath>
+          <itemPath>main/peripherals/led.c</itemPath>
+        </logicalFolder>
+        <logicalFolder name="utils" displayName="utils" projectFiles="true">
+          <itemPath>main/utils/assert.c</itemPath>
         </logicalFolder>
         <logicalFolder name="view" displayName="view" projectFiles="true">
           <logicalFolder name="fonts" displayName="fonts" projectFiles="true">
@@ -599,6 +623,12 @@
             <itemPath>main/view/pages/page_info.c</itemPath>
             <itemPath>main/view/pages/page_scelta_programma.c</itemPath>
             <itemPath>main/view/pages/page_parciclo.c</itemPath>
+            <itemPath>main/view/pages/page_splash.c</itemPath>
+            <itemPath>main/view/pages/page_reset_ram.c</itemPath>
+            <itemPath>main/view/pages/page_commissioning.c</itemPath>
+            <itemPath>main/view/pages/page_coin_test.c</itemPath>
+            <itemPath>main/view/pages/page_contrast.c</itemPath>
+            <itemPath>main/view/pages/page_stats.c</itemPath>
           </logicalFolder>
           <logicalFolder name="widgets" displayName="widgets" projectFiles="true">
             <itemPath>main/view/widgets/custom_lv_img.c</itemPath>
@@ -631,7 +661,7 @@
         <platformTool>ICD3PlatformTool</platformTool>
         <languageToolchain>XC16</languageToolchain>
         <languageToolchainVersion>1.36</languageToolchainVersion>
-        <platform>3</platform>
+        <platform>2</platform>
       </toolsSet>
       <packs>
         <pack name="PIC24F-GA-GB_DFP" vendor="Microchip" version="1.3.109"/>
@@ -830,6 +860,7 @@
         <property key="UART 1" value="true"/>
         <property key="UART 2" value="true"/>
         <property key="debugoptions.useswbreakpoints" value="false"/>
+        <property key="firmware.download.all" value="false"/>
         <property key="hwtoolclock.frcindebug" value="false"/>
         <property key="memories.aux" value="false"/>
         <property key="memories.bootflash" value="false"/>
@@ -982,6 +1013,7 @@
         <property key="UART 1" value="true"/>
         <property key="UART 2" value="true"/>
         <property key="debugoptions.useswbreakpoints" value="false"/>
+        <property key="firmware.download.all" value="false"/>
         <property key="hwtoolclock.frcindebug" value="false"/>
         <property key="memories.aux" value="false"/>
         <property key="memories.bootflash" value="false"/>
@@ -1013,6 +1045,14 @@
         <property key="programoptions.uselvpprogramming" value="false"/>
         <property key="voltagevalue" value="3.25"/>
       </Tool>
+      <item path="components/SPI/spi_ports/dummy/dummy_spi_port.c"
+            ex="true"
+            overriding="false">
+      </item>
+      <item path="components/SPI/spi_ports/esp-idf/esp_idf_spi_port.c"
+            ex="true"
+            overriding="false">
+      </item>
       <item path="components/generic_embedded_libs/gel/pid/pid.c"
             ex="true"
             overriding="false">

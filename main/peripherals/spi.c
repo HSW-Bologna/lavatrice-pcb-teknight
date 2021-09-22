@@ -15,6 +15,7 @@ void spi_init(void) {
     SPI_CLK_TRIS=TRIS_OUTPUT;
     SPI_MISO_TRIS=TRIS_INPUT;
     SPI_CLK_LAT = 1;
+    SPI_CS1_TRIS=TRIS_OUTPUT;
 }
 
 uint8_t spi1_master_exchange(uint8_t send, spi_speed_t speed){

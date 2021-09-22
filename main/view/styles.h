@@ -6,5 +6,7 @@
 void styles_init(void);
 
 extern lv_style_t style_label_8x16;
+extern lv_style_t style_label_normal;
+extern lv_style_t style_label_reverse;
 
 #endif

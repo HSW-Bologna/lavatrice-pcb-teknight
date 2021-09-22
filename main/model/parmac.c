@@ -15,7 +15,7 @@
 /*                                                                            */
 /******************************************************************************/
 
-#include <assert.h>
+#include "utils/assert.h"
 #include <stdio.h>
 #include "gel/parameter/parameter.h"
 #include "model.h"
@@ -24,10 +24,12 @@
 
 #define NUM_PARAMETERS           53
 #define NUM_CHUNKS               ((NUM_PARAMETERS / MAX_PARAMETER_CHUNK) + ((NUM_PARAMETERS % MAX_PARAMETER_CHUNK) > 0))
-#define PARAMETERS_IN_LAST_CHUNK  8
+#define PARAMETERS_IN_LAST_CHUNK 8
 
 #define AL_USER 0x01
 #define AL_TECH 0x02
+
+#define FINT(i) ((parameter_user_data_t){parmac_descriptions[i], formatta, NULL, NULL})
 
 enum {
     LIVELLO_ACCESSO_ESTESI  = 0,
@@ -50,13 +52,25 @@ static size_t              get_parameter_chunk(model_t *pmodel, size_t parameter
 void parmac_init(model_t *p, int reset) {
     size_t i = 0;
     for (i = 0; i < NUM_CHUNKS; i++) {
-        parmac_setup(p, i, reset);
+        parmac_setup_full(p, i, reset);
     }
 }
 
 
-void parmac_setup(model_t *p, size_t chunk, int reset) {
-#define FINT(i) ((parameter_user_data_t){parmac_descriptions[i], formatta, NULL, NULL})
+void parmac_setup_commissioning(model_t *p) {
+    parameters[PARMAC_COMMISSIONING_LINGUA] = PARAMETER_C99(PARAMETER_TYPE_UINT8, &p->pmac.lingua, NULL, NULL, 0, 1, 0,
+                                                            1, AL_USER, FINT(PARMAC_DESCRIPTIONS_LINGUA), NULL, NULL);
+    parameters[PARMAC_COMMISSIONING_LOGO] =
+        PARAMETER_C99(PARAMETER_TYPE_UINT8, &p->pmac.logo_ditta, NULL, NULL, 0, 5, 1, 1, AL_TECH,
+                      FINT(PARMAC_DESCRIPTIONS_STRINGA_DITTA_VISUALIZZATA), NULL, NULL);
+    parameters[PARMAC_COMMISSIONING_MODELLO] =
+        PARAMETER_C99(PARAMETER_TYPE_UINT8, &p->pmac.modello_macchina, NULL, NULL, 1, 19, 0, 1, AL_TECH,
+                      FINT(PARMAC_DESCRIPTIONS_MODELLO_MACCHINA), NULL, NULL);
+    parameter_check_ranges(parameters, _NUM_PARMAC_COMMISSIONING);
+}
+
+
+void parmac_setup_full(model_t *p, size_t chunk, int reset) {
     size_t i = 0;
 
     switch (chunk) {
@@ -74,8 +88,8 @@ void parmac_setup(model_t *p, size_t chunk, int reset) {
             parameters[i++] = PARAMETER_C99(PARAMETER_TYPE_UINT8, &p->pmac.temperatura_max_1_in,                NULL,   NULL,   1,      125,    115,    1,      AL_TECH,     FINT(PARMAC_DESCRIPTIONS_TEMPERATURA_MAX_1_IN),                    NULL,       NULL);
             parameters[i++] = PARAMETER_C99(PARAMETER_TYPE_UINT8, &p->pmac.temperatura_sicurezza_1,             NULL,   NULL,   1,      145,    135,    1,      AL_TECH,     FINT(PARMAC_DESCRIPTIONS_TEMPERATURA_SICUREZZA_1),                 NULL,       NULL);
             parameters[i++] = PARAMETER_C99(PARAMETER_TYPE_UINT8, &p->pmac.tempo_allarme_temperatura_1,         NULL,   NULL,   0,      99,     60,     1,      AL_TECH,     FINT(PARMAC_DESCRIPTIONS_TEMPO_ALLARME_TEMPERATURA_1),             NULL,       NULL);
-            parameters[i++] = PARAMETER_C99(PARAMETER_TYPE_UINT8, &p->pmac.lingua,                              NULL,   NULL,   0,      6,      0,      1,      AL_USER,     FINT(PARMAC_DESCRIPTIONS_LINGUA),                                  NULL,       NULL);
-            parameters[i++] = PARAMETER_C99(PARAMETER_TYPE_UINT8, &p->pmac.stringa_ditta_visualizzata,          NULL,   NULL,   0,      5,      1,      1,      AL_TECH,     FINT(PARMAC_DESCRIPTIONS_STRINGA_DITTA_VISUALIZZATA),              NULL,       NULL);
+            parameters[i++] = PARAMETER_C99(PARAMETER_TYPE_UINT8, &p->pmac.lingua,                              NULL,   NULL,   0,      1,      0,      1,      AL_USER,     FINT(PARMAC_DESCRIPTIONS_LINGUA),                                  NULL,       NULL);
+            parameters[i++] = PARAMETER_C99(PARAMETER_TYPE_UINT8, &p->pmac.logo_ditta,                          NULL,   NULL,   0,      4,      1,      1,      AL_TECH,     FINT(PARMAC_DESCRIPTIONS_STRINGA_DITTA_VISUALIZZATA),              NULL,       NULL);
             parameters[i++] = PARAMETER_C99(PARAMETER_TYPE_UINT8, &p->pmac.abilita_tasto_menu,                  NULL,   NULL,   0,      1,      1,      1,      AL_TECH,     FINT(PARMAC_DESCRIPTIONS_LINGUA_MAX),                              NULL,       NULL);
             parameters[i++] = PARAMETER_C99(PARAMETER_TYPE_UINT8, &p->pmac.lingua_max,                          NULL,   NULL,   0,      7,      7,      1,      AL_TECH,     FINT(PARMAC_DESCRIPTIONS_LINGUA_MAX),                 NULL,       NULL);
             break;
@@ -205,7 +219,7 @@ static size_t num_parameters_in_chunk(size_t chunk) {
 static parameter_handle_t *get_actual_parameter(model_t *pmodel, size_t parameter, uint8_t al) {
     size_t chunk = get_parameter_chunk(pmodel, parameter);
     if (chunk != pmodel->parchunk) {
-        parmac_setup(pmodel, chunk, 0);
+        parmac_setup_full(pmodel, chunk, 0);
     }
 
     return parameter_get_handle(parameters, num_parameters_in_chunk(chunk), get_parameter_index(pmodel, parameter),
@@ -242,4 +256,17 @@ static size_t get_parameter_index(model_t *pmodel, size_t parameter) {
     }
 
     return 0;
+}
+
+
+const char *parmac_commissioning_language_get_description(model_t *pmodel) {
+    parameter_user_data_t data = parameter_get_user_data(&parameters[PARMAC_COMMISSIONING_LINGUA]);
+    return data.descrizione[pmodel->pmac.lingua];
+}
+
+
+
+void parmac_commissioning_operation(model_t *pmodel, parmac_commissioning_t parameter, int op) {
+    parameter_operator(&parameters[parameter], op);
+    pmodel->lingua_temporanea = pmodel->pmac.lingua;
 }

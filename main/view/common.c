@@ -1,4 +1,4 @@
-#include <assert.h>
+#include "utils/assert.h"
 #include "common.h"
 #include "gel/timer/timecheck.h"
 
@@ -99,7 +99,7 @@ lv_task_t *view_common_register_timer(unsigned long period) {
 
 static void timer_task(lv_task_t *task) {
     (void)task;
-    view_event((view_event_t){.code = VIEW_EVENT_TIMER});
+    view_event((view_event_t){.code = VIEW_EVENT_CODE_TIMER});
 }
 
 

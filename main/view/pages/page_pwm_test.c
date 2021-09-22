@@ -38,7 +38,7 @@ static view_message_t process_page_event(model_t *model, void *arg, pman_event_t
         case VIEW_EVENT_KEYPAD: {
             if (event.key_event.event == KEY_CLICK) {
                 switch (event.key_event.code) {
-                    case BUTTON_SKIP_RIGHT: {
+                    case BUTTON_CALDO: {
                         page_data.speed = 0;
                         page_data.step  = 0;
                         if (page_data.pwm == 1) {
@@ -47,11 +47,11 @@ static view_message_t process_page_event(model_t *model, void *arg, pman_event_t
                             msg.vmsg.extra = (void *)(uintptr_t)2;
                         } else {
                             msg.vmsg.code = VIEW_PAGE_COMMAND_CODE_SWAP_PAGE;
-                            msg.vmsg.page = &page_digin_test;
+                            msg.vmsg.page = &page_led_test;
                         }
                         break;
                     }
-                    case BUTTON_SKIP_LEFT: {
+                    case BUTTON_MEDIO: {
                         page_data.speed = 0;
                         page_data.step  = 0;
                         if (page_data.pwm == 1) {

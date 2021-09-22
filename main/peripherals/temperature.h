@@ -4,7 +4,6 @@
 #include <stdint.h>
 #include <stdlib.h>
 
-void temperature_init(void);
 int temperature_read(uint16_t *temperature, uint16_t *humidity);
 
 

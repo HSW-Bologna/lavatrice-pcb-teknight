@@ -11,9 +11,9 @@ typedef enum {
 #define ORARIO RELE_1
 #define ANTIORARIO RELE_2
 #define RISCALDAMENTO RELE_3
-#define VENTILAZIONE RELE_4
+#define MACCHINA_OCCUPATA RELE_4
 #define RESET_BRUCIATORE RELE_5
-#define MACCHINA_OCCUPATA RELE_6
+#define VENTILAZIONE RELE_6
 
 void digout_init(void);
 

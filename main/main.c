@@ -93,7 +93,7 @@ const unsigned char versione_prg[] = "V:00.1  D:05/08/2021";
 #include "controller/controller.h"
 #include "controller/stato.h"
 
-
+#include "peripherals/led.h"
 
 #include "controller/gt_allarmi.h"
 #include "controller/ciclo.h"
@@ -106,20 +106,19 @@ static model_t model;
 
 
 
-int main(void)
-{
-    unsigned long tskp=0, ts_input=0, ts_temperature=0, ts_spi=0;
-    
-    //inizializzazioni
+int main(void) {
+    unsigned long tskp = 0, ts_input = 0, ts_temperature = 0, ts_spi = 0;
+
+    // inizializzazioni
     system_init();
-    
+
     spi_init();
     nt7534_init();
     digout_init();
-    temperature_init();
+    led_init();
     keyboard_init();
-    
-    i2c_bitbang_init();
+
+    i2c_bitbang_init(5);
     digin_init();
     timer_init();
     ptc_init();
@@ -128,91 +127,82 @@ int main(void)
     gettoniera_init();
     uart_init();
     modbus_server_init();
-    
+
     model_init(&model);
     controller_init(&model);
     view_init(&model, nt7534_flush, nt7534_rounder, nt7534_set_px, keyboard_reset);
     digout_buzzer_bip(2, 100, 100);
-    
-    
-    
-    for(;;) {
+
+    for (;;) {
         controller_manage_gui(&model);
         modbus_server_manage();
-        
-        
-        
-        //controller_manage_stato(&model);
-        
+
         gt_allarmi(&model);
-        
+
         gt_ciclo(&model, get_millis());
-        
+
         gt_cesto(&model, get_millis());
         gt_macchina_occupata(&model);
         gt_ventilazione(&model, get_millis());
-        
-        
-        
-        
-                
+
         ClrWdt();
-        
-        if (is_expired(ts_input, get_millis(), 2))
-        {
-            if (digin_take_reading())
-            {
+
+        if (is_expired(ts_input, get_millis(), 2)) {
+            if (digin_take_reading()) {
                 view_event((view_event_t){.code = VIEW_EVENT_MODEL_UPDATE});
-                
-                model.inputs=digin_get_inputs();
+
+                model.inputs = digin_get_inputs();
             }
-            
-            if (gettoniera_take_insert())
-            {
-                view_event((view_event_t) {.code = VIEW_EVENT_MODEL_UPDATE});
-                
-                model.pwoff.credito+=gettoniera_get_count();
-                controller_update_pwoff(&model);
+
+            if (gettoniera_take_insert()) {
+                if (model_is_in_test(&model)) {
+                    view_event((view_event_t){.code = VIEW_EVENT_COIN, .coins = gettoniera_get_count()});
+                } else {
+                    view_event((view_event_t){.code = VIEW_EVENT_MODEL_UPDATE});
+                    model.pwoff.credito += gettoniera_get_count();
+                    controller_update_pwoff(&model);
+                }
                 gettoniera_reset_count();
             }
-            ts_input=get_millis();
+            ts_input = get_millis();
         }
-        
-        if (is_expired(ts_temperature, get_millis(), 50))
-        {
-            ptc_read_temperature();
-            view_event((view_event_t) {.code = VIEW_EVENT_MODEL_UPDATE});
-            
-            model.ptc_adc = ptc_get_adc_value();
-            model.ptc_temperature = ptc_get_temperature();
-            ts_temperature=get_millis();
-        }
-        
-        if (is_expired(ts_spi, get_millis(), 500))
-        {
-            uint16_t temp, hum;
-            
-            if (temperature_read(&temp, &hum) == 0)
-            {
-                model.sht_temperature = temp;
-                model.sht_umidity = hum/100;
-            }
-            ts_spi=get_millis();
-        }
-        
-        if (is_expired(tskp,get_millis(), 5))
-        {
+
+        if (is_expired(tskp, get_millis(), 5)) {
             keypad_update_t update = keyboard_manage(get_millis());
-            
-            if (update.event != KEY_NOTHING)
-            {
+
+            if (update.event != KEY_NOTHING) {
                 view_event((view_event_t){.code = VIEW_EVENT_KEYPAD, .key_event = update});
             }
-            tskp=get_millis();
+            tskp = get_millis();
         }
-        //controllo buzzer
-        digout_buzzer_check(); 
-        
+
+        if (is_expired(ts_temperature, get_millis(), 50)) {
+            ptc_read_temperature();
+            view_event((view_event_t){.code = VIEW_EVENT_MODEL_UPDATE});
+
+            model.ptc_adc         = ptc_get_adc_value();
+            model.ptc_temperature = ptc_get_temperature();
+            ts_temperature        = get_millis();
+        }
+
+        if (is_expired(ts_spi, get_millis(), 500)) {
+            uint16_t temp, hum;
+
+            if (temperature_read(&temp, &hum) == 0) {
+                model.sht_temperature = temp;
+                model.sht_umidity     = hum / 100;
+            }
+            ts_spi = get_millis();
+        }
+
+        if (timer_second_passed()) {
+            model_add_second(&model);
+            controller_update_pwoff(&model);
+        }
+
+        // controllo buzzer
+        digout_buzzer_check();
+
         __delay_us(10);
     }
     return 0;

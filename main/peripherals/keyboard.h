@@ -5,13 +5,10 @@
 #include <stdint.h>
 #include "gel/keypad/keypad.h"
 
-typedef enum
-{
-    BUTTON_NONE = 0,
-    BUTTON_SKIP_RIGHT,
+typedef enum {
+    BUTTON_NONE  = 0,
     BUTTON_MEDIO = 1,
     BUTTON_PADLOCK,
-    BUTTON_SKIP_LEFT,
     BUTTON_CALDO = 3,
     BUTTON_MINUS,
     BUTTON_FREDDO = 4,
@@ -22,9 +19,10 @@ typedef enum
     BUTTON_LINGUA,
     BUTTON_MENU,
     BUTTON_STOP,
-    BUTTON_STOP_MENU, // 10
-    BUTTON_STOP_MINUS, // 11
-    BUTTON_STOP_FREDDO = 11, // 10
+    BUTTON_STOP_MENU,          // 10
+    BUTTON_STOP_LANA = 11,
+    BUTTON_STOP_FREDDO,
+    BUTTON_LINGUA_TIEPIDO,
 } button_t;
 
 void            keyboard_init(void);

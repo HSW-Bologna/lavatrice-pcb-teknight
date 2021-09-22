@@ -10,3 +10,6 @@
 [submodule "components/liblightmodbus"]
 	path = components/liblightmodbus
 	url = https://github.com/Jacajack/liblightmodbus.git
+[submodule "components/SPI"]
+	path = components/SPI
+	url = https://github.com/Maldus512/SPI.git

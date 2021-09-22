@@ -101,12 +101,25 @@ static view_message_t process_page_event(model_t *model, void *arg, pman_event_t
                     msg.vmsg.code = VIEW_PAGE_COMMAND_CODE_CHANGE_PAGE;
                     msg.vmsg.page = &page_scelta_programma;
                     break;
+                } else if (view_common_check_password(&page_data.password, VIEW_PASSWORD_RESET, VIEW_LONG_PASSWORD_LEN,
+                                                      get_millis())) {
+                    msg.vmsg.code = VIEW_PAGE_COMMAND_CODE_CHANGE_PAGE;
+                    msg.vmsg.page = &page_reset_ram;
+                    break;
+                } else if (view_common_check_password(&page_data.password, VIEW_PASSWORD_TIEPIDO,
+                                                      VIEW_SHORT_PASSWORD_LEN, get_millis())) {
+                    msg.vmsg.code = VIEW_PAGE_COMMAND_CODE_CHANGE_PAGE;
+                    msg.vmsg.page = &page_stats;
+                    break;
                 } else if (view_common_check_password_started(&page_data.password)) {
                     break;
                 }
             }
 
-            if (event.key_event.code == BUTTON_STOP_FREDDO && event.key_event.event == KEY_CLICK) {
+            if (event.key_event.code == BUTTON_STOP_LANA && event.key_event.event == KEY_CLICK) {
+                msg.vmsg.code = VIEW_PAGE_COMMAND_CODE_CHANGE_PAGE;
+                msg.vmsg.page = &page_contrast;
+            } else if (event.key_event.code == BUTTON_STOP_FREDDO && event.key_event.event == KEY_CLICK) {
                 msg.vmsg.code = VIEW_PAGE_COMMAND_CODE_CHANGE_PAGE;
                 msg.vmsg.page = &page_info;
             } else if (event.key_event.code == BUTTON_LINGUA && event.key_event.event == KEY_CLICK) {
@@ -174,7 +187,7 @@ static view_message_t process_page_event(model_t *model, void *arg, pman_event_t
             }
             break;
         }
-        case VIEW_EVENT_TIMER: {
+        case VIEW_EVENT_CODE_TIMER: {
             lv_label_set_text_fmt(page_data.ltimer, "%lusec", model_get_stato_timer(model));
             break;
         }

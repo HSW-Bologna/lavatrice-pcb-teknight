@@ -22,7 +22,7 @@ static struct {
 
 
 static void *create_page(model_t *model, void *extra) {
-    parmac_setup(model, 0, 0);
+    parmac_setup_full(model, 0, 0);
     page_data.par_to_save     = 0;
     page_data.livello_accesso = model->pmac.abilita_parametri_ridotti;
     return NULL;
@@ -57,7 +57,7 @@ static view_message_t process_page_event(model_t *model, void *arg, pman_event_t
         case VIEW_EVENT_KEYPAD: {
             if (event.key_event.event == KEY_CLICK) {
                 switch (event.key_event.code) {
-                    case BUTTON_SKIP_LEFT:
+                    case BUTTON_MEDIO:
                         if (page_data.parameter > 0) {
                             page_data.parameter--;
                         } else {
@@ -66,7 +66,7 @@ static view_message_t process_page_event(model_t *model, void *arg, pman_event_t
                         msg.vmsg.code = VIEW_PAGE_COMMAND_CODE_UPDATE;
                         break;
 
-                    case BUTTON_SKIP_RIGHT:
+                    case BUTTON_CALDO:
                         page_data.parameter = (page_data.parameter + 1) % page_data.num_parameters;
                         msg.vmsg.code       = VIEW_PAGE_COMMAND_CODE_UPDATE;
                         break;
@@ -85,8 +85,9 @@ static view_message_t process_page_event(model_t *model, void *arg, pman_event_t
 
                     case BUTTON_STOP:
                         msg.vmsg.code = VIEW_PAGE_COMMAND_CODE_BACK;
-                        if (page_data.par_to_save)
+                        if (page_data.par_to_save) {
                             msg.cmsg.code = VIEW_CONTROLLER_COMMAND_CODE_PARAMETERS_SAVE;
+                        }
                         break;
                 }
             }

@@ -61,7 +61,7 @@ static view_message_t process_page_event(model_t *model, void *arg, pman_event_t
         case VIEW_EVENT_KEYPAD: {
             if (event.key_event.event == KEY_CLICK || event.key_event.event == KEY_LONGPRESS) {
                 switch (event.key_event.code) {
-                    case BUTTON_SKIP_LEFT:
+                    case BUTTON_MEDIO:
                         if (page_data.parameter > 0) {
                             page_data.parameter--;
                         } else {
@@ -70,7 +70,7 @@ static view_message_t process_page_event(model_t *model, void *arg, pman_event_t
                         msg.vmsg.code = VIEW_PAGE_COMMAND_CODE_UPDATE;
                         break;
 
-                    case BUTTON_SKIP_RIGHT:
+                    case BUTTON_CALDO:
                         page_data.parameter = (page_data.parameter + 1) % page_data.num_parameters;
                         msg.vmsg.code       = VIEW_PAGE_COMMAND_CODE_UPDATE;
                         break;

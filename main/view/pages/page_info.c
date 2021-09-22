@@ -55,7 +55,7 @@ static view_message_t process_page_event(model_t *pmodel, void *arg, pman_event_
     view_message_t msg = {.vmsg = {VIEW_PAGE_COMMAND_CODE_NOTHING}};
 
     switch (event.code) {
-        case VIEW_EVENT_TIMER:
+        case VIEW_EVENT_CODE_TIMER:
             msg.vmsg.code = VIEW_PAGE_COMMAND_CODE_UPDATE;
             break;
 

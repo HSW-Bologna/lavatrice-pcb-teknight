@@ -62,11 +62,6 @@ static uint8_t crc8_ccitt(const void * data, size_t size) {
 }
 
 
-void temperature_init(void) {
-    SPI_CS1_TRIS=TRIS_OUTPUT;
-}
-
-
 int temperature_read(uint16_t *temperature, uint16_t *humidity) {
     int     i;
     uint8_t rec_buf[5];

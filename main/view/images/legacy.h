@@ -41,7 +41,6 @@ extern const GSYMBOL legacy_img_antipiega;
 
 extern const GSYMBOL legacy_img_logo_ciao;
 extern const GSYMBOL legacy_img_logo_hoover;
-extern const GSYMBOL legacy_img_logo_hsw;
 extern const GSYMBOL legacy_img_logo_msgroup;
 extern const GSYMBOL legacy_img_logo_schulthess;
 extern const GSYMBOL legacy_img_logo_rotondi;

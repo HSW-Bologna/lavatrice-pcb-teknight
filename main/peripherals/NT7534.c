@@ -130,14 +130,14 @@ void nt7534_init(void) {
     nt7534_command(0xA0);
     nt7534_command(0x24);
     nt7534_command(0x81);
-    nt7534_command(0x1A);
+    nt7534_command(NT7534_DEFAULT_CONTRAST);
     nt7534_command(0x2F);
     nt7534_command(CMD_DISPLAY_ON);
 
     LCD_CS_D_LAT = 1;
 }
 
-void nt7534_reconfigure(void) {
+void nt7534_reconfigure(uint8_t contrast) {
     LCD_CS_D_LAT = 0;
     nt7534_command(CMD_SET_COLUMN_UPPER);
     nt7534_command(CMD_SET_DISP_START_LINE);
@@ -147,7 +147,7 @@ void nt7534_reconfigure(void) {
     nt7534_command(CMD_SET_COM_NORMAL);
     nt7534_command(0x24);
     nt7534_command(0x81);
-    nt7534_command(0x1A);
+    nt7534_command(contrast);
     nt7534_command(0x2F);
     nt7534_command(CMD_DISPLAY_ON);
     LCD_CS_D_LAT = 1;

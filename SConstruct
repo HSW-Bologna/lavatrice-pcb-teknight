@@ -128,6 +128,7 @@ def main():
         f"{LIBLIGHTMODBUS}/src").rglob('*.c')]
 
     sources = [str(filename) for filename in Path('simulator').rglob('*.c')]
+    sources += [str(filename) for filename in Path('main/utils').rglob('*.c')]
     sources += [str(filename) for filename in Path('main/view').rglob('*.c')]
     sources += [str(filename) for filename in Path('main/model').rglob('*.c')]
     sources += [str(filename)

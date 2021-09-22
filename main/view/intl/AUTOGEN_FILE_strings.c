@@ -1,4 +1,4 @@
-const char *strings[22][2] = {
+const char *strings[34][2] = {
     {"Scelta programma", "Choose program", },
     {"al  lavoro", "al  lavoro", },
     {"pausa lavoro", "pausa lavoro", },
@@ -21,5 +21,17 @@ const char *strings[22][2] = {
     {"TEMPERATURA ALTA", "TEMPERATURA ALTA", },
     {"ANOMALIA  ARIA", "ANOMALIA  ARIA", },
     {"MANUTENZIONE !", "MANUTENZIONE !", },
+    {"ITALIANO", "ITALIAN", },
+    {"INGLESE", "ENGLISH", },
+    {"CONTRASTO LCD", "LCD CONTRAST", },
+    {"STATISTICHE", "STATISTICS", },
+    {"Tempo accensione", "Active time", },
+    {"Tempo lavoro", "Work time", },
+    {"Tempo moto", "Run time", },
+    {"Tempo ventilaz.", "Fan run time", },
+    {"Tempo riscald.", "Heating time", },
+    {"Cicli parziali", "Partial cycles", },
+    {"Cicli totali", "Total cycles", },
+    {"Gettoni totali", "Total coins", },
 };
 

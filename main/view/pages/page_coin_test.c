@@ -8,9 +8,15 @@
 #include "peripherals/digin.h"
 
 static struct {
-    lv_obj_t *digin_in;
-    lv_obj_t *digin_status;
+    unsigned int coins;
+    lv_obj_t *   lbl_coins;
 } page_data;
+
+
+static void update_page(void) {
+    lv_label_set_text_fmt(page_data.lbl_coins, "IMPULSI %8i", page_data.coins);
+}
+
 
 static void *create_page(model_t *model, void *extra) {
     return NULL;
@@ -18,17 +24,16 @@ static void *create_page(model_t *model, void *extra) {
 
 
 static void open_page(model_t *model, void *data) {
-    view_common_title(lv_scr_act(), "TEST INGRESSI");
+    view_common_title(lv_scr_act(), "TEST GETT.");
 
-    lv_obj_t *lblin = lv_label_create(lv_scr_act(), NULL);
-    lv_obj_set_auto_realign(lblin, 1);
-    lv_obj_align(lblin, NULL, LV_ALIGN_IN_TOP_LEFT, 2, 20);
-    page_data.digin_in = lblin;
+    page_data.coins = 0;
 
-    lv_obj_t *lblstato = lv_label_create(lv_scr_act(), NULL);
-    lv_obj_set_auto_realign(lblstato, 1);
-    lv_obj_align(lblstato, NULL, LV_ALIGN_IN_TOP_RIGHT, 0, 20);
-    page_data.digin_status = lblstato;
+    lv_obj_t *lbl = lv_label_create(lv_scr_act(), NULL);
+    lv_obj_set_auto_realign(lbl, 1);
+    lv_obj_align(lbl, NULL, LV_ALIGN_IN_TOP_LEFT, 0, 20);
+    page_data.lbl_coins = lbl;
+
+    update_page();
 }
 
 
@@ -36,25 +41,27 @@ static view_message_t process_page_event(model_t *model, void *arg, pman_event_t
     view_message_t msg = VIEW_EMPTY_MSG;
 
     switch (event.code) {
-        case VIEW_EVENT_KEYPAD: {
+        case VIEW_EVENT_COIN:
+            page_data.coins += event.coins;
+            update_page();
+            break;
 
+        case VIEW_EVENT_KEYPAD: {
             if (event.key_event.event == KEY_CLICK && event.key_event.code == BUTTON_CALDO) {
                 msg.vmsg.code = VIEW_PAGE_COMMAND_CODE_SWAP_PAGE;
-                msg.vmsg.page = &page_digout_test;
+                msg.vmsg.page = &page_digin_test;
             }
             if (event.key_event.event == KEY_CLICK && event.key_event.code == BUTTON_MEDIO) {
                 msg.vmsg.code = VIEW_PAGE_COMMAND_CODE_SWAP_PAGE;
-                msg.vmsg.page = &page_coin_test;
+                msg.vmsg.page = &page_led_test;
             }
             if (event.key_event.event == KEY_CLICK && event.key_event.code == BUTTON_STOP) {
-                msg.vmsg.code           = VIEW_PAGE_COMMAND_CODE_SWAP_PAGE;
-                msg.vmsg.page           = &page_main;
-                model->status.f_in_test = 0;
+                page_data.coins = 0;
+                update_page();
             }
             break;
         }
         case VIEW_EVENT_MODEL_UPDATE: {
-            msg.vmsg.code = VIEW_PAGE_COMMAND_CODE_UPDATE;
             break;
         }
 
@@ -65,19 +72,10 @@ static view_message_t process_page_event(model_t *model, void *arg, pman_event_t
     return msg;
 }
 
-static view_t update_page(model_t *model, void *arg) {
 
-    lv_label_set_text_fmt(page_data.digin_in, "IN:", page_data.digin_in);
-    lv_label_set_text_fmt(page_data.digin_status, "%07b", model->inputs);
-
-    return 0;
-}
-
-
-const pman_page_t page_digin_test = {
+const pman_page_t page_coin_test = {
     .create        = create_page,
     .open          = open_page,
-    .update        = update_page,
     .process_event = process_page_event,
     .close         = view_close_all,
 };

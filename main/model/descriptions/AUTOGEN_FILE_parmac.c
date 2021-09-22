@@ -10,7 +10,7 @@ const char *parmac_descriptions[68][2] = {
     {"TEMP. MASSIMA T1", "TEMP. MASSIMA T1", },
     {"TEMP.SICUREZ. T1", "TEMP.SICUREZ. T1", },
     {"T. ALLARME T1", "T. ALLARME T1", },
-    {"LINGUA IN USO", "LINGUA IN USO", },
+    {"LINGUA", "LANGUAGE", },
     {"LOGO IN TESTATA", "LOGO IN TESTATA", },
     {"AB. TASTO MENU", "AB. TASTO MENU", },
     {"N.MAX.LINGUE BAN", "N.MAX.LINGUE BAN", },

@@ -6,34 +6,51 @@
 #include "controller.h"
 #include "peripherals/pwm.h"
 #include "peripherals/digout.h"
+#include "peripherals/led.h"
 #include "view/view.h"
 #include "peripherals/i2c_devices.h"
+#include "peripherals/NT7534.h"
 #include "i2c_devices/eeprom/24LC16/24LC16.h"
 #include "controller.h"
 #include "gel/serializer/serializer.h"
 #include "peripherals/pwoff.h"
 #include "gel/wearleveling/wearleveling.h"
 
-#define CHECK_BYTE                   0xAA
-#define CHECK_BYTE_ADDRESS           0
-#define PAR_START_ADDRESS            (CHECK_BYTE_ADDRESS) + 1
-#define PWOFF_DATA_ADDRESS           512UL
+#define CHECK_BYTE           0xAA
+#define CHECK_BYTE_ADDRESS   0
+#define PAR_START_ADDRESS    (CHECK_BYTE_ADDRESS) + 1
+#define PRIVATE_PARS_ADDRESS 256UL
+
+#define PWOFF_DATA_ADDRESS (PRIVATE_PARS_ADDRESS + 128UL)
+
+#if (PWOFF_DATA_ADDRESS % 16) != 0
+#error "Wear leveled memory should be aligned to page size!"
+#endif
+
 #define WL_BLOCK_SIZE                32UL
 #define WL_MEMORY_SIZE               256
 #define WL_BLOCK_NUM                 8
 #define WL_MARKER_ADDRESS(block_num) ((PWOFF_DATA_ADDRESS) + ((block_num) * (WL_BLOCK_SIZE)))
 #define WL_DATA_ADDRESS(block_num)   ((PWOFF_DATA_ADDRESS) + ((block_num) * (WL_BLOCK_SIZE) + 1))
 
-static uint8_t               pwoff_data[PWOFF_SERIALIZED_SIZE] = {0};
+#if PWOFF_SERIALIZED_SIZE > WL_BLOCK_SIZE
+#error "Wear leveled blocks are too small!"
+#endif
+
+//#define WEARLEVELING 1
+
+
+static uint8_t pwoff_data[PWOFF_SERIALIZED_SIZE] = {0};
+#ifdef WEARLEVELING
 static wear_leveled_memory_t memory;
 
 static int read_marker(size_t block_num, uint8_t *marker);
 static int read_block(size_t block_num, uint8_t *buffer, size_t len);
 static int write_block(size_t block_num, uint8_t marker, uint8_t *buffer, size_t len);
+#endif
+
 static int controller_start_check(void);
 
-
-#define WEARLEVELING 1
 
 
 void controller_process_msg(view_controller_command_t *msg, model_t *pmodel) {
@@ -75,7 +92,27 @@ void controller_process_msg(view_controller_command_t *msg, model_t *pmodel) {
             controller_save_pars(pmodel);
             break;
         }
-        
+
+        case VIEW_CONTROLLER_COMMAND_CODE_RESET_RAM: {
+            model_reset_parameters(pmodel);
+            model_init_parametri_ciclo(pmodel);
+            controller_save_pars(pmodel);
+            break;
+        }
+
+        case VIEW_CONTROLLER_COMMAND_CODE_UPDATE_LED: {
+            led_set_color(msg->led);
+            break;
+        }
+
+        case VIEW_CONTROLLER_COMMAND_CODE_UPDATE_CONTRAST:
+            nt7534_reconfigure(pmodel->hsw.contrasto);
+            break;
+
+        case VIEW_CONTROLLER_COMMAND_CODE_PRIVATE_PARAMETERS_SAVE:
+            controller_save_private_pars(pmodel);
+            break;
+
         case VIEW_CONTROLLER_COMMAND_CODE_NOTHING:
             break;
     }
@@ -83,9 +120,11 @@ void controller_process_msg(view_controller_command_t *msg, model_t *pmodel) {
 
 
 void controller_init(model_t *pmodel) {
+#ifdef WEARLEVELING
     wearleveling_init(&memory, read_block, write_block, read_marker, WL_BLOCK_NUM);
+#endif
     size_t i = 0;
-    
+
     if (!controller_start_check()) {
         uint8_t data[PARS_SERIALIZED_SIZE] = {0};
         parmac_init(pmodel, 1);
@@ -94,12 +133,20 @@ void controller_init(model_t *pmodel) {
         }
         uint8_t check_byte = CHECK_BYTE;
         EE24LC16_SEQUENTIAL_WRITE(eeprom_driver, CHECK_BYTE_ADDRESS, &check_byte, 1);
+
         i = model_pars_serialize(pmodel, data);
         EE24LC16_SEQUENTIAL_WRITE(eeprom_driver, PAR_START_ADDRESS, data, i);
+
+        i = model_private_parameters_serialize(pmodel, data);
+        EE24LC16_SEQUENTIAL_WRITE(eeprom_driver, PRIVATE_PARS_ADDRESS, data, i);
     } else {
         uint8_t data[PARS_SERIALIZED_SIZE] = {0};
         EE24CL16_SEQUENTIAL_READ(eeprom_driver, PAR_START_ADDRESS, data, PARS_SERIALIZED_SIZE);
         model_pars_deserialize(pmodel, data);
+
+        EE24CL16_SEQUENTIAL_READ(eeprom_driver, PRIVATE_PARS_ADDRESS, data, PRIVATE_PARS_SERIALIZED_SIZE);
+        model_private_parameters_deserialize(pmodel, data);
+
         parmac_init(pmodel, 0);
         for (i = 0; i < NUM_CICLI; i++) {
             parciclo_init(pmodel, i, 0);
@@ -116,6 +163,7 @@ void controller_init(model_t *pmodel) {
     }
 
     pwoff_set_callback(controller_save_pwoff);
+    nt7534_reconfigure(pmodel->hsw.contrasto);
 }
 
 
@@ -123,6 +171,13 @@ void controller_save_pars(model_t *pmodel) {
     uint8_t data[PARS_SERIALIZED_SIZE] = {0};
     size_t  i                          = model_pars_serialize(pmodel, data);
     EE24LC16_SEQUENTIAL_WRITE(eeprom_driver, PAR_START_ADDRESS, data, i);
+}
+
+
+void controller_save_private_pars(model_t *pmodel) {
+    uint8_t data[PRIVATE_PARS_SERIALIZED_SIZE] = {0};
+    size_t  i                                  = model_private_parameters_serialize(pmodel, data);
+    EE24LC16_SEQUENTIAL_WRITE(eeprom_driver, PRIVATE_PARS_ADDRESS, data, i);
 }
 
 
@@ -143,6 +198,7 @@ void controller_save_pwoff(void) {
 }
 
 
+#if WEARLEVELING
 static int read_marker(size_t block_num, uint8_t *marker) {
     if (block_num > (WL_BLOCK_NUM - 1)) {
         return 1;
@@ -161,23 +217,18 @@ static int read_block(size_t block_num, uint8_t *buffer, size_t len) {
 }
 
 static int write_block(size_t block_num, uint8_t marker, uint8_t *buffer, size_t len) {
-
     if (block_num > (WL_BLOCK_NUM - 1)) {
         return 1;
     }
 
-#ifdef WEARLEVELING
     uint8_t intermediate_buffer[len + 1];
 
     intermediate_buffer[0] = marker;
     memcpy(&intermediate_buffer[1], buffer, len);
     EE24LC16_SEQUENTIAL_WRITE(eeprom_driver, WL_MARKER_ADDRESS(block_num), intermediate_buffer, len + 1);
-#else
-    EE24LC16_SEQUENTIAL_WRITE(eeprom_driver, WL_MARKER_ADDRESS(block_num), &marker, 1);
-    EE24LC16_SEQUENTIAL_WRITE(eeprom_driver, WL_DATA_ADDRESS(block_num), buffer, len);
-#endif
     return 0;
 }
+#endif
 
 
 static int controller_start_check(void) {

@@ -6,7 +6,11 @@
 #include "view/view.h"
 #include "view/images/legacy.h"
 
-#define BUFFER_SIZE (256*3)
+
+#define BUFFER_SIZE (256 * 3)
+
+
+static void periodic_task(lv_task_t *task);
 
 
 QUEUE_DECLARATION(event_queue, view_event_t, 8);
@@ -47,7 +51,7 @@ view_t view_init(model_t *model, void (*flush_cb)(struct _disp_drv_t *, const lv
 
     pman_init(&pman);
     event_queue_init(&q);
-    return view_change_page(model, &page_main);
+    return view_change_page(model, &page_splash);
 }
 
 
@@ -138,8 +142,17 @@ void view_event(view_event_t event) {
 }
 
 
-
 void view_close_all(void *data) {
     (void)data;
     lv_obj_clean(lv_scr_act());
+}
+
+
+lv_task_t *view_register_periodic_task(size_t period, lv_task_prio_t prio, int id) {
+    return lv_task_create(periodic_task, period, prio, (void *)(uintptr_t)id);
+}
+
+
+static void periodic_task(lv_task_t *task) {
+    view_event((view_event_t){.code = VIEW_EVENT_CODE_TIMER, .timer_id = (int)(uintptr_t)task->user_data});
 }

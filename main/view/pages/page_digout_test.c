@@ -51,13 +51,13 @@ static view_message_t process_page_event(model_t *model, void *arg, pman_event_t
         case VIEW_EVENT_KEYPAD: {
             if (event.key_event.event == KEY_CLICK) {
                 switch (event.key_event.code) {
-                    case BUTTON_SKIP_LEFT: {
+                    case BUTTON_MEDIO: {
                         msg.cmsg.code = VIEW_CONTROLLER_COMMAND_CODE_DIGOUT_TURNOFF;
                         msg.vmsg.code = VIEW_PAGE_COMMAND_CODE_SWAP_PAGE;
                         msg.vmsg.page = &page_digin_test;
                         break;
                     }
-                    case BUTTON_SKIP_RIGHT: {
+                    case BUTTON_CALDO: {
                         msg.cmsg.code = VIEW_CONTROLLER_COMMAND_CODE_DIGOUT_TURNOFF;
                         msg.vmsg.code = VIEW_PAGE_COMMAND_CODE_SWAP_PAGE;
                         msg.vmsg.page = &page_temperature_test;
@@ -117,7 +117,7 @@ static view_message_t process_page_event(model_t *model, void *arg, pman_event_t
             break;
         }
 
-        case VIEW_EVENT_TIMER: {
+        case VIEW_EVENT_CODE_TIMER: {
             msg.vmsg.code = VIEW_PAGE_COMMAND_CODE_UPDATE;
             page_data.time--;
             if (page_data.time == 0) {
