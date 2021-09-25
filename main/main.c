@@ -129,8 +129,8 @@ int main(void) {
     modbus_server_init();
 
     model_init(&model);
-    controller_init(&model);
     view_init(&model, nt7534_flush, nt7534_rounder, nt7534_set_px, keyboard_reset);
+    controller_init(&model);
     digout_buzzer_bip(2, 100, 100);
 
     for (;;) {

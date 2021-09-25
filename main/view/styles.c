@@ -1,15 +1,21 @@
 #include "styles.h"
 #include "fonts/legacy_fonts.h"
 
+
 lv_style_t style_label_8x16;
+lv_style_t style_label_6x8;
 lv_style_t style_label_normal;
 lv_style_t style_label_reverse;
+
 
 void styles_init(void) {
     lv_style_copy(&style_label_8x16, &lv_style_plain);
     style_label_8x16.text.font = &hsw_8x16_font;
 
     lv_style_copy(&style_label_normal, &lv_style_scr);
+
+    lv_style_copy(&style_label_6x8, &lv_style_scr);
+    style_label_6x8.text.font = &hsw_6x8_font;
 
     lv_style_copy(&style_label_reverse, &lv_style_scr);
     style_label_reverse.body.main_color     = LV_COLOR_BLACK;

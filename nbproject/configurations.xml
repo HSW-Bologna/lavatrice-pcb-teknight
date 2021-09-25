@@ -480,9 +480,6 @@
       </logicalFolder>
       <logicalFolder name="main" displayName="main" projectFiles="true">
         <logicalFolder name="config" displayName="config" projectFiles="true">
-          <logicalFolder name="mbconf" displayName="mbconf" projectFiles="true">
-          </logicalFolder>
-          <itemPath>main/config/lightmodbus-impl.c</itemPath>
         </logicalFolder>
         <logicalFolder name="controller" displayName="controller" projectFiles="true">
           <itemPath>main/controller/gui.c</itemPath>
@@ -526,12 +523,14 @@
         </logicalFolder>
         <logicalFolder name="utils" displayName="utils" projectFiles="true">
           <itemPath>main/utils/assert.c</itemPath>
+          <itemPath>main/utils/lightmodbus-impl.c</itemPath>
         </logicalFolder>
         <logicalFolder name="view" displayName="view" projectFiles="true">
           <logicalFolder name="fonts" displayName="fonts" projectFiles="true">
             <itemPath>main/view/fonts/hsw8x8.c</itemPath>
             <itemPath>main/view/fonts/legacy_fonts.c</itemPath>
             <itemPath>main/view/fonts/hsw8x16.c</itemPath>
+            <itemPath>main/view/fonts/hsw6x8.c</itemPath>
           </logicalFolder>
           <logicalFolder name="images" displayName="images" projectFiles="true">
             <itemPath>main/view/images/legacy_img_insert_coin.c</itemPath>
@@ -575,6 +574,7 @@
             <itemPath>main/view/pages/page_coin_test.c</itemPath>
             <itemPath>main/view/pages/page_contrast.c</itemPath>
             <itemPath>main/view/pages/page_stats.c</itemPath>
+            <itemPath>main/view/pages/page_ram_error.c</itemPath>
           </logicalFolder>
           <logicalFolder name="widgets" displayName="widgets" projectFiles="true">
             <itemPath>main/view/widgets/custom_lv_img.c</itemPath>

@@ -37,11 +37,11 @@
 #error "Wear leveled blocks are too small!"
 #endif
 
-//#define WEARLEVELING 1
+//#define ENABLE_WEARLEVELING 1
 
 
 static uint8_t pwoff_data[PWOFF_SERIALIZED_SIZE] = {0};
-#ifdef WEARLEVELING
+#ifdef ENABLE_WEARLEVELING
 static wear_leveled_memory_t memory;
 
 static int read_marker(size_t block_num, uint8_t *marker);
@@ -120,7 +120,7 @@ void controller_process_msg(view_controller_command_t *msg, model_t *pmodel) {
 
 
 void controller_init(model_t *pmodel) {
-#ifdef WEARLEVELING
+#ifdef ENABLE_WEARLEVELING
     wearleveling_init(&memory, read_block, write_block, read_marker, WL_BLOCK_NUM);
 #endif
     size_t i = 0;
@@ -153,7 +153,7 @@ void controller_init(model_t *pmodel) {
         }
 
         uint8_t pwoff_data[PWOFF_SERIALIZED_SIZE] = {0};
-#ifdef WEARLEVELING
+#ifdef ENABLE_WEARLEVELING
         wearleveling_read(&memory, pwoff_data, PWOFF_SERIALIZED_SIZE);
 #else
         EE24CL16_SEQUENTIAL_READ(eeprom_driver, PWOFF_DATA_ADDRESS, pwoff_data, PWOFF_SERIALIZED_SIZE);
@@ -164,6 +164,7 @@ void controller_init(model_t *pmodel) {
 
     pwoff_set_callback(controller_save_pwoff);
     nt7534_reconfigure(pmodel->hsw.contrasto);
+    view_change_page(pmodel, &page_splash);
 }
 
 
@@ -190,7 +191,7 @@ size_t controller_update_pwoff(model_t *pmodel) {
 
 
 void controller_save_pwoff(void) {
-#ifdef WEARLEVELING
+#ifdef ENABLE_WEARLEVELING
     wearleveling_write(&memory, pwoff_data, PWOFF_SERIALIZED_SIZE);
 #else
     EE24LC16_SEQUENTIAL_WRITE(eeprom_driver, PWOFF_DATA_ADDRESS, pwoff_data, PWOFF_SERIALIZED_SIZE);
@@ -198,7 +199,7 @@ void controller_save_pwoff(void) {
 }
 
 
-#if WEARLEVELING
+#if ENABLE_WEARLEVELING
 static int read_marker(size_t block_num, uint8_t *marker) {
     if (block_num > (WL_BLOCK_NUM - 1)) {
         return 1;

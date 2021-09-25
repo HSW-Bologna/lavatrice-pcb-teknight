@@ -33,3 +33,5 @@ TEMPO_RISCALDAMENTO, Tempo riscald., Heating time
 CICLI_PARZIALI, Cicli parziali, Partial cycles
 CICLI_TOTALI, Cicli totali, Total cycles
 GETTONI_TOTALI, Gettoni totali, Total coins
+ERRORE_FATALE_RAM, Si e' verificato un malfunzionamento fatale della eeprom. I parametri non verranno caricati,
+ERRORE_LIEVE_RAM, I parametri caricati dalla eeprom non erano validi. Sono stati corretti,

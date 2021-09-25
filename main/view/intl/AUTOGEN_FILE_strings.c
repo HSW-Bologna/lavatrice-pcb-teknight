@@ -1,4 +1,4 @@
-const char *strings[34][2] = {
+const char *strings[36][2] = {
     {"Scelta programma", "Choose program", },
     {"al  lavoro", "al  lavoro", },
     {"pausa lavoro", "pausa lavoro", },
@@ -33,5 +33,7 @@ const char *strings[34][2] = {
     {"Cicli parziali", "Partial cycles", },
     {"Cicli totali", "Total cycles", },
     {"Gettoni totali", "Total coins", },
+    {"Si e' verificato un malfunzionamento fatale della eeprom. I parametri non verranno caricati", "", },
+    {"I parametri caricati dalla eeprom non erano validi. Sono stati corretti", "", },
 };
 

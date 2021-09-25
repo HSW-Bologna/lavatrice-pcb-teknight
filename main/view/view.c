@@ -21,7 +21,7 @@ static void (*reset_input)(void) = NULL;
 static page_manager_t pman;
 
 
-view_t view_init(model_t *model, void (*flush_cb)(struct _disp_drv_t *, const lv_area_t *, lv_color_t *),
+void view_init(model_t *model, void (*flush_cb)(struct _disp_drv_t *, const lv_area_t *, lv_color_t *),
                  void (*rounder_cb)(struct _disp_drv_t *, lv_area_t *),
                  void (*set_px_cb)(struct _disp_drv_t *, uint8_t *, lv_coord_t, lv_coord_t, lv_coord_t, lv_color_t,
                                    lv_opa_t),
@@ -51,7 +51,7 @@ view_t view_init(model_t *model, void (*flush_cb)(struct _disp_drv_t *, const lv
 
     pman_init(&pman);
     event_queue_init(&q);
-    return view_change_page(model, &page_splash);
+    //view_change_page(model, &page_splash);
 }
 
 
