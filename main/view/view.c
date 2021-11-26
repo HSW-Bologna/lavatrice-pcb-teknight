@@ -13,7 +13,7 @@
 static void periodic_task(lv_task_t *task);
 
 
-QUEUE_DECLARATION(event_queue, view_event_t, 8);
+QUEUE_DECLARATION(event_queue, view_event_t, 12);
 QUEUE_DEFINITION(event_queue, view_event_t);
 static struct event_queue q;
 

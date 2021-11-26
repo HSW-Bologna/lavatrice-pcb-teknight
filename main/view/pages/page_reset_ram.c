@@ -13,6 +13,7 @@
 static struct page_data {
     lv_obj_t *lbl;
     size_t    count;
+    size_t    count2;
 } data;
 
 
@@ -24,6 +25,7 @@ static void *create_page(model_t *model, void *extra) {
 static void open_page(model_t *pmodel, void *args) {
     (void)args;
     data.count = 0;
+    data.count2 = 0;
 
     lv_obj_t *lbl = lv_label_create(lv_scr_act(), NULL);
     lv_label_set_text(lbl, "* DEL RAM  ? *");
@@ -58,6 +60,15 @@ static view_message_t process_page_event(model_t *pmodel, void *arg, pman_event_
                             msg.vmsg.page = &page_splash;
                         } else {
                             lv_label_set_text_fmt(data.lbl, "[Start]   (%i)", data.count);
+                        }
+                        break;
+
+                    case BUTTON_TIEPIDO:
+                        data.count2++;
+                        if (data.count2 >= 3) {
+                            pmodel->pmac.abilita_parametri_ridotti = 0;
+                            msg.vmsg.code = VIEW_PAGE_COMMAND_CODE_REBASE;
+                            msg.vmsg.page = &page_splash;
                         }
                         break;
                 }

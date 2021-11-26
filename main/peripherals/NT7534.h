@@ -5,7 +5,9 @@
 #include <stdint.h>
 
 
+
 #define NT7534_DEFAULT_CONTRAST 26
+
 
 
 void nt7534_init(void);
@@ -16,4 +18,4 @@ void nt7534_flush(lv_disp_drv_t *disp_drv, const lv_area_t *area, lv_color_t *co
 void nt7534_sync(uint8_t *data, lv_coord_t x1, lv_coord_t y1, lv_coord_t x2, lv_coord_t y2);
 void nt7534_reconfigure(uint8_t contrast);
 
-#endif
+#endif  /* NT7534_H_INCLUDED */

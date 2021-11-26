@@ -1,4 +1,6 @@
 #include <stdio.h>
+#include "controller/controller.h"
+
 #include "view/view.h"
 #include "gel/pagemanager/page_manager.h"
 #include "model/model.h"
@@ -29,6 +31,7 @@ static void open_page(model_t *model, void *data) {
     lv_obj_align(lblspeed, NULL, LV_ALIGN_IN_TOP_LEFT, 0, 20);
     page_data.speedlbl = lblspeed;
 }
+
 
 
 static view_message_t process_page_event(model_t *model, void *arg, pman_event_t event) {

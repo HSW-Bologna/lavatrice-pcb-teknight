@@ -36,6 +36,7 @@ extern const GSYMBOL legacy_img_program_medio;
 extern const GSYMBOL legacy_img_program_tiepido;
 extern const GSYMBOL legacy_img_program_freddo;
 extern const GSYMBOL legacy_img_program_lana;
+
 extern const GSYMBOL legacy_img_raffreddamento;
 extern const GSYMBOL legacy_img_antipiega;
 
@@ -45,4 +46,4 @@ extern const GSYMBOL legacy_img_logo_msgroup;
 extern const GSYMBOL legacy_img_logo_schulthess;
 extern const GSYMBOL legacy_img_logo_rotondi;
 
-#endif
+#endif  /* LEGACY_H_INCLUDED */

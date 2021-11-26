@@ -39,9 +39,9 @@ typedef enum
     ANTIPIEGA_START = 0,
     ANTIPIEGA_RITARDO,
     ANTIPIEGA_TIPO_DURATA,
-    ANTIPIEGA_DURATA_TERMINE,
+    ANTIPIEGA_DURATA_TERMINE,                           // 03
             
-    ANTIPIEGA_DURATA_TERMINE_CHECK,        
+    ANTIPIEGA_DURATA_TERMINE_CHECK,
     ANTIPIEGA_DURATA_TERMINE_GESTIONE,
     ANTIPIEGA_DURATA_TERMINE_GESTIONE_INV_NO,
     ANTIPIEGA_DURATA_TERMINE_GESTIONE_INV_NO_GIRO,
@@ -50,7 +50,7 @@ typedef enum
     ANTIPIEGA_DURATA_TERMINE_GESTIONE_INV_SI_GIRO_ORA,
     ANTIPIEGA_DURATA_TERMINE_GESTIONE_INV_SI_PAUSA_ORA,
     ANTIPIEGA_DURATA_TERMINE_GESTIONE_INV_SI_GIRO_ANT,
-    ANTIPIEGA_DURATA_TERMINE_GESTIONE_INV_SI_PAUSA_ANT,
+    ANTIPIEGA_DURATA_TERMINE_GESTIONE_INV_SI_PAUSA_ANT, // 13
             
     ANTIPIEGA_DURATA_INFINITA,
     ANTIPIEGA_DURATA_INFINITA_INV_NO,
@@ -60,21 +60,20 @@ typedef enum
     ANTIPIEGA_DURATA_INFINITA_INV_SI_GIRO_ORA,
     ANTIPIEGA_DURATA_INFINITA_INV_SI_PAUSA_ORA,
     ANTIPIEGA_DURATA_INFINITA_INV_SI_GIRO_ANT,
-    ANTIPIEGA_DURATA_INFINITA_INV_SI_PAUSA_ANT,
+    ANTIPIEGA_DURATA_INFINITA_INV_SI_PAUSA_ANT,         // 22
             
-    ANTIPIEGA_ATTESA_APERTURA_OBLO,
+    ANTIPIEGA_ATTESA_APERTURA_OBLO,                     // 23
 } fase_antipiega_t;
 
 
 
+void gt_cesto(model_t *model, unsigned long timestamp);
 
-void gt_cesto(model_t *p, unsigned long timestamp);
+void cesto_stop(model_t *model);
+void cesto_avanti(model_t *model);
+void cesto_indietro(model_t *model);
 
-void cesto_stop(void);
-void cesto_avanti(model_t *p);
-void cesto_indietro(model_t *p);
-
-void gt_velocita_cesto(model_t *p);
-void gt_velocita_simulata(model_t *p);
+void gt_velocita_cesto(model_t *model);
+void gt_velocita_simulata(model_t *model);
 
 #endif

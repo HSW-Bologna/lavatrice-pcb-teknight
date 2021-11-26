@@ -29,6 +29,6 @@ void clear_digout_all (void);
 void digout_buzzer_bip(size_t r, unsigned long t_on, unsigned long t_off);
 void digout_buzzer_check(void);
 uint8_t rele_get_status(void);
+uint8_t rele_get(rele_t);
 
-#endif	
-
+#endif  /* DIGOUT_H_INCLUDED */

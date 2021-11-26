@@ -7,6 +7,8 @@
 
 #include "controller/ciclo.h"
 #include "model/model.h"
+#include "view/view_types.h"
+#include "timer.h"
 
 extern stopwatch_t ct_moto_cesto;
 extern stopwatch_t ct_oblo_open_close_on;
@@ -30,109 +32,68 @@ void gt_ciclo(model_t *p, uint32_t timestamp)
         stopwatch_init(&ct_anti_piega_pausa);
     }
     
+
+
+    // STATO - PAUSA ======================================================== //
+    if (model_get_status_pause(p))
+    {
+        stopwatch_pause(&ct_moto_cesto, get_millis());
+        
+        stopwatch_pause(&ct_anti_piega_rit, get_millis());
+        
+        stopwatch_pause(&ct_anti_piega_max, get_millis());
+        stopwatch_pause(&ct_anti_piega, get_millis());
+        stopwatch_pause(&ct_anti_piega_pausa, get_millis());
+        model_metti_tempo_lavoro_in_pausa(p, get_millis());
+    }
     
-    return;
     
-//    if (model_get_status_stopped(p)) // =========================================== //
-//    {
-////      stato.numero_programma = 0; ToDO -!!!!
-//        
-//        
-//        
-//        stopwatch_init(&ct_durata);
-//        stopwatch_init(&ct_precarica);
-//        stopwatch_init(&ct_all_livello);
-//        stopwatch_init(&ct_all_temperatura);
-//        stopwatch_init(&ct_all_scarico);
-//        
-//        if (stato.f_in_test==0)
-//        {
-//            stopwatch_init(&ct_colpo_apert_scarico);
-//        }
-//        
-//        stopwatch_init(&ct_gt_sbil);
-//        stopwatch_init(&ct_frenata);
-//        stopwatch_init(&ct_gt_sbil_acc);
-//        
-////////        stopwatch_set(&ct_durata, 0);
-////////        stopwatch_set(&ct_precarica, 0);
-////////        stopwatch_set(&ct_all_livello, 0);
-////////        stopwatch_set(&ct_all_temperatura, 0);
-////////        stopwatch_set(&ct_all_scarico, 0);
-////////        
-////////        if (stato.f_in_test==0)
-////////        {
-////////            stopwatch_set(&ct_colpo_apert_scarico, 0);
-////////        }
-////////        
-////////        stopwatch_set(&ct_gt_sbil, 0);
-////////        stopwatch_set(&ct_frenata, 0);
-////////        stopwatch_set(&ct_gt_sbil_acc, 0);
-//        
-//        
-//        
-//        stopwatch_init(&ct_frenata_tappo_prox);
-////////        stopwatch_set(&ct_frenata_tappo_prox, 0);
-//        
-//        
-//        
-//        stato.sottostato = 0;
-//        step_parameters.codice_step = 0;
-//        stato.cod_vis_ped = 0;
-//        
-//        stato.f_alt_tempo_durata = 0;
-//        stato.f_alt_tempo_durata_sap = 0;
-//        stato.f_alt_tempo_durata_sap_standby = 0;
-//        
-//        stato.f_vis_popup_frenata = FRE_OFF;
-//        stato.nro_sbilanc = 0;
-//        stato.cc_cicli_prep = 0;
-//        stato.f_sbilanciamento = 0;
-//        stato.f_blocco_velocita = 0;
-//
-//        stato.nf_ok_liv  = 0;
-//        stato.f_ok_liv = 0;
-//        stato.ff_ok_liv = 0;
-//        
-//        stato.nf_ok_liv_risc = 0;
-//        stato.f_ok_liv_risc = 0;
-//        
-//        
-//        stato.f_ok_temp = 0;
-//        stato.ff_ok_temp = 0;
-//        stato.f_in_termodeg = 0;
-//        
-//        stato.f_all_no_riempimento = 0;
-//        stato.f_all_no_riscaldamento = 0;
-//        stato.f_all_no_scarico = 0;
-//        
-//        stato.f_ok_scarico = 0;
-//        
-//        memset(&step_parameters, 0, sizeof(step_parameters_t));
-//        
-//        return;
-//    }
-//    
-//    
-//    
-//    
-//    // STATO - PAUSA ======================================================== //
-//    if (model_get_status_pause(p))
-//    {
-//        stopwatch_pause(&ct_durata, get_millis());
-//        
-//        stopwatch_pause(&ct_precarica, get_millis());
-//        
-//        stopwatch_pause(&ct_all_livello, get_millis());
-//        stopwatch_pause(&ct_all_temperatura, get_millis());
-//        stopwatch_pause(&ct_all_scarico, get_millis());
-//        
-//        stopwatch_pause(&ct_frenata, get_millis());
-//    }
-//    
-//        
-//    
-//    
+    
+    
+    // STATO - WORK ======================================================== //
+    if (model_get_status_work(p))
+    {
+        switch (p->status.stato_step) {
+            case STATO_STEP_ASC:
+                if (model_tempo_lavoro_scaduto(p, get_millis())) {
+                    if (model_ciclo_corrente(p)->abilita_raffreddamento)
+                    {
+                        model_comincia_raffreddamento(p);
+                    }
+                    else if (model_ciclo_corrente(p)->abilita_antipiega)
+                    {
+                        model_comincia_antipiega(p);
+                    }
+                    else
+                    {
+                        model_set_status_stopped(p);
+                    }
+                    view_event((view_event_t){.code = VIEW_EVENT_STEP_UPDATE});
+                }
+                break;
+
+            case STATO_STEP_RAF:
+                if (model_tempo_lavoro_scaduto(p, get_millis())) {
+                    if (model_ciclo_corrente(p)->abilita_antipiega)
+                    {
+                        model_comincia_antipiega(p);
+                    }
+                    else
+                    {
+                        model_set_status_stopped(p);
+                    }
+                    view_event((view_event_t){.code = VIEW_EVENT_STEP_UPDATE});
+                }
+                break;
+
+            case STATO_STEP_ANT:
+                break;
+        }
+    }
+    
+    
+    
+    
 //    // STATO - MARCIA ======================================================= //
 //    if (stato_in_marcia(&stato) && stato.stato_step==1 && step_parameters.codice_step!=0)
 //    {
@@ -297,25 +258,3 @@ void gt_ciclo(model_t *p, uint32_t timestamp)
 //    }
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

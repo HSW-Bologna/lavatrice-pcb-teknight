@@ -1,8 +1,13 @@
-#include "hardwareprofile.h"
-#include "pwm.h"
 #include <xc.h>
+#include "model/model.h"
+
+#include "hardwareprofile.h"
+
+#include "pwm.h"
 
 #define PERIOD (0xFFFF/16)
+
+
 
 void pwm_init(void) {
     TRISBbits.TRISB5 = TRIS_OUTPUT; 
@@ -63,26 +68,29 @@ void pwm_init(void) {
     CCP2CON1Lbits.CCPON = 1;          // Turn on MCCP module
 }
 
-void pwm_set(uint8_t perc, int i) {
+void pwm_set(model_t *p, uint8_t giri, uint8_t ch) {
     Nop();
     Nop();
     Nop();
 //    uint16_t res = (uint16_t)((unsigned long)PERIOD*(unsigned long)perc)/100;
-    uint16_t res = (uint16_t)((unsigned long)PERIOD/100)*perc;
+    uint16_t res = (uint16_t)((unsigned long)PERIOD/p->pmac.velocita_max_lavoro)*giri;
     if (res==0) {
         res = 1;
     }
 
-    if (perc == 100)
+    if (giri >= p->pmac.velocita_max_lavoro)
         res = PERIOD;
     
     Nop();
     Nop();
     Nop();
-    if (i==1)
+    
+    if (ch==1)
         CCP1RA = res;
-    if (i==2)
+    
+    if (ch==2)
         CCP2RA = res;
+    
     Nop();
     Nop();
     Nop();

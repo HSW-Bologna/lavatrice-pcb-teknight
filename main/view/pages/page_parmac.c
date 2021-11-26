@@ -85,6 +85,8 @@ static view_message_t process_page_event(model_t *model, void *arg, pman_event_t
 
                     case BUTTON_STOP:
                         msg.vmsg.code = VIEW_PAGE_COMMAND_CODE_BACK;
+#warning "Rimuovere i parametri estesi in uscita dalla pagina!"
+                        //model->pmac.abilita_parametri_ridotti = 1;
                         if (page_data.par_to_save) {
                             msg.cmsg.code = VIEW_CONTROLLER_COMMAND_CODE_PARAMETERS_SAVE;
                         }

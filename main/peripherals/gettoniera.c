@@ -18,15 +18,21 @@ void gettoniera_init(void) {
 
 void gettoniera_reset_count(void) {
     pulse_clear(&filter, 0);
+    pulse_clear(&filter, 1);
 }
 
 int gettoniera_take_insert(void) {   
-    unsigned int input=GETT_PORT;
+    unsigned int input=GETT_PORT | (1 << !IN3_PORT);
     return pulse_filter(&filter, input, 10);
 }
 
 unsigned int gettoniera_get_count(void) {
-    return pulse_count(&filter,0);
+    return pulse_count(&filter,0) ;
+}
+
+
+unsigned int gettoniera_get_count_ingresso(void) {
+    return pulse_count(&filter, 1);
 }
 
 int gettoniera_get_pulse_level(void) {

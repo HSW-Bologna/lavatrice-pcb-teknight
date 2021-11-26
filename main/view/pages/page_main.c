@@ -2,6 +2,7 @@
 
 #include "controller/gt_allarmi.h"
 #include "gel/pagemanager/page_manager.h"
+#include "gel/timer/timecheck.h"
 #include "lvgl/lvgl.h"
 #include "model/model.h"
 #include "peripherals/keyboard.h"
@@ -54,10 +55,13 @@ static struct {
     lv_obj_t *ltemperature;
     lv_obj_t *status;
     lv_obj_t *image;
+    
+    unsigned long stop_timestamp;
 } page_data;
 
 static void view_status_string(model_t *p);
 static void view_status_legacy_img(model_t *p);
+static void update_timer(model_t *pmodel);
 
 stopwatch_t ct_string_status_change = STOPWATCH_NULL;
 
@@ -103,10 +107,9 @@ static void open_page(model_t *model, void *data) {
     lv_obj_set_auto_realign(lbltimer, 1);
     lv_obj_align(lbltimer, NULL, LV_ALIGN_IN_TOP_RIGHT, 0, 10);
     page_data.ltimer = lbltimer;
-    lv_obj_set_hidden(page_data.ltimer, 1);
     
     view_status_string(model);
-    
+    update_timer(model);
 ////    if (model->status.n_allarme == ALL_NO)
 ////    {
 ////        lv_label_set_text(page_data.status, view_intl_get_string(model, STRINGS_SCELTA_PROGRAMMA));
@@ -132,12 +135,6 @@ static view_message_t process_page_event(model_t *model, void *arg, pman_event_t
         
         case VIEW_EVENT_KEYPAD:
         {
-            // msg.vmsg.code = VIEW_PAGE_COMMAND_CODE_UPDATE;
-            if (model->status.n_allarme != 0) {
-                lv_label_set_text(page_data.status,
-                        view_intl_get_string(model, allarme_codice[model->status.n_allarme - 1]));
-                custom_lv_img_set_src(page_data.image, &legacy_img_warning);
-            }
             if (event.key_event.event == KEY_CLICK)
             {
                 view_common_password_add_key(&page_data.password, event.key_event.code, get_millis());
@@ -170,112 +167,184 @@ static view_message_t process_page_event(model_t *model, void *arg, pman_event_t
                 } else if (view_common_check_password_started(&page_data.password)) {
                     break;
                 }
-            }
 
-            if (event.key_event.code == BUTTON_STOP_LANA && event.key_event.event == KEY_CLICK) {
-                msg.vmsg.code = VIEW_PAGE_COMMAND_CODE_CHANGE_PAGE;
-                msg.vmsg.page = &page_contrast;
-            } else if (event.key_event.code == BUTTON_STOP_FREDDO && event.key_event.event == KEY_CLICK) {
-                msg.vmsg.code = VIEW_PAGE_COMMAND_CODE_CHANGE_PAGE;
-                msg.vmsg.page = &page_info;
-            } else if (event.key_event.code == BUTTON_LINGUA && event.key_event.event == KEY_CLICK) {
-                model_cambia_lingua(model);
+                switch (event.key_event.code) {
+                    case BUTTON_STOP_LANA:
+                        msg.vmsg.code = VIEW_PAGE_COMMAND_CODE_CHANGE_PAGE;
+                        msg.vmsg.page = &page_contrast;
+                        break;
+
+                    case BUTTON_STOP_FREDDO:
+                        msg.vmsg.code = VIEW_PAGE_COMMAND_CODE_CHANGE_PAGE;
+                        msg.vmsg.page = &page_info;
+                        break;
+
+                    case BUTTON_LINGUA:
+                        model_cambia_lingua(model);
                 
-                lv_label_set_text(page_data.status, view_intl_get_string(model, STRINGS_SCELTA_PROGRAMMA));
-                view_status_string(model);
-            }
-            else if (event.key_event.code == BUTTON_CALDO && event.key_event.event == KEY_CLICK)
-            {
-                if(model->status.n_allarme == ALL_NO)
-                {
-                    model_set_status_work(model);
-                    model_set_status_step_asc(model);
-                    model->status.ciclo = CICLO_CALDO;
+                        lv_label_set_text(page_data.status, view_intl_get_string(model, STRINGS_SCELTA_PROGRAMMA));
+                        view_status_string(model);
+                        break;
 
-                    lv_obj_set_hidden(page_data.ltimer, 0);
+                    case BUTTON_CALDO:
+                         if(model->status.n_allarme == ALL_NO)
+                        {
+                            model_set_status_work(model);
+                            model_set_status_step_asc(model);
+                            model->status.ciclo = CICLO_CALDO;
+                            view_status_string(model);
+                            update_timer(model);
+                        } 
+                        else 
+                        {
+                             gt_allarmi_azzera(model);
+                        }
+                        break;
 
-                    view_status_string(model);
-                }
-            } else if (event.key_event.code == BUTTON_MEDIO && event.key_event.event == KEY_CLICK) {
-                if(model->status.n_allarme == ALL_NO)
-                {
-                    model_set_status_work(model);
-                    model_set_status_step_asc(model);
-                    model->status.ciclo = CICLO_MEDIO;
+                    case BUTTON_MEDIO:
+                        if(model->status.n_allarme == ALL_NO)
+                        {
+                            model_set_status_work(model);
+                            model_set_status_step_asc(model);
+                            model->status.ciclo = CICLO_MEDIO;
 
-                    view_status_string(model);
+                            view_status_string(model);
+                            update_timer(model);
+                        }
+                        else 
+                        {
+                             gt_allarmi_azzera(model);
+                        }
+                        break;
+
+                    case BUTTON_TIEPIDO:
+                        if(model->status.n_allarme == ALL_NO)
+                        {
+                            model_set_status_work(model);
+                            model_set_status_step_asc(model);
+                            model->status.ciclo = CICLO_TIEPIDO;
+
+                            view_status_string(model);
+                            update_timer(model);
+                        }
+                        else 
+                        {
+                             gt_allarmi_azzera(model);
+                        }
+                        break;
+
+                    case BUTTON_LANA:
+                        if(model->status.n_allarme == ALL_NO)
+                        {
+                            model_set_status_work(model);
+                            model_set_status_step_asc(model);
+                            model->status.ciclo = CICLO_LANA;
+
+                            view_status_string(model);
+                            update_timer(model);
+                        }
+                        else 
+                        {
+                             gt_allarmi_azzera(model);
+                        }
+                        break;
+
+                    case BUTTON_FREDDO:
+                        if(model->status.n_allarme == ALL_NO)
+                        {
+                            model_set_status_work(model);
+                            model_set_status_step_asc(model);
+                            model->status.ciclo = CICLO_FREDDO;
+
+                            view_status_string(model);
+                            update_timer(model);
+                        }
+                        else 
+                        {
+                             gt_allarmi_azzera(model);
+                        }
+                        break;
+
+                    case BUTTON_STOP:
+                        page_data.stop_timestamp = get_millis();
+                        break;
+
+                    default:
+                        break;
                 }
-            } else if (event.key_event.code == BUTTON_TIEPIDO && event.key_event.event == KEY_CLICK) {
-                if(model->status.n_allarme == ALL_NO)
-                {
-                    model_set_status_work(model);
-                    model_set_status_step_asc(model);
-                    model->status.ciclo = CICLO_TIEPIDO;
-                    
-                    view_status_string(model);
+            } else if (event.key_event.event == KEY_LONGCLICK) {
+                switch (event.key_event.code) {
+                    case BUTTON_STOP:
+                        break;
                 }
-            } else if (event.key_event.code == BUTTON_LANA && event.key_event.event == KEY_CLICK) {
-                if(model->status.n_allarme == ALL_NO)
-                {
-                    model_set_status_work(model);
-                    model_set_status_step_asc(model);
-                    model->status.ciclo = CICLO_LANA;
-                    
-                    view_status_string(model);
+            } else if (event.key_event.event == KEY_PRESSING || event.key_event.event == KEY_LONGPRESS) {
+                switch (event.key_event.code) {
+                    case BUTTON_STOP:
+                        if (model_get_status_pause(model) 
+                                && is_expired(page_data.stop_timestamp, get_millis(), model->pmac.tempo_azzeramento_ciclo_stop*1000UL))
+                        {
+                            model_set_status_stopped(model);
+                            view_status_string(model);
+                            view_status_legacy_img(model);
+                            update_timer(model);
+                        }
+                        else if (model_get_status_work(model) 
+                                && is_expired(page_data.stop_timestamp, get_millis(), model->pmac.tempo_azzeramento_ciclo_pausa*1000UL))
+                        {
+                            model_set_status_pause(model);
+                            view_status_string(model);
+                            update_timer(model);
+                        }
+                        break;
                 }
-            } else if (event.key_event.code == BUTTON_FREDDO && event.key_event.event == KEY_CLICK) {
-                if(model->status.n_allarme == ALL_NO)
-                {
-                    model_set_status_work(model);
-                    model_set_status_step_asc(model);
-                    model->status.ciclo = CICLO_FREDDO;
-                    
-                    view_status_string(model);
-                }
-            }
-            else if (event.key_event.code == BUTTON_STOP && event.key_event.event == KEY_LONGCLICK)
-            {
-                if (model_get_status_pause(model))
-                {
-                    model_set_status_stopped(model);
-                }
-                else if (model_get_status_work(model))
-                {
-                    model_set_status_pause(model);
-                }
-                view_status_string(model);
             }
             break;
         }
-        case VIEW_EVENT_MODEL_UPDATE: {
-            msg.vmsg.code = VIEW_PAGE_COMMAND_CODE_UPDATE;
+
+        case VIEW_EVENT_COIN: {
+            view_status_string(model);
+            break;
+        }
+        
+        case VIEW_EVENT_STEP_UPDATE: {
+            view_status_legacy_img(model);
+            view_status_string(model);
             break;
         }
 
         case VIEW_EVENT_STATO_UPDATE: {
             if (model_get_stato(model) == STATO_WORK)
             {
-                lv_obj_set_hidden(page_data.ltimer, 0);
 //                lv_label_set_text(page_data.status, "STATO ON");
                 view_status_string(model);
             }
             else if (model_get_stato(model) == STATO_PAUSE)
             {
-                lv_obj_set_hidden(page_data.ltimer, 1);
 //                lv_label_set_text(page_data.status, view_intl_get_string(model, STRINGS_SCELTA_PROGRAMMA));
                 view_status_string(model);
             }
             else if (model_get_stato(model) == STATO_STOPPED)
             {
-                lv_obj_set_hidden(page_data.ltimer, 1);
 //                lv_label_set_text(page_data.status, view_intl_get_string(model, STRINGS_SCELTA_PROGRAMMA));
                 view_status_string(model);
             }
             break;
         }
         case VIEW_EVENT_CODE_TIMER: {
-            lv_label_set_text_fmt(page_data.ltimer, "%lusec", model_get_stato_timer(model));
-            lv_label_set_text_fmt(page_data.ltemperature, "%i C %i", model->status.temperatura_rilevata , model->status.f_ventilazione);
+            update_timer(model);
+            
+            if (model->pmac.abilita_visualizzazione_temperatura)
+            {
+                lv_label_set_text_fmt(page_data.ltemperature, "%i C %i", model->status.temperatura_rilevata , model->status.f_ventilazione);
+            } 
+            else if (model_get_riscaldamento_attivo(model))
+            {
+                lv_label_set_text(page_data.ltemperature, "ON");
+            }
+            else
+            {
+                lv_label_set_text(page_data.ltemperature, "OFF");
+            }
             break;
         }
         default:
@@ -318,17 +387,35 @@ void view_status_string(model_t *p)
     {
         if (model_get_status_stopped(p))
         {
-            lv_label_set_text(page_data.status, view_intl_get_string(p, STRINGS_SCELTA_PROGRAMMA));
+            if (model_consenso_raggiunto(p))
+            {
+                lv_label_set_text(page_data.status, view_intl_get_string(p, STRINGS_SCELTA_PROGRAMMA));
+            }
+            else
+            {
+                switch (p->pmac.tipo_visualizzazione_get_mon_cas) {
+                    case VISUALIZZAZIONE_CASSA:
+                        lv_label_set_text(page_data.status, view_intl_get_string(p, STRINGS_PAGARE_CASSA));
+                        break;
+                    case VISUALIZZAZIONE_GETTONE:
+                        lv_label_set_text(page_data.status, view_intl_get_string(p, STRINGS_INSERIRE_GETTONE));
+                        break;
+                    case VISUALIZZAZIONE_MONETA:
+                        lv_label_set_text(page_data.status, view_intl_get_string(p, STRINGS_INSERIRE_MONETA));
+                        break;
+
+                    default:
+                        break;
+                }
+            }
             view_status_legacy_img(p);
         }
-        
-        if (model_get_status_pause(p))
+        else if (model_get_status_pause(p))
         {
             lv_label_set_text(page_data.status, view_intl_get_string(p, STRINGS_MACCHINA_IN_PAUSA));
             view_status_legacy_img(p);
         }
-        
-        if (model_get_status_work(p))
+        else if (model_get_status_work(p))
         {
             lv_label_set_text(page_data.status, view_intl_get_string(p, STRINGS_MACCHINA_AL_LAVORO));
             view_status_legacy_img(p);
@@ -345,7 +432,7 @@ void view_status_string(model_t *p)
 
 void view_status_legacy_img(model_t *p)
 {
-    if (p->status.n_allarme == ALL_NO)
+    if (p->status.n_allarme==ALL_NO || p->status.n_allarme==AVV_ANTIPIEGA)
     {
         if (model_get_status_stopped(p))
         {
@@ -391,4 +478,20 @@ void view_status_legacy_img(model_t *p)
             custom_lv_img_set_src(page_data.image, &legacy_img_warning); // AVV
         }
     }
+}
+
+
+static void update_timer(model_t *pmodel) {
+    unsigned int secondi = 0;
+    
+    if (model_get_status_stopped(pmodel))
+    {
+        secondi = model_secondi_durata_asciugatura(pmodel);
+    }
+    else
+    {
+        secondi = model_get_stato_timer(pmodel);
+    }
+    
+    lv_label_set_text_fmt(page_data.ltimer, "%02im%02is", secondi/60, secondi%60);
 }

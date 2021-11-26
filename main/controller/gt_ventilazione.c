@@ -11,18 +11,37 @@
 /*                                                                            */
 /*  Data  : 19/07/2021      REV  : 00.0                                       */
 /*                                                                            */
-/*  U.mod.: 03/08/2021      REV  : 01.0                                       */
+/*  U.mod.: 19/10/2021      REV  : 01.0                                       */
 /*                                                                            */
 /******************************************************************************/
 
-#include "controller/gt_ventilazione.h"
 #include "model/model.h"
 
+#include "controller/gt_ventilazione.h"
+#include "controller/ciclo.h"
+
+#include "peripherals/digout.h"
+#include "peripherals/timer.h"
+#include "gel/timer/stopwatch.h"
 
 
 // ************************************************************************** //
 void gt_ventilazione(model_t *p, unsigned long timestamp)
 {
+    
+    if (model_get_status_stopped(p) || model_get_status_pause(p))
+    {
+        if (p->status.f_in_test==0)
+            ventilazione_stop(p);
+    }
+
+    if (model_get_status_work(p))
+    {
+        if (p->status.f_in_test==0)
+            ventilazione_marcia(p);
+    }
+    
+    
     return;
     
     
@@ -209,3 +228,30 @@ void gt_ventilazione(model_t *p, unsigned long timestamp)
     }
 */
 }
+void ventilazione_stop(model_t *p)
+{
+    clear_digout(VENTILAZIONE);
+   
+    pwm_set((p), 0, CH_VEL_VENTILAZIONE); // % speed , CH ANALOG
+}
+
+void ventilazione_marcia(model_t *p)
+{
+    set_digout(VENTILAZIONE);
+   
+    if (p->status.stato_step==STATO_STEP_ASC)
+    {
+        pwm_set((p), 100, CH_VEL_VENTILAZIONE); // % speed , CH ANALOG
+    }
+    
+    if (p->status.stato_step==STATO_STEP_RAF)
+    {
+        pwm_set((p), 80, CH_VEL_VENTILAZIONE); // % speed , CH ANALOG
+    }
+    
+    if (p->status.stato_step==STATO_STEP_ANT)
+    {
+        pwm_set((p), 20, CH_VEL_VENTILAZIONE); // % speed , CH ANALOG
+    }
+}
+

@@ -13,8 +13,7 @@
             <sourceEncoding>ISO-8859-1</sourceEncoding>
             <make-dep-projects/>
             <sourceRootList>
-                <sourceRootElem>main</sourceRootElem>
-                <sourceRootElem>components</sourceRootElem>
+                <sourceRootElem>main/controller</sourceRootElem>
             </sourceRootList>
             <confList>
                 <confElem>

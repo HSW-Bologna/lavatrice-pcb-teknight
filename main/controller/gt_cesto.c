@@ -11,17 +11,21 @@
 /*                                                                            */
 /*  Data  : 19/07/2021      REV  : 00.0                                       */
 /*                                                                            */
-/*  U.mod.: 03/08/2021      REV  : 01.0                                       */
+/*  U.mod.: 19/08/2021      REV  : 01.0                                       */
 /*                                                                            */
 /******************************************************************************/
 
+#include <xc.h>
+
 #include "gt_cesto.h"
+#include "model/model.h"
 
 #include "controller/ciclo.h"
 
 #include "peripherals/digout.h"
 #include "peripherals/timer.h"
 #include "gel/timer/stopwatch.h"
+#include "pwm.h"
 
 stopwatch_t ct_moto_cesto = STOPWATCH_NULL;
 stopwatch_t ct_oblo_open_close_on = STOPWATCH_NULL;
@@ -47,8 +51,11 @@ void gt_cesto(model_t *p, unsigned long timestamp)
 {
     if (model_get_status_stopped(p) || model_get_status_pause(p))
     {
-        if (p->status.f_in_test==0)
-            cesto_stop();
+        if (model_not_in_test(p))
+        {
+            cesto_stop(p);
+            Nop();
+        }
     }
     
     
@@ -79,11 +86,11 @@ void gt_cesto(model_t *p, unsigned long timestamp)
         // ================================================================== //
         if (model_get_status_step(p)==STATO_STEP_ASC)
         {
-            if (model_ciclo_corrente(p)->abilita_inversione_asciugatura==0)
+            if (model_ciclo_corrente(p)->abilita_inversione_asciugatura==0) // INV NO
             {
                 cesto_avanti(p);
             }
-            else // INV prevista
+            else // INV SI
             {
                 if ((stopwatch_get_state(&ct_moto_cesto) == TIMER_STOPPED) || stopwatch_is_timer_reached(&ct_moto_cesto, timestamp)) 
                 {
@@ -98,7 +105,7 @@ void gt_cesto(model_t *p, unsigned long timestamp)
                     else if (p->status.nf_ava_ind==1) // ORARIO
                     {              
                         stopwatch_set(&ct_moto_cesto, model_ciclo_corrente(p)->tempo_pausa_asciugatura*1000UL);
-                        cesto_stop();
+                        cesto_stop(p);
                         p->status.f_ava_ind = 0;
                         p->status.nf_ava_ind = 2;
                     }
@@ -111,7 +118,7 @@ void gt_cesto(model_t *p, unsigned long timestamp)
                     else if (p->status.nf_ava_ind==3) // ANTIORARIO
                     {
                         stopwatch_set(&ct_moto_cesto, model_ciclo_corrente(p)->tempo_pausa_asciugatura*1000UL);
-                        cesto_stop();
+                        cesto_stop(p);
                         p->status.f_ava_ind = 0;
                         p->status.nf_ava_ind = 4;
                     }
@@ -150,7 +157,7 @@ void gt_cesto(model_t *p, unsigned long timestamp)
                     else if (p->status.nf_ava_ind==1) // ORARIO
                     {              
                         stopwatch_set(&ct_moto_cesto, model_ciclo_corrente(p)->tempo_pausa_raffreddamento*1000UL);
-                        cesto_stop();
+                        cesto_stop(p);
                         p->status.f_ava_ind = 0;
                         p->status.nf_ava_ind = 2;
                     }
@@ -163,7 +170,7 @@ void gt_cesto(model_t *p, unsigned long timestamp)
                     else if (p->status.nf_ava_ind==3) // ANTIORARIO
                     {
                         stopwatch_set(&ct_moto_cesto, model_ciclo_corrente(p)->tempo_pausa_raffreddamento*1000UL);
-                        cesto_stop();
+                        cesto_stop(p);
                         p->status.f_ava_ind = 0;
                         p->status.nf_ava_ind = 4;
                     }
@@ -234,15 +241,16 @@ void gt_cesto(model_t *p, unsigned long timestamp)
         //  5 - NB: nella "gt_cesto" viene valutato se USARE VEL CICLO o ANTIPIEGA    //
         //                                                                            //
         // ************************************************************************** //
+        //
         if (model_get_status_step(p)==STATO_STEP_ANT)
         {
             if (p->pciclo[p->status.ciclo].abilita_antipiega==0 || p->status.stato!=2 || p->status.f_in_test!=0 || p->status.f_anti_piega==0)
             {
                 return;
             }
-
-
-
+            
+            
+            
             if (p->status.nf_anti_piega==ANTIPIEGA_START) // PARTENZA ANTIPIEGA ============================= //
             {
                 if (p->pmac.tempo_ritardo_antipiega != 0)
@@ -257,9 +265,9 @@ void gt_cesto(model_t *p, unsigned long timestamp)
                     p->status.nf_anti_piega = ANTIPIEGA_TIPO_DURATA; // NO RIT
                 }
             }
-
-
-
+            
+            
+            
             if (p->status.nf_anti_piega==ANTIPIEGA_RITARDO) /* ATTESA RITARDO ANTIPIEGA ------------- */
             {
                 if (stopwatch_is_timer_reached(&ct_anti_piega_rit, get_millis()))
@@ -268,9 +276,9 @@ void gt_cesto(model_t *p, unsigned long timestamp)
                     p->status.nf_anti_piega = ANTIPIEGA_TIPO_DURATA;
                 }
             }
-
-
-
+            
+            
+            
             if (p->status.nf_anti_piega==ANTIPIEGA_TIPO_DURATA) /* CP DURATA INFINITA/TERMINE ----------- */
             {
                 if (p->pmac.tempo_max_antipiega==0 && p->pmac.numero_cicli_max_antipiega==0)
@@ -282,23 +290,23 @@ void gt_cesto(model_t *p, unsigned long timestamp)
                     p->status.nf_anti_piega = ANTIPIEGA_DURATA_TERMINE; // A TERMINE
                 }
             }
-
-
-
-
-
-
-
-
-
-
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
             // DURATA A TERMINE ===================================================== //
             if (p->status.nf_anti_piega==ANTIPIEGA_DURATA_TERMINE)
             {
                 if (p->pmac.tempo_max_antipiega != 0)
                 {
         //            ct_anti_piega_max = p->pmac.tempo_max_antipiega*60;          
-
+                    
                     stopwatch_init(&ct_anti_piega_max);
                     stopwatch_set(&ct_anti_piega_max,p->pmac.tempo_max_antipiega*1000UL);
                     stopwatch_start(&ct_anti_piega_max, get_millis());
@@ -312,9 +320,9 @@ void gt_cesto(model_t *p, unsigned long timestamp)
                     p->status.nf_anti_piega = ANTIPIEGA_DURATA_TERMINE_CHECK; // TERMINE CICLI
                 }
             }
-
-
-
+            
+            
+            
             if (p->status.nf_anti_piega==ANTIPIEGA_DURATA_TERMINE_CHECK) // DURATA A TERMINE - VALUTAZIONE FINE =========== //
             {
                 if (p->pmac.tempo_max_antipiega != 0)
@@ -331,7 +339,7 @@ void gt_cesto(model_t *p, unsigned long timestamp)
                         p->status.nf_anti_piega = ANTIPIEGA_DURATA_TERMINE_GESTIONE;
                     }
                 }
-
+                
                 if (p->pmac.numero_cicli_max_antipiega != 0)
                 {
                     if (p->status.cnro_c_anti_piega_max == 0)
@@ -345,11 +353,11 @@ void gt_cesto(model_t *p, unsigned long timestamp)
                     }
                 }
             }
-
-
-
-
-
+            
+            
+            
+            
+            
             if (p->status.nf_anti_piega==ANTIPIEGA_DURATA_TERMINE_GESTIONE) // DURATA A TERMINE ============================== //
             {
                 if (p->pmac.tempo_pausa_antipiega==0) // CP INVERSIONE
@@ -775,10 +783,13 @@ void gt_velocita_cesto (model_t *p)
 
 
 
-void cesto_stop(void) /* ------------------------------------------ */
+void cesto_stop(model_t *p) /* ------------------------------------------ */
 {
     clear_digout(ORARIO);
     clear_digout(ANTIORARIO);
+    
+       pwm_set((p), 0, CH_VEL_CESTO); // % speed , CH ANALOG
+
 }
 
 void cesto_avanti(model_t *p) /* ----------------------------- */
@@ -787,6 +798,7 @@ void cesto_avanti(model_t *p) /* ----------------------------- */
     
     //set_digout(ORARIO);
     rele_update(ORARIO, 1);
+    pwm_set((p), model_ciclo_corrente(p)->velocita_asciugatura, CH_VEL_CESTO); // % speed , CH ANALOG
 }
 
 void cesto_indietro(model_t *p) /* --------------------------- */
@@ -794,6 +806,7 @@ void cesto_indietro(model_t *p) /* --------------------------- */
     p->status.f_ava_ind = 2;
     
     set_digout(ANTIORARIO);
+    pwm_set((p), model_ciclo_corrente(p)->velocita_asciugatura, CH_VEL_CESTO); // % speed , CH ANALOG
 }
 
 

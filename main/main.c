@@ -17,7 +17,7 @@
 /*                                                                            */
 /*  ver. 00.0:  05/05/2021  dalla da MiniEco V:17.4   D:11/04/2021            */
 /*                                                                            */
-/*  ver. att.:  05/08/2021  00.1                                              */
+/*  ver. att.:  23/11/2021  00.3                                              */
 /*                                                                            */
 /*  BY:         Maldus (Mattia MALDINI) & Virginia NEGRI & Massimo ZANNA      */
 /*                                                                            */
@@ -31,8 +31,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-//                                  12345678901234567890
-const unsigned char versione_prg[] = "V:00.1  D:05/08/2021";
+//                                    12345678901234567890
+const unsigned char versione_prg[] = "V:00.3  D:23/11/2021";
 
 
 
@@ -58,9 +58,22 @@ const unsigned char versione_prg[] = "V:00.1  D:05/08/2021";
 /*                                                                            */
 /*----------------------------------------------------------------------------*/
 /*                                                                            */
-/*  rev.:       04/08/2021 (01.1)                                             */
+/*  rev.:       04/08/2021 (00.1)                                             */
 /*                                                                            */
-/*      - xxxxxx                                                              */
+/*      - prima versione con interfaccia quasi completa e gestione completa   */
+/*        di tutte le periferiche presenti sulla scheda                       */
+/*                                                                            */
+/*----------------------------------------------------------------------------*/
+/*                                                                            */
+/*  rev.:       06/10/2021 (00.2)                                             */
+/*                                                                            */
+/*      - prima versione con interfaccia quasi completa e gestione completa   */
+/*                                                                            */
+/*----------------------------------------------------------------------------*/
+/*                                                                            */
+/*  rev.:       22/11/2021 (00.3)                                             */
+/*                                                                            */
+/*      - implementazione ciclo                                               */
 /*                                                                            */
 /******************************************************************************/
 
@@ -101,15 +114,19 @@ const unsigned char versione_prg[] = "V:00.1  D:05/08/2021";
 #include "controller/gt_cesto.h"
 #include "controller/gt_macchina_occupata.h"
 #include "controller/gt_ventilazione.h"
+#include "controller/gt_reset_bruciatore.h"
+#include "controller/gt_riscaldamento.h"
+#include "controller/gt_presenza_aria.h"
 
-static model_t model;
+model_t model;
 
 
 
-int main(void) {
+int main(void)
+{
     unsigned long tskp = 0, ts_input = 0, ts_temperature = 0, ts_spi = 0;
 
-    // inizializzazioni
+    // inizializzazioni ----------------------- //
     system_init();
 
     spi_init();
@@ -132,22 +149,37 @@ int main(void) {
     view_init(&model, nt7534_flush, nt7534_rounder, nt7534_set_px, keyboard_reset);
     controller_init(&model);
     digout_buzzer_bip(2, 100, 100);
-
-    for (;;) {
+    
+    
+    
+    
+    
+    // MAIN LOOP ============================================================ //
+    for (;;)
+    {
         controller_manage_gui(&model);
         modbus_server_manage();
-
+        
+        
+        
+        // gestione macchina ------------------ //
         gt_allarmi(&model);
-
+        
         gt_ciclo(&model, get_millis());
-
+        
+        gt_ventilazione(&model, get_millis());
+        gt_presenza_aria(&model, get_millis());
+        gt_riscaldamento(&model, get_millis());
+        
         gt_cesto(&model, get_millis());
         gt_macchina_occupata(&model);
-        gt_ventilazione(&model, get_millis());
-
+        gt_reset_bruciatore(&model, get_millis());
+        model.outputs = rele_get_status();
+        
         ClrWdt();
-
-        if (is_expired(ts_input, get_millis(), 2)) {
+        
+        if (is_expired(ts_input, get_millis(), 2))
+        {
             if (digin_take_reading()) {
                 view_event((view_event_t){.code = VIEW_EVENT_MODEL_UPDATE});
 
@@ -158,16 +190,19 @@ int main(void) {
                 if (model_is_in_test(&model)) {
                     view_event((view_event_t){.code = VIEW_EVENT_COIN, .coins = gettoniera_get_count()});
                 } else {
-                    view_event((view_event_t){.code = VIEW_EVENT_MODEL_UPDATE});
-                    model.pwoff.credito += gettoniera_get_count();
+                    view_event((view_event_t){.code = VIEW_EVENT_COIN});
+                    model_aggiungi_gettoni(&model, gettoniera_get_count(), gettoniera_get_count_ingresso());
                     controller_update_pwoff(&model);
                 }
                 gettoniera_reset_count();
             }
             ts_input = get_millis();
         }
-
-        if (is_expired(tskp, get_millis(), 5)) {
+        
+        
+        
+        if (is_expired(tskp, get_millis(), 5))
+        {
             keypad_update_t update = keyboard_manage(get_millis());
 
             if (update.event != KEY_NOTHING) {
@@ -175,34 +210,53 @@ int main(void) {
             }
             tskp = get_millis();
         }
-
-        if (is_expired(ts_temperature, get_millis(), 50)) {
+        
+        
+        
+        if (is_expired(ts_temperature, get_millis(), 50))
+        {
             ptc_read_temperature();
             view_event((view_event_t){.code = VIEW_EVENT_MODEL_UPDATE});
 
             model.ptc_adc         = ptc_get_adc_value();
             model.ptc_temperature = ptc_get_temperature();
             ts_temperature        = get_millis();
+            
+            if (model.pmac.tipo_pausa_asciugatura==0)
+            {
+                model.status.temperatura_rilevata = model.ptc_temperature;
+            }
         }
-
-        if (is_expired(ts_spi, get_millis(), 500)) {
+        
+        
+        
+        if (is_expired(ts_spi, get_millis(), 500))
+        {
             uint16_t temp, hum;
 
             if (temperature_read(&temp, &hum) == 0) {
                 model.sht_temperature = temp;
                 model.sht_umidity     = hum / 100;
             }
+            
+            if (model.pmac.tipo_pausa_asciugatura==1)
+            {
+                model.status.temperatura_rilevata = model.sht_temperature;
+            }
             ts_spi = get_millis();
         }
-
-        if (timer_second_passed()) {
+        
+        
+        
+        if (timer_second_passed())
+        {
             model_add_second(&model);
             controller_update_pwoff(&model);
         }
-
+        
         // controllo buzzer
         digout_buzzer_check();
-
+        
         __delay_us(10);
     }
     return 0;

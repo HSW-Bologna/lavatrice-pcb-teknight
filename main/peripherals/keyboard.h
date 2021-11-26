@@ -20,7 +20,7 @@ typedef enum {
     BUTTON_MENU,
     BUTTON_STOP,
     BUTTON_STOP_MENU,          // 10
-    BUTTON_STOP_LANA = 11,
+    BUTTON_STOP_LANA,
     BUTTON_STOP_FREDDO,
     BUTTON_LINGUA_TIEPIDO,
 } button_t;

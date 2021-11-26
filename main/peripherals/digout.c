@@ -66,6 +66,34 @@ uint8_t rele_get_status(void) {
     return res;
 }
 
+uint8_t rele_get(rele_t rele) {
+    switch(rele) {
+        case RELE_1 :
+            return RELE1_LAT;
+            break;
+        case RELE_2 :
+            return RELE1_LAT;
+            break;
+        case RELE_3 :
+            return RELE1_LAT;
+            break;
+        case RELE_4 :
+            return RELE1_LAT;
+            break;
+        case RELE_5 :
+            return RELE1_LAT;
+            break;
+        case RELE_6 :
+            return RELE1_LAT;
+            break;
+        default:
+            return 0;
+            break;
+    }
+}
+
+
+
 void digout_buzzer_bip(size_t r, unsigned long t_on, unsigned long t_off) {
     repeat = r;
     time_on = t_on;

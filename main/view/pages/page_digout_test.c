@@ -72,7 +72,7 @@ static view_message_t process_page_event(model_t *model, void *arg, pman_event_t
                         msg.cmsg.code = VIEW_CONTROLLER_COMMAND_CODE_DIGOUT_TURNOFF;
                         lv_task_set_prio(page_data.task, LV_TASK_PRIO_OFF);
                         lv_task_reset(page_data.task);
-                        page_data.time = 5;
+                        page_data.time = 15;
                         break;
                     }
                     case BUTTON_MINUS: {
@@ -84,7 +84,7 @@ static view_message_t process_page_event(model_t *model, void *arg, pman_event_t
                         msg.cmsg.code = VIEW_CONTROLLER_COMMAND_CODE_DIGOUT_TURNOFF;
                         lv_task_set_prio(page_data.task, LV_TASK_PRIO_OFF);
                         lv_task_reset(page_data.task);
-                        page_data.time = 5;
+                        page_data.time = 15;
                         break;
                     }
                     case BUTTON_STOP: {
@@ -93,13 +93,14 @@ static view_message_t process_page_event(model_t *model, void *arg, pman_event_t
                         msg.cmsg.value  = 0;
                         lv_task_set_prio(page_data.task, LV_TASK_PRIO_OFF);
                         lv_task_reset(page_data.task);
-                        page_data.time = 5;
+                        page_data.time = 15;
                         break;
                     }
                     case BUTTON_LINGUA: {
                         msg.cmsg.code   = VIEW_CONTROLLER_COMMAND_CODE_UPDATE_DIGOUT;
                         msg.cmsg.output = page_data.digout_index;
                         msg.cmsg.value  = 1;
+                        page_data.time = 15;
                         lv_task_set_prio(page_data.task, LV_TASK_PRIO_MID);
                         break;
                     }

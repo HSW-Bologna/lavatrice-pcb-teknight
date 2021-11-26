@@ -1,9 +1,10 @@
+#include "controller.h"
+
 #include "controller/stato.h"
 #include "view/view_types.h"
 #include "model/model.h"
 #include "model/parmac.h"
 #include "model/parciclo.h"
-#include "controller.h"
 #include "peripherals/pwm.h"
 #include "peripherals/digout.h"
 #include "peripherals/led.h"
@@ -56,11 +57,11 @@ static int controller_start_check(void);
 void controller_process_msg(view_controller_command_t *msg, model_t *pmodel) {
     switch (msg->code) {
         case VIEW_CONTROLLER_COMMAND_CODE_UPDATE_PWM: {
-            pwm_set(msg->value, msg->output);
-            if (msg->output == 1)
-                pmodel->pwm1 = msg->value;
-            if (msg->output == 2)
-                pmodel->pwm2 = msg->value;
+////            pwm_set(msg->value, msg->output);
+////            if (msg->output == 1)
+////                pmodel->pwm1 = msg->value;
+////            if (msg->output == 2)
+////                pmodel->pwm2 = msg->value;
             break;
         }
 
@@ -96,6 +97,7 @@ void controller_process_msg(view_controller_command_t *msg, model_t *pmodel) {
         case VIEW_CONTROLLER_COMMAND_CODE_RESET_RAM: {
             model_reset_parameters(pmodel);
             model_init_parametri_ciclo(pmodel);
+            parmac_init(pmodel, 1);
             controller_save_pars(pmodel);
             break;
         }

@@ -35,7 +35,7 @@ void parciclo_init(model_t *p, tipo_ciclo_t ciclo, int reset) {
     parameters[j++] = PARAMETER_C99(PARAMETER_TYPE_UINT8, &p->pciclo[i].abilita_inversione_raffreddamento,NULL,   NULL,   0,   1,  1,    1,    AL_TECH,     FINT(PARMAC_DESCRIPTIONS_ABILITA_INVERSIONE_RAFFREDDAMENTO),     NULL,       NULL);
     parameters[j++] = PARAMETER_C99(PARAMETER_TYPE_UINT8, &p->pciclo[i].tempo_giro_raffreddamento,      NULL,   NULL,   1,   99,    35,    1,    AL_TECH,     FINT(PARMAC_DESCRIPTIONS_TEMPO_GIRO_RAFFREDDAMENTO),     NULL,       NULL);
     parameters[j++] = PARAMETER_C99(PARAMETER_TYPE_UINT8, &p->pciclo[i].tempo_pausa_raffreddamento,     NULL,   NULL,   5,   99,  6,    1,    AL_TECH,     FINT(PARMAC_DESCRIPTIONS_TEMPO_PAUSA_RAFFREDDAMENTO),     NULL,       NULL);
-    parameters[j++] = PARAMETER_C99(PARAMETER_TYPE_UINT8, &p->pciclo[i].abilita_antipiega,              NULL,   NULL,   0,    1,  0,    1,    AL_TECH,     FINT(PARMAC_DESCRIPTIONS_ABILITA_ANTIPIEGA),     NULL,       NULL);
+    parameters[j++] = PARAMETER_C99(PARAMETER_TYPE_UINT8, &p->pciclo[i].abilita_antipiega,              NULL,   NULL,   0,    1,  0,    1,    AL_USER,     FINT(PARMAC_DESCRIPTIONS_ABILITA_ANTIPIEGA),     NULL,       NULL);
     // clang-format on
 
     parameter_check_ranges(parameters, NUM_PARAMETERS);

@@ -1,44 +1,57 @@
 #ifndef MODEL_H_INCLUDED
 #define MODEL_H_INCLUDED
 
-
 #include <stdint.h>
 #include <stdlib.h>
 #include "lvgl/lvgl.h"
 #include "gel/timer/stopwatch.h"
 
-#define PARS_SERIALIZED_SIZE         130
-#define PRIVATE_PARS_SERIALIZED_SIZE 3
-#define PWOFF_SERIALIZED_SIZE        8
-#define MAX_PARAMETER_CHUNK          15
+#define PARS_SERIALIZED_SIZE            130
+#define PRIVATE_PARS_SERIALIZED_SIZE    3
+#define PWOFF_SERIALIZED_SIZE           8
+#define MAX_PARAMETER_CHUNK             15
+
+#define GETTONIERA_DISABILITATA 0
+#define GETTONIERA_NA 1
+#define GETTONIERA_NC 2
+#define GETTONIERA_INGRESSO 3
+
+
+#define VISUALIZZAZIONE_GETTONE 0
+#define VISUALIZZAZIONE_MONETA 1
+#define VISUALIZZAZIONE_CASSA 2
 
 
 typedef enum {
-    MODELLO_MACCHINA_TEST = 0,
-    MODELLO_MACCHINA_EDS_RE_SELF_CA,
+    MODELLO_MACCHINA_TEST = 0,          // 00
+            
+    MODELLO_MACCHINA_EDS_RE_SELF_CA,    // 01
     MODELLO_MACCHINA_EDS_RE_LAB_CA,
     MODELLO_MACCHINA_EDS_RG_SELF_CA,
     MODELLO_MACCHINA_EDS_RG_LAB_CA,
     MODELLO_MACCHINA_EDS_RV_SELF_CA,
+            
     MODELLO_MACCHINA_EDS_RV_LAB_CA,
     MODELLO_MACCHINA_EDS_RE_SELF_CC,
     MODELLO_MACCHINA_EDS_RV_SELF_CC,
     MODELLO_MACCHINA_EDS_RE_LAB_CC,
     MODELLO_MACCHINA_EDS_RV_LAB_CC,
+            
     MODELLO_MACCHINA_EDS_RP_SELF_CA,
     MODELLO_MACCHINA_EDS_RP_LAB_CA,
     MODELLO_MACCHINA_EDS_RP_SELF_CC,
-    MODELLO_MACCHINA_EDS_RP_LAB_CC,
-    MODELLO_MACCHINA_EDS_RE_LAB_TH_CA,
+    MODELLO_MACCHINA_EDS_RP_LAB_CC,     // 14
+            
+    MODELLO_MACCHINA_EDS_RE_LAB_TH_CA,  // 15
     MODELLO_MACCHINA_EDS_RG_LAB_TH_CA,
     MODELLO_MACCHINA_EDS_RV_LAB_TH_CA,
     MODELLO_MACCHINA_EDS_RE_LAB_TH_CC,
-    MODELLO_MACCHINA_EDS_RV_LAB_TH_CC,
+    MODELLO_MACCHINA_EDS_RV_LAB_TH_CC,  // 19
 } modello_macchina_t;
 
 
 typedef enum {
-    CICLO_CALDO = 0,
+    CICLO_CALDO,
     CICLO_MEDIO,
     CICLO_TIEPIDO,
     CICLO_FREDDO,
@@ -133,6 +146,7 @@ typedef enum {
 
 typedef enum {
     STATO_STEP_NUL = 0,
+            
     STATO_STEP_ASC,
     STATO_STEP_RAF,
     STATO_STEP_ANT,
@@ -166,11 +180,12 @@ typedef struct {
     parmac_t              pmac;
     parciclo_t            pciclo[NUM_CICLI];
     parametri_riservati_t hsw;
-
+    
     struct {
         tipo_ciclo_t ciclo;
         stato_t      stato;
         uint8_t      sottostato;
+        uint16_t     temperatura_rilevata;
         stato_step_t stato_step;
         uint8_t      f_in_test;
         uint8_t      f_no_gt_all;
@@ -185,22 +200,25 @@ typedef struct {
         uint8_t      cnro_c_anti_piega_max;
         uint8_t      f_all;
         uint8_t      n_allarme;
+        uint8_t      n_old_allarme;
         uint8_t      f_errore_ram_ko;
         uint8_t      f_all_emergenza;
         uint8_t      f_all_inverter;
         uint8_t      f_all_filtro_aperto;
+        uint8_t      f_all_flusso_aria;
+        uint8_t      f_all_anomalia_aria;
+        uint8_t      f_all_sovratemperatura;
         uint8_t      f_all_blocco_bruciatore;
         stopwatch_t  stopwatch;
     } status;
-
+    
     struct {
         uint8_t  used_percentage;
         uint8_t  frag_percentage;
         uint32_t low_watermark;
     } lvgl_mem;
-
+    
     pwoff_data_t pwoff;
-
 } model_t;
 
 void               model_init(model_t *pmodel);
@@ -236,8 +254,21 @@ uint8_t            model_get_logo_ditta(model_t *pmodel);
 void               model_reset_parameters(model_t *pmodel);
 void               model_init_parametri_ciclo(model_t *pmodel);
 int                model_is_in_test(model_t *pmodel);
+int                model_not_in_test(model_t *pmodel);
 size_t             model_private_parameters_deserialize(model_t *pmodel, uint8_t *buff);
-size_t   model_private_parameters_serialize(model_t *pmodel, uint8_t buff[static PRIVATE_PARS_SERIALIZED_SIZE]);
-void     model_add_second(model_t *pmodel);
+size_t             model_private_parameters_serialize(model_t *pmodel, uint8_t buff[static PRIVATE_PARS_SERIALIZED_SIZE]);
+void               model_add_second(model_t *pmodel);
+int                model_get_riscaldamento_attivo(model_t *pmodel);
+unsigned int model_secondi_durata_asciugatura(model_t *pmodel);
+void model_aggiungi_gettoni(model_t *pmodel, unsigned int gettoniera, unsigned int ingresso);
+int model_consenso_raggiunto(model_t *pmodel);
+int model_tempo_lavoro_scaduto(model_t *pmodel, unsigned long ts);
+void model_metti_tempo_lavoro_in_pausa(model_t * pmodel, unsigned long ts);
+void model_comincia_antipiega(model_t *pmodel);
+void model_comincia_raffreddamento(model_t *pmodel);
+void model_azzera_credito(model_t *pmodel);
+void model_fine_ciclo(model_t *pmodel);
+int model_in_antipiega(model_t *pmodel);
+
 
 #endif

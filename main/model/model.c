@@ -10,6 +10,7 @@
 #include "peripherals/NT7534.h"
 
 
+
 parameter_handle_t parameters[MAX_PARAMETER_CHUNK];
 static void        init_comune_parametri_1(model_t *pmodel);
 static void        init_comune_parametri_2(model_t *pmodel);
@@ -17,34 +18,34 @@ static void        init_comune_parametri_2(model_t *pmodel);
 
 void model_init(model_t *pmodel) {
     assert(pmodel != NULL);
-
-    pmodel->inputs            = 0;
-    pmodel->ptc_temperature   = 0;
-    pmodel->sht_temperature   = 0;
-    pmodel->pwm1              = 0;
-    pmodel->pwm2              = 0;
-    pmodel->ptc_adc           = 0;
-    pmodel->outputs           = 0;
-    pmodel->lingua_temporanea = 0;
-
-    pmodel->status.stato     = 0;
-    pmodel->status.n_allarme = 0;
-
-    pmodel->hsw.contrasto = NT7534_DEFAULT_CONTRAST;
-
-    pmodel->pwoff.credito             = 0;
-    pmodel->pwoff.tempo_attivita      = 0;
-    pmodel->pwoff.tempo_lavoro        = 0;
-    pmodel->pwoff.tempo_moto          = 0;
-    pmodel->pwoff.tempo_riscaldamento = 0;
-    pmodel->pwoff.tempo_ventilazione  = 0;
-    pmodel->pwoff.cicli_parziali      = 0;
-    pmodel->pwoff.cicli_totali        = 0;
-    pmodel->pwoff.gettoni             = 0;
-
-    pmodel->lvgl_mem.frag_percentage = 0;
-    pmodel->lvgl_mem.used_percentage = 0;
-    pmodel->lvgl_mem.low_watermark   = LV_MEM_SIZE;
+    
+    pmodel->inputs                      = 0;
+    pmodel->ptc_temperature             = 0;
+    pmodel->sht_temperature             = 0;
+    pmodel->pwm1                        = 0;
+    pmodel->pwm2                        = 0;
+    pmodel->ptc_adc                     = 0;
+    pmodel->outputs                     = 0;
+    pmodel->lingua_temporanea           = 0;
+    
+    pmodel->status.stato                = 0;
+    pmodel->status.n_allarme            = 0;
+    
+    pmodel->hsw.contrasto               = NT7534_DEFAULT_CONTRAST;
+    
+    pmodel->pwoff.credito               = 0;
+    pmodel->pwoff.tempo_attivita        = 0;
+    pmodel->pwoff.tempo_lavoro          = 0;
+    pmodel->pwoff.tempo_moto            = 0;
+    pmodel->pwoff.tempo_riscaldamento   = 0;
+    pmodel->pwoff.tempo_ventilazione    = 0;
+    pmodel->pwoff.cicli_parziali        = 0;
+    pmodel->pwoff.cicli_totali          = 0;
+    pmodel->pwoff.gettoni               = 0;
+    
+    pmodel->lvgl_mem.frag_percentage    = 0;
+    pmodel->lvgl_mem.used_percentage    = 0;
+    pmodel->lvgl_mem.low_watermark      = LV_MEM_SIZE;
 }
 
 
@@ -61,6 +62,13 @@ char *model_get_output_status(model_t *pmodel, int output) {
     else
         return "off";
 }
+
+
+
+int model_get_riscaldamento_attivo(model_t *pmodel) {
+    return (pmodel->outputs  & 0x04) > 0;
+}
+
 
 size_t model_pars_serialize(model_t *pmodel, uint8_t buff[static PARS_SERIALIZED_SIZE]) {
     assert(pmodel != NULL);
@@ -481,8 +489,10 @@ void model_init_parametri_ciclo(model_t *pmodel) {
     }
 
     uint8_t valori[NUM_CICLI][14] = {
-        {0, 35, 0, 1, 95, 6, 55, 0, 1, 0, 2, 1, 35, 6}, {0, 40, 0, 1, 95, 6, 55, 0, 1, 0, 2, 1, 35, 6},
-        {0, 40, 0, 1, 95, 6, 55, 0, 1, 0, 2, 1, 35, 6}, {0, 20, 0, 1, 60, 6, 55, 30, 0, 0, 2, 1, 35, 6},
+        {0, 35, 0, 1, 95, 6, 55, 0, 1, 0, 2, 1, 35, 6},
+        {0, 40, 0, 1, 95, 6, 55, 0, 1, 0, 2, 1, 35, 6},
+        {0, 40, 0, 1, 95, 6, 55, 0, 1, 0, 2, 1, 35, 6},
+        {0, 20, 0, 1, 60, 6, 55, 30, 0, 0, 2, 1, 35, 6},
         {0, 45, 0, 1, 95, 6, 55, 0, 0, 0, 2, 1, 35, 6},
     };
 
@@ -531,14 +541,18 @@ void model_init_parametri_ciclo(model_t *pmodel) {
     }
 }
 
+
+
+
+
 /* -------------------------------------------------------------------------- */
 /*                                                                            */
 /*  Set / Get STATO MACCHINA                                                  */
 /*                                                                            */
-/* ------------------------------------------------------------------------- */
-
+/* -------------------------------------------------------------------------- */
 void model_set_status_stopped(model_t *p) {
     assert(p != NULL);
+    model_azzera_credito(p);
     p->status.stato = STATO_STOPPED;
 }
 
@@ -553,18 +567,59 @@ int model_get_status_not_stopped(model_t *p) {
 }
 
 
+void model_comincia_raffreddamento(model_t *pmodel) {
+    if (model_get_status_work(pmodel))
+    {
+        pmodel->status.stato_step = STATO_STEP_RAF;
+        stopwatch_init(&pmodel->status.stopwatch);
+        stopwatch_setngo(&pmodel->status.stopwatch, model_ciclo_corrente(pmodel)->tempo_durata_raffreddamento * 1000UL,
+                         get_millis());
+    }
+}
+
+
+int model_in_antipiega(model_t *pmodel) {
+    assert(pmodel != NULL);
+    return pmodel->status.stato_step == STATO_STEP_ANT;
+}
+
+
+void model_comincia_antipiega(model_t *pmodel) {
+    if (model_get_status_work(pmodel))
+    {
+        pmodel->status.stato_step = STATO_STEP_ANT;
+        pmodel->status.f_anti_piega = 1;
+        stopwatch_init(&pmodel->status.stopwatch);
+        stopwatch_setngo(&pmodel->status.stopwatch, 10 * 1000UL,
+                         get_millis());
+    }
+}
+
+
 
 void model_set_status_work(model_t *p) {
     assert(p != NULL);
     if (model_get_status_pause(p)) {
         stopwatch_start(&p->status.stopwatch, get_millis());
-    } else {
+        p->status.stato = STATO_WORK;
+    } else if (model_get_status_stopped(p) && model_consenso_raggiunto(p)) {
         stopwatch_init(&p->status.stopwatch);
-        stopwatch_setngo(&p->status.stopwatch, p->pciclo[p->status.ciclo].tempo_durata_asciugatura * 1000UL,
+        stopwatch_setngo(&p->status.stopwatch, model_secondi_durata_asciugatura(p) * 1000UL,
                          get_millis());
-    }
-    p->status.stato = STATO_WORK;
+        p->status.stato = STATO_WORK;
+    } 
 }
+
+
+int model_tempo_lavoro_scaduto(model_t *pmodel, unsigned long ts) {
+    return stopwatch_is_timer_reached(&pmodel->status.stopwatch, ts);
+}
+
+
+void model_metti_tempo_lavoro_in_pausa(model_t * pmodel, unsigned long ts) {
+    stopwatch_pause(&pmodel->status.stopwatch, ts);
+}
+
 
 int model_get_status_work(model_t *p) {
     assert(p != NULL);
@@ -617,17 +672,22 @@ int model_get_status_step(model_t *p) {
 }
 
 
+void model_fine_ciclo(model_t *pmodel) {
+    assert(pmodel != NULL);
+    pmodel->status.stato = STATO_STOPPED;
+    model_azzera_credito(pmodel);
+}
+
+
 int model_is_machine_selected(model_t *pmodel) {
     assert(pmodel != NULL);
     return pmodel->pmac.modello_macchina != MODELLO_MACCHINA_TEST;
 }
 
-
 uint8_t model_get_logo_ditta(model_t *pmodel) {
     assert(pmodel != NULL);
     return pmodel->pmac.logo_ditta;
 }
-
 
 modello_macchina_t model_get_machine_model(model_t *pmodel) {
     assert(pmodel != NULL);
@@ -635,10 +695,19 @@ modello_macchina_t model_get_machine_model(model_t *pmodel) {
 }
 
 
+
 int model_is_in_test(model_t *pmodel) {
     assert(pmodel != NULL);
     return pmodel->status.f_in_test;
 }
+
+int model_not_in_test(model_t *pmodel) {
+    assert(pmodel != NULL);
+    return !pmodel->status.f_in_test;
+}
+
+
+
 
 
 size_t model_private_parameters_serialize(model_t *pmodel, uint8_t buff[static PRIVATE_PARS_SERIALIZED_SIZE]) {
@@ -672,9 +741,78 @@ size_t model_private_parameters_deserialize(model_t *pmodel, uint8_t *buff) {
 }
 
 
+
 void model_add_second(model_t *pmodel) {
     assert(pmodel != NULL);
     pmodel->pwoff.tempo_attivita++;
+}
+
+
+unsigned int model_secondi_durata_asciugatura(model_t *pmodel)
+{
+    assert(pmodel != NULL);
+    if (pmodel->pmac.abilita_gettoniera) 
+    {
+        unsigned int secondi = 0;
+        if (pmodel->pmac.tempo_gettone_min_sec)
+        {
+            secondi = pmodel->pwoff.credito * pmodel->pmac.tempo_gettone_1;
+        }
+        else
+        {
+            secondi = pmodel->pwoff.credito * pmodel->pmac.tempo_gettone_1 * 60;
+        }
+        if (secondi > 99*60+59)
+        {
+            return 99*60+59;
+        }
+        else
+        {
+            return secondi;
+        }
+    }
+    else
+    {
+        return model_ciclo_corrente(pmodel)->tempo_durata_asciugatura*60;
+    }
+}
+
+
+int model_consenso_raggiunto(model_t *pmodel) {
+    if (pmodel->pmac.abilita_gettoniera == GETTONIERA_DISABILITATA) 
+    {
+        return 1; // se non c'e' una gettoniera non serve il consenso
+    }
+    else
+    {
+        return pmodel->pwoff.credito >= pmodel->pmac.numero_gettoni_consenso;
+    }
+}
+
+
+void model_azzera_credito(model_t *pmodel) {
+    assert(pmodel != NULL);
+    pmodel->pwoff.credito = 0;
+}
+
+
+void model_aggiungi_gettoni(model_t *pmodel, unsigned int gettoniera, unsigned int ingresso) {
+    switch (pmodel->pmac.abilita_gettoniera) {
+        case GETTONIERA_DISABILITATA:
+            break;
+            
+        case GETTONIERA_NC:
+        case GETTONIERA_NA:
+            pmodel->pwoff.credito += ingresso;
+            break;
+            
+        case GETTONIERA_INGRESSO:
+            pmodel->pwoff.credito += gettoniera;
+            break;
+            
+        default:
+            break;
+    }
 }
 
 
@@ -685,7 +823,6 @@ static void init_comune_parametri_1(model_t *pmodel) {
     pmodel->pmac.abilita_tasto_menu                  = 0;
     pmodel->pmac.tempo_azzeramento_ciclo_pausa       = 5;
 }
-
 
 static void init_comune_parametri_2(model_t *pmodel) {
     pmodel->pmac.tempo_azzeramento_ciclo_stop        = 3;
