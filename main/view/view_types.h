@@ -18,6 +18,7 @@ typedef enum {
     VIEW_PAGE_COMMAND_CODE_CHANGE_PAGE,
     VIEW_PAGE_COMMAND_CODE_CHANGE_PAGE_EXTRA,
     VIEW_PAGE_COMMAND_CODE_BACK,
+    VIEW_PAGE_COMMAND_CODE_BACK_TWICE,
     VIEW_PAGE_COMMAND_CODE_UPDATE,
 } view_page_command_code_t;
 
@@ -27,7 +28,7 @@ typedef struct {
     union {
         struct {
             const void *page;
-            void *      extra;
+            void       *extra;
         };
     };
 } view_page_command_t;
@@ -67,6 +68,7 @@ typedef uint8_t view_t;
 
 
 typedef enum {
+    VIEW_EVENT_SAVED,
     VIEW_EVENT_KEYPAD,
     VIEW_EVENT_MODEL_UPDATE,
     VIEW_EVENT_COIN,

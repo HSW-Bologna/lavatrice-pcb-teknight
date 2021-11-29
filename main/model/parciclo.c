@@ -22,13 +22,13 @@ void parciclo_init(model_t *p, tipo_ciclo_t ciclo, int reset) {
     // clang-format off
     /*                                 Tipo                  Puntatore                                     PMIN    PMAX    MIN  MAX   DEF   STEP  ACCESS       STRINGHE                                        RUNTIME     ARG */
     parameters[j++] = PARAMETER_C99(PARAMETER_TYPE_UINT8, &p->pciclo[i].tipo_asciugatura_m_a,           NULL,   NULL,   0,   1,    0,    1,    AL_TECH,     FINT(PARMAC_DESCRIPTIONS_TIPO_ASCIUGATURA_M_A),     NULL,       NULL);
-    parameters[j++] = PARAMETER_C99(PARAMETER_TYPE_UINT8, &p->pciclo[i].tempo_durata_asciugatura,       NULL,   NULL,   1,   99,  35,    1,    AL_USER,     FINT(PARMAC_DESCRIPTIONS_TEMPO_DURATA_ASCIUGATURA),     NULL,       NULL);
+    parameters[j++] = PARAMETER_C99(PARAMETER_TYPE_UINT8, &p->pciclo[i].tempo_durata_asciugatura,       NULL,   NULL,   1,   MINUTI_MASSIMI_ASCIUGATURA,  35,    1,    AL_USER,     FINT(PARMAC_DESCRIPTIONS_TEMPO_DURATA_ASCIUGATURA),     NULL,       NULL);
     parameters[j++] = PARAMETER_C99(PARAMETER_TYPE_UINT8, &p->pciclo[i].abilita_attesa_temperatura,     NULL,   NULL,   0,   1,    0,    1,    AL_TECH,     FINT(PARMAC_DESCRIPTIONS_ABILITA_ATTESA_TEMPERATURA),     NULL,       NULL);
     parameters[j++] = PARAMETER_C99(PARAMETER_TYPE_UINT8, &p->pciclo[i].abilita_inversione_asciugatura, NULL,   NULL,   0,   1,  1,    1,    AL_TECH,     FINT(PARMAC_DESCRIPTIONS_ABILITA_INVERSIONE_ASCIUGATURA),     NULL,       NULL);
     parameters[j++] = PARAMETER_C99(PARAMETER_TYPE_UINT8, &p->pciclo[i].tempo_giro_asciugatura,         NULL,   NULL,   1,   99,    95,    1,    AL_USER,     FINT(PARMAC_DESCRIPTIONS_TEMPO_GIRO_ASCIUGATURA),     NULL,       NULL);
     parameters[j++] = PARAMETER_C99(PARAMETER_TYPE_UINT8, &p->pciclo[i].tempo_pausa_asciugatura,        NULL,   NULL,   5,   99,  6,    1,    AL_USER,     FINT(PARMAC_DESCRIPTIONS_TEMPO_PAUSA_ASCIUGATURA),     NULL,       NULL);
     parameters[j++] = PARAMETER_C99(PARAMETER_TYPE_UINT8, &p->pciclo[i].velocita_asciugatura,           &p->pmac.velocita_min_lavoro,   &p->pmac.velocita_max_lavoro,   0,   0,    55,    1,    AL_USER,     FINT(PARMAC_DESCRIPTIONS_VELOCITA_ASCIUGATURA),     NULL,       NULL);
-    parameters[j++] = PARAMETER_C99(PARAMETER_TYPE_UINT8, &p->pciclo[i].temperatura_aria_1,             NULL,   NULL,   0,   100,  0,    1,    AL_USER,     FINT(PARMAC_DESCRIPTIONS_TEMPERATURA_ARIA_1),     temperatura_aria_check_posizione_sonda,       p);
+    parameters[j++] = PARAMETER_C99(PARAMETER_TYPE_UINT8, &p->pciclo[i].temperatura_aria_1,             NULL,   NULL,   0,   TEMPERATURA_MASSIMA_ARIA,  0,    1,    AL_USER,     FINT(PARMAC_DESCRIPTIONS_TEMPERATURA_ARIA_1),     temperatura_aria_check_posizione_sonda,       p);
     parameters[j++] = PARAMETER_C99(PARAMETER_TYPE_UINT8, &p->pciclo[i].abilita_raffreddamento,         NULL,   NULL,   0,   1,    1,    1,    AL_TECH,     FINT(PARMAC_DESCRIPTIONS_ABILITA_RAFFREDDAMENTO),     NULL,       NULL);
     parameters[j++] = PARAMETER_C99(PARAMETER_TYPE_UINT8, &p->pciclo[i].tipo_raffreddamento_m_a,        NULL,   NULL,   0,   1,  0,    1,    AL_TECH,     FINT(PARMAC_DESCRIPTIONS_TIPO_RAFFREDDAMENTO_M_A),     NULL,       NULL);
     parameters[j++] = PARAMETER_C99(PARAMETER_TYPE_UINT8, &p->pciclo[i].tempo_durata_raffreddamento,    NULL,   NULL,   1,   99,    2,    1,    AL_TECH,     FINT(PARMAC_DESCRIPTIONS_TEMPO_DURATA_RAFFREDDAMENTO),     NULL,       NULL);
@@ -59,8 +59,8 @@ const char *parciclo_get_description(const model_t *pmodel, size_t parameter) {
 }
 
 void parciclo_format_value(char *string, size_t parameter, model_t *pmodel) {
-    parameter_handle_t *  par  = parameter_get_handle(parameters, NUM_PARAMETERS, parameter,
-                                                   get_livello_accesso(pmodel->pmac.abilita_parametri_ridotti));
+    parameter_handle_t   *par  = parameter_get_handle(parameters, NUM_PARAMETERS, parameter,
+                                                      get_livello_accesso(pmodel->pmac.abilita_parametri_ridotti));
     parameter_user_data_t data = parameter_get_user_data(par);
 
     data.format(string, par);

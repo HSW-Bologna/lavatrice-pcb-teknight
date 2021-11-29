@@ -22,10 +22,10 @@ static page_manager_t pman;
 
 
 void view_init(model_t *model, void (*flush_cb)(struct _disp_drv_t *, const lv_area_t *, lv_color_t *),
-                 void (*rounder_cb)(struct _disp_drv_t *, lv_area_t *),
-                 void (*set_px_cb)(struct _disp_drv_t *, uint8_t *, lv_coord_t, lv_coord_t, lv_coord_t, lv_color_t,
-                                   lv_opa_t),
-                 void (*rinput)(void)) {
+               void (*rounder_cb)(struct _disp_drv_t *, lv_area_t *),
+               void (*set_px_cb)(struct _disp_drv_t *, uint8_t *, lv_coord_t, lv_coord_t, lv_coord_t, lv_color_t,
+                                 lv_opa_t),
+               void (*rinput)(void)) {
     lv_init();
     styles_init();
 
@@ -51,7 +51,7 @@ void view_init(model_t *model, void (*flush_cb)(struct _disp_drv_t *, const lv_a
 
     pman_init(&pman);
     event_queue_init(&q);
-    //view_change_page(model, &page_splash);
+    // view_change_page(model, &page_splash);
 }
 
 
@@ -105,6 +105,13 @@ int view_process_msg(view_page_command_t vmsg, model_t *model) {
             break;
 
         case VIEW_PAGE_COMMAND_CODE_BACK:
+            pman_back(&pman, model);
+            reset_input();
+            event_queue_init(&q);
+            break;
+
+        case VIEW_PAGE_COMMAND_CODE_BACK_TWICE:
+            pman_back(&pman, model);
             pman_back(&pman, model);
             reset_input();
             event_queue_init(&q);

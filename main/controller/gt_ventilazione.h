@@ -19,7 +19,7 @@
 #define	GT_VENTILAZIONE_H_INCLUDED
 
 #include "model/model.h"
-#include "pwm.h"
+#include "peripherals/pwm.h"
 
 void gt_ventilazione(model_t *p,  unsigned long timestamp);
 

@@ -8,7 +8,7 @@
 #include "controller/ciclo.h"
 #include "model/model.h"
 #include "view/view_types.h"
-#include "timer.h"
+#include "peripherals/timer.h"
 
 extern stopwatch_t ct_moto_cesto;
 extern stopwatch_t ct_oblo_open_close_on;
@@ -87,6 +87,9 @@ void gt_ciclo(model_t *p, uint32_t timestamp)
                 break;
 
             case STATO_STEP_ANT:
+                break;
+                
+            default:
                 break;
         }
     }

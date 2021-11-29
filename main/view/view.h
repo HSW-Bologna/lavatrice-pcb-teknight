@@ -25,6 +25,6 @@ lv_task_t *view_register_periodic_task(size_t period, lv_task_prio_t prio, int i
 
 extern const pman_page_t page_main, page_temperature_test, page_digout_test, page_digin_test, page_pwm_test,
     page_led_test, page_parmac, page_info, page_scelta_programma, page_parciclo, page_splash, page_commissioning,
-    page_reset_ram, page_coin_test, page_contrast, page_stats, page_ram_error;
+    page_reset_ram, page_coin_test, page_contrast, page_stats, page_ram_error, page_wait, page_adjust;
 
 #endif

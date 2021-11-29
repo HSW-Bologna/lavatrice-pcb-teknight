@@ -11,44 +11,44 @@
 #include "gel/timer/timecheck.h"
 #include "system.h"
 
-static unsigned long time_on=0;
-static unsigned long time_off=0;
-static size_t repeat=0;
-static int is_set=0;
-static unsigned long ts=0;
+static unsigned long time_on  = 0;
+static unsigned long time_off = 0;
+static size_t        repeat   = 0;
+static int           is_set   = 0;
+static unsigned long ts       = 0;
 
 
 void digout_init(void) {
-    RELE1_TRIS=TRIS_OUTPUT;
-    RELE2_TRIS=TRIS_OUTPUT;
-    RELE3_TRIS=TRIS_OUTPUT;
-    RELE4_TRIS=TRIS_OUTPUT;
-    RELE5_TRIS=TRIS_OUTPUT;
-    RELE6_TRIS=TRIS_OUTPUT;
+    RELE1_TRIS  = TRIS_OUTPUT;
+    RELE2_TRIS  = TRIS_OUTPUT;
+    RELE3_TRIS  = TRIS_OUTPUT;
+    RELE4_TRIS  = TRIS_OUTPUT;
+    RELE5_TRIS  = TRIS_OUTPUT;
+    RELE6_TRIS  = TRIS_OUTPUT;
     BUZZER_TRIS = TRIS_OUTPUT;
 }
 
 
 void rele_update(rele_t rele, int val) {
     val = val > 0;
-    switch(rele) {
-        case RELE_1 :
-            RELE1_LAT=val;
+    switch (rele) {
+        case RELE_1:
+            RELE1_LAT = val;
             break;
-        case RELE_2 :
-            RELE2_LAT=val;
+        case RELE_2:
+            RELE2_LAT = val;
             break;
-        case RELE_3 :
-            RELE3_LAT=val;
+        case RELE_3:
+            RELE3_LAT = val;
             break;
-        case RELE_4 :
-            RELE4_LAT=val;
+        case RELE_4:
+            RELE4_LAT = val;
             break;
-        case RELE_5 :
-            RELE5_LAT=val;
+        case RELE_5:
+            RELE5_LAT = val;
             break;
-        case RELE_6 :
-            RELE6_LAT=val;
+        case RELE_6:
+            RELE6_LAT = val;
             break;
         default:
             break;
@@ -56,34 +56,34 @@ void rele_update(rele_t rele, int val) {
 }
 
 uint8_t rele_get_status(void) {
-    uint8_t res=0;
-    res=RELE1_LAT<<0;
-    res|=RELE2_LAT<<1;
-    res|=RELE3_LAT<<2;
-    res|=RELE4_LAT<<3;
-    res|=RELE5_LAT<<4;
-    res|=RELE6_LAT<<5;
+    uint8_t res = 0;
+    res         = RELE1_LAT << 0;
+    res |= RELE2_LAT << 1;
+    res |= RELE3_LAT << 2;
+    res |= RELE4_LAT << 3;
+    res |= RELE5_LAT << 4;
+    res |= RELE6_LAT << 5;
     return res;
 }
 
 uint8_t rele_get(rele_t rele) {
-    switch(rele) {
-        case RELE_1 :
+    switch (rele) {
+        case RELE_1:
             return RELE1_LAT;
             break;
-        case RELE_2 :
+        case RELE_2:
             return RELE1_LAT;
             break;
-        case RELE_3 :
+        case RELE_3:
             return RELE1_LAT;
             break;
-        case RELE_4 :
+        case RELE_4:
             return RELE1_LAT;
             break;
-        case RELE_5 :
+        case RELE_5:
             return RELE1_LAT;
             break;
-        case RELE_6 :
+        case RELE_6:
             return RELE1_LAT;
             break;
         default:
@@ -95,38 +95,45 @@ uint8_t rele_get(rele_t rele) {
 
 
 void digout_buzzer_bip(size_t r, unsigned long t_on, unsigned long t_off) {
-    repeat = r;
-    time_on = t_on;
-    time_off = t_off;
-    is_set = 1;
+    repeat     = r;
+    time_on    = t_on;
+    time_off   = t_off;
+    is_set     = 1;
     BUZZER_LAT = 1;
-    ts = get_millis();
+    ts         = get_millis();
+}
+
+
+void digout_buzzer_stop(void) {
+    BUZZER_LAT = 0;
+    is_set     = 0;
+    repeat     = 0;
+    time_on    = 0;
+    time_off   = 0;
 }
 
 
 void digout_buzzer_check(void) {
-    if (is_set && repeat>0) {
+    if (is_set && repeat > 0) {
         if ((is_expired(ts, get_millis(), time_on)) && BUZZER_LAT) {
-            BUZZER_LAT=!BUZZER_LAT;
-            ts=get_millis();
+            BUZZER_LAT = !BUZZER_LAT;
+            ts         = get_millis();
             repeat--;
         } else if ((is_expired(ts, get_millis(), time_off)) && !BUZZER_LAT) {
-            BUZZER_LAT=!BUZZER_LAT; 
-            ts=get_millis();
+            BUZZER_LAT = !BUZZER_LAT;
+            ts         = get_millis();
         }
     }
-    
-    if (is_set && repeat==0) {
-        is_set=0;
-        ts=0;
-        BUZZER_LAT=0;
+
+    if (is_set && repeat == 0) {
+        is_set     = 0;
+        ts         = 0;
+        BUZZER_LAT = 0;
     }
-    
 }
 
 
-void clear_digout_all (void)
-{
+void clear_digout_all(void) {
     RELE1_LAT = 0;
     RELE2_LAT = 0;
     RELE3_LAT = 0;

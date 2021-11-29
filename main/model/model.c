@@ -18,34 +18,38 @@ static void        init_comune_parametri_2(model_t *pmodel);
 
 void model_init(model_t *pmodel) {
     assert(pmodel != NULL);
-    
-    pmodel->inputs                      = 0;
-    pmodel->ptc_temperature             = 0;
-    pmodel->sht_temperature             = 0;
-    pmodel->pwm1                        = 0;
-    pmodel->pwm2                        = 0;
-    pmodel->ptc_adc                     = 0;
-    pmodel->outputs                     = 0;
-    pmodel->lingua_temporanea           = 0;
-    
+
+    pmodel->inputs            = 0;
+    pmodel->ptc_temperature   = 0;
+    pmodel->sht_temperature   = 0;
+    pmodel->pwm1              = 0;
+    pmodel->pwm2              = 0;
+    pmodel->ptc_adc           = 0;
+    pmodel->outputs           = 0;
+    pmodel->lingua_temporanea = 0;
+    pmodel->delta_temperatura = 0;
+    pmodel->delta_velocita    = 0;
+
+    pmodel->status.ciclo                = CICLO_NESSUNO;
     pmodel->status.stato                = 0;
     pmodel->status.n_allarme            = 0;
-    
-    pmodel->hsw.contrasto               = NT7534_DEFAULT_CONTRAST;
-    
-    pmodel->pwoff.credito               = 0;
-    pmodel->pwoff.tempo_attivita        = 0;
-    pmodel->pwoff.tempo_lavoro          = 0;
-    pmodel->pwoff.tempo_moto            = 0;
-    pmodel->pwoff.tempo_riscaldamento   = 0;
-    pmodel->pwoff.tempo_ventilazione    = 0;
-    pmodel->pwoff.cicli_parziali        = 0;
-    pmodel->pwoff.cicli_totali          = 0;
-    pmodel->pwoff.gettoni               = 0;
-    
-    pmodel->lvgl_mem.frag_percentage    = 0;
-    pmodel->lvgl_mem.used_percentage    = 0;
-    pmodel->lvgl_mem.low_watermark      = LV_MEM_SIZE;
+    pmodel->status.temperatura_rilevata = 0;
+
+    pmodel->hsw.contrasto = NT7534_DEFAULT_CONTRAST;
+
+    pmodel->pwoff.credito             = 0;
+    pmodel->pwoff.tempo_attivita      = 0;
+    pmodel->pwoff.tempo_lavoro        = 0;
+    pmodel->pwoff.tempo_moto          = 0;
+    pmodel->pwoff.tempo_riscaldamento = 0;
+    pmodel->pwoff.tempo_ventilazione  = 0;
+    pmodel->pwoff.cicli_parziali      = 0;
+    pmodel->pwoff.cicli_totali        = 0;
+    pmodel->pwoff.gettoni             = 0;
+
+    pmodel->lvgl_mem.frag_percentage = 0;
+    pmodel->lvgl_mem.used_percentage = 0;
+    pmodel->lvgl_mem.low_watermark   = LV_MEM_SIZE;
 }
 
 
@@ -64,9 +68,8 @@ char *model_get_output_status(model_t *pmodel, int output) {
 }
 
 
-
 int model_get_riscaldamento_attivo(model_t *pmodel) {
-    return (pmodel->outputs  & 0x04) > 0;
+    return (pmodel->outputs & 0x04) > 0;
 }
 
 
@@ -311,12 +314,18 @@ void model_cambia_stato(model_t *pmodel, int res) {
 unsigned long model_get_stato_timer(model_t *pmodel) {
     assert(pmodel != NULL);
 
-    return stopwatch_get_remaining(&pmodel->status.stopwatch, get_millis()) / 1000UL;
+    return stopwatch_get_remaining(&pmodel->status.tempo_asciugatura, get_millis()) / 1000UL;
+}
+
+
+int model_ciclo_selezionato(model_t *pmodel) {
+    return pmodel->status.ciclo < NUM_CICLI;
 }
 
 
 parciclo_t *model_ciclo_corrente(model_t *pmodel) {
     assert(pmodel != NULL);
+    assert(pmodel->status.ciclo < NUM_CICLI);
 
     return &pmodel->pciclo[pmodel->status.ciclo];
 }
@@ -489,10 +498,8 @@ void model_init_parametri_ciclo(model_t *pmodel) {
     }
 
     uint8_t valori[NUM_CICLI][14] = {
-        {0, 35, 0, 1, 95, 6, 55, 0, 1, 0, 2, 1, 35, 6},
-        {0, 40, 0, 1, 95, 6, 55, 0, 1, 0, 2, 1, 35, 6},
-        {0, 40, 0, 1, 95, 6, 55, 0, 1, 0, 2, 1, 35, 6},
-        {0, 20, 0, 1, 60, 6, 55, 30, 0, 0, 2, 1, 35, 6},
+        {0, 35, 0, 1, 95, 6, 55, 0, 1, 0, 2, 1, 35, 6}, {0, 40, 0, 1, 95, 6, 55, 0, 1, 0, 2, 1, 35, 6},
+        {0, 40, 0, 1, 95, 6, 55, 0, 1, 0, 2, 1, 35, 6}, {0, 20, 0, 1, 60, 6, 55, 30, 0, 0, 2, 1, 35, 6},
         {0, 45, 0, 1, 95, 6, 55, 0, 0, 0, 2, 1, 35, 6},
     };
 
@@ -568,12 +575,11 @@ int model_get_status_not_stopped(model_t *p) {
 
 
 void model_comincia_raffreddamento(model_t *pmodel) {
-    if (model_get_status_work(pmodel))
-    {
+    if (model_get_status_work(pmodel)) {
         pmodel->status.stato_step = STATO_STEP_RAF;
-        stopwatch_init(&pmodel->status.stopwatch);
-        stopwatch_setngo(&pmodel->status.stopwatch, model_ciclo_corrente(pmodel)->tempo_durata_raffreddamento * 1000UL,
-                         get_millis());
+        stopwatch_init(&pmodel->status.tempo_asciugatura);
+        stopwatch_setngo(&pmodel->status.tempo_asciugatura,
+                         model_ciclo_corrente(pmodel)->tempo_durata_raffreddamento * 1000UL, get_millis());
     }
 }
 
@@ -585,39 +591,45 @@ int model_in_antipiega(model_t *pmodel) {
 
 
 void model_comincia_antipiega(model_t *pmodel) {
-    if (model_get_status_work(pmodel))
-    {
-        pmodel->status.stato_step = STATO_STEP_ANT;
+    if (model_get_status_work(pmodel)) {
+        pmodel->status.stato_step   = STATO_STEP_ANT;
         pmodel->status.f_anti_piega = 1;
-        stopwatch_init(&pmodel->status.stopwatch);
-        stopwatch_setngo(&pmodel->status.stopwatch, 10 * 1000UL,
-                         get_millis());
+        stopwatch_init(&pmodel->status.tempo_asciugatura);
+        stopwatch_setngo(&pmodel->status.tempo_asciugatura, 10 * 1000UL, get_millis());
     }
 }
 
+
+void model_seleziona_ciclo(model_t *pmodel, tipo_ciclo_t ciclo) {
+    assert(pmodel != NULL);
+    pmodel->delta_temperatura = 0;
+    pmodel->delta_velocita    = 0;
+    model_set_status_work(pmodel);
+    model_set_status_step_asc(pmodel);
+    pmodel->status.ciclo = ciclo;
+}
 
 
 void model_set_status_work(model_t *p) {
     assert(p != NULL);
     if (model_get_status_pause(p)) {
-        stopwatch_start(&p->status.stopwatch, get_millis());
+        stopwatch_start(&p->status.tempo_asciugatura, get_millis());
         p->status.stato = STATO_WORK;
     } else if (model_get_status_stopped(p) && model_consenso_raggiunto(p)) {
-        stopwatch_init(&p->status.stopwatch);
-        stopwatch_setngo(&p->status.stopwatch, model_secondi_durata_asciugatura(p) * 1000UL,
-                         get_millis());
+        stopwatch_init(&p->status.tempo_asciugatura);
+        stopwatch_setngo(&p->status.tempo_asciugatura, model_secondi_durata_asciugatura(p) * 1000UL, get_millis());
         p->status.stato = STATO_WORK;
-    } 
+    }
 }
 
 
 int model_tempo_lavoro_scaduto(model_t *pmodel, unsigned long ts) {
-    return stopwatch_is_timer_reached(&pmodel->status.stopwatch, ts);
+    return stopwatch_is_timer_reached(&pmodel->status.tempo_asciugatura, ts);
 }
 
 
-void model_metti_tempo_lavoro_in_pausa(model_t * pmodel, unsigned long ts) {
-    stopwatch_pause(&pmodel->status.stopwatch, ts);
+void model_metti_tempo_lavoro_in_pausa(model_t *pmodel, unsigned long ts) {
+    stopwatch_pause(&pmodel->status.tempo_asciugatura, ts);
 }
 
 
@@ -635,7 +647,7 @@ void model_set_status_pause(model_t *p) {
     assert(p != NULL);
     p->status.stato = STATO_PAUSE;
 
-    stopwatch_pause(&p->status.stopwatch, get_millis());
+    stopwatch_pause(&p->status.tempo_asciugatura, get_millis());
 }
 
 int model_get_status_pause(model_t *p) {
@@ -748,43 +760,76 @@ void model_add_second(model_t *pmodel) {
 }
 
 
-unsigned int model_secondi_durata_asciugatura(model_t *pmodel)
-{
+void model_modifica_temperatura_aria(model_t *pmodel, int gradi) {
     assert(pmodel != NULL);
-    if (pmodel->pmac.abilita_gettoniera) 
-    {
-        unsigned int secondi = 0;
-        if (pmodel->pmac.tempo_gettone_min_sec)
-        {
-            secondi = pmodel->pwoff.credito * pmodel->pmac.tempo_gettone_1;
+
+    if (model_temperatura_aria_ciclo(pmodel) + gradi > TEMPERATURA_MASSIMA_ARIA) {
+        pmodel->delta_temperatura = TEMPERATURA_MASSIMA_ARIA - model_ciclo_corrente(pmodel)->temperatura_aria_1;
+    } else if (model_temperatura_aria_ciclo(pmodel) + gradi < 0) {
+        pmodel->delta_temperatura = -model_ciclo_corrente(pmodel)->temperatura_aria_1;
+    } else {
+        pmodel->delta_temperatura += gradi;
+    }
+}
+
+
+void model_modifica_velocita(model_t *pmodel, int giri) {
+    assert(pmodel != NULL);
+
+    if (model_velocita_ciclo(pmodel) + giri > pmodel->pmac.velocita_max_lavoro) {
+        pmodel->delta_velocita = pmodel->pmac.velocita_max_lavoro - model_ciclo_corrente(pmodel)->velocita_asciugatura;
+    } else if (model_velocita_ciclo(pmodel) + giri < pmodel->pmac.velocita_min_lavoro) {
+        pmodel->delta_velocita = pmodel->pmac.velocita_min_lavoro - model_ciclo_corrente(pmodel)->velocita_asciugatura;
+    } else {
+        pmodel->delta_velocita += giri;
+    }
+}
+
+
+void model_modifica_durata_asciugatura(model_t *pmodel, int minuti) {
+    assert(pmodel != NULL);
+    unsigned int secondi = stopwatch_get_remaining(&pmodel->status.tempo_asciugatura, get_millis()) / 1000;
+
+    if (minuti > 0) {
+        if (secondi + minuti * 60 < MINUTI_MASSIMI_ASCIUGATURA * 60) {
+            stopwatch_change(&pmodel->status.tempo_asciugatura, (secondi + minuti * 60) * 1000UL, get_millis());
+        } else {
+            stopwatch_change(&pmodel->status.tempo_asciugatura, MINUTI_MASSIMI_ASCIUGATURA * 60 * 1000UL, get_millis());
         }
-        else
-        {
-            secondi = pmodel->pwoff.credito * pmodel->pmac.tempo_gettone_1 * 60;
-        }
-        if (secondi > 99*60+59)
-        {
-            return 99*60+59;
-        }
-        else
-        {
-            return secondi;
+    } else if (minuti < 0) {
+        if ((int)secondi + minuti * 60 > 0) {
+            stopwatch_change(&pmodel->status.tempo_asciugatura, (secondi + minuti * 60) * 1000UL, get_millis());
+        } else {
+            stopwatch_change(&pmodel->status.tempo_asciugatura, 0, get_millis());
         }
     }
-    else
-    {
-        return model_ciclo_corrente(pmodel)->tempo_durata_asciugatura*60;
+}
+
+
+unsigned int model_secondi_durata_asciugatura(model_t *pmodel) {
+    assert(pmodel != NULL);
+    if (pmodel->pmac.abilita_gettoniera) {
+        unsigned int secondi = 0;
+        if (pmodel->pmac.tempo_gettone_min_sec) {
+            secondi = pmodel->pwoff.credito * pmodel->pmac.tempo_gettone_1;
+        } else {
+            secondi = pmodel->pwoff.credito * pmodel->pmac.tempo_gettone_1 * 60;
+        }
+        if (secondi > 99 * 60 + 59) {
+            return 99 * 60 + 59;
+        } else {
+            return secondi;
+        }
+    } else {
+        return model_ciclo_corrente(pmodel)->tempo_durata_asciugatura * 60;
     }
 }
 
 
 int model_consenso_raggiunto(model_t *pmodel) {
-    if (pmodel->pmac.abilita_gettoniera == GETTONIERA_DISABILITATA) 
-    {
-        return 1; // se non c'e' una gettoniera non serve il consenso
-    }
-    else
-    {
+    if (pmodel->pmac.abilita_gettoniera == GETTONIERA_DISABILITATA) {
+        return 1;     // se non c'e' una gettoniera non serve il consenso
+    } else {
         return pmodel->pwoff.credito >= pmodel->pmac.numero_gettoni_consenso;
     }
 }
@@ -800,18 +845,39 @@ void model_aggiungi_gettoni(model_t *pmodel, unsigned int gettoniera, unsigned i
     switch (pmodel->pmac.abilita_gettoniera) {
         case GETTONIERA_DISABILITATA:
             break;
-            
+
         case GETTONIERA_NC:
         case GETTONIERA_NA:
             pmodel->pwoff.credito += ingresso;
             break;
-            
+
         case GETTONIERA_INGRESSO:
             pmodel->pwoff.credito += gettoniera;
             break;
-            
+
         default:
             break;
+    }
+}
+
+
+uint16_t model_temperatura_aria_ciclo(model_t *pmodel) {
+    assert(pmodel != NULL);
+    return model_ciclo_corrente(pmodel)->temperatura_aria_1 + pmodel->delta_temperatura;
+}
+
+
+uint16_t model_velocita_ciclo(model_t *pmodel) {
+    assert(pmodel != NULL);
+    return model_ciclo_corrente(pmodel)->velocita_asciugatura + pmodel->delta_velocita;
+}
+
+
+int model_modifica_abilitata(model_t *pmodel) {
+    if (model_get_status_work(pmodel) && model_ciclo_selezionato(pmodel) && pmodel->pmac.abilita_tasto_menu) {
+        return 1;
+    } else {
+        return 0;
     }
 }
 

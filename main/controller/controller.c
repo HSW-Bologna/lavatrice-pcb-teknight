@@ -57,11 +57,11 @@ static int controller_start_check(void);
 void controller_process_msg(view_controller_command_t *msg, model_t *pmodel) {
     switch (msg->code) {
         case VIEW_CONTROLLER_COMMAND_CODE_UPDATE_PWM: {
-////            pwm_set(msg->value, msg->output);
-////            if (msg->output == 1)
-////                pmodel->pwm1 = msg->value;
-////            if (msg->output == 2)
-////                pmodel->pwm2 = msg->value;
+            ////            pwm_set(msg->value, msg->output);
+            ////            if (msg->output == 1)
+            ////                pmodel->pwm1 = msg->value;
+            ////            if (msg->output == 2)
+            ////                pmodel->pwm2 = msg->value;
             break;
         }
 
@@ -90,7 +90,9 @@ void controller_process_msg(view_controller_command_t *msg, model_t *pmodel) {
         }
 
         case VIEW_CONTROLLER_COMMAND_CODE_PARAMETERS_SAVE: {
+            digout_buzzer_stop();
             controller_save_pars(pmodel);
+            view_event((view_event_t){.code = VIEW_EVENT_SAVED});
             break;
         }
 

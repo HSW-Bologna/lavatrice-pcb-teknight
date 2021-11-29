@@ -17,27 +17,22 @@
 
 
 
-void gt_riscaldamento(model_t *p, unsigned long timestamp)
-{
-     if (model_get_status_stopped(p) || model_get_status_pause(p))
-    {
-        if (p->status.f_in_test==0)
-        {
+void gt_riscaldamento(model_t *p, unsigned long timestamp) {
+    if (model_get_status_stopped(p) || model_get_status_pause(p)) {
+        if (p->status.f_in_test == 0) {
             clear_digout(RISCALDAMENTO);
         }
     }
-    
-    
-    
-    if (model_get_status_work(p))
-    {
-        if (p->status.f_ventilazione==1 && p->status.stato_step==STATO_STEP_ASC && ((p->pmac.tipo_pausa_asciugatura==0 && ((model_ciclo_corrente(p)->temperatura_aria_1) > (p->ptc_temperature))) ||
-                (p->pmac.tipo_pausa_asciugatura==1 && ((model_ciclo_corrente(p)->temperatura_aria_1) > (p->sht_temperature))) ) )
-        {
+
+
+
+    if (model_get_status_work(p)) {
+        if (p->status.f_ventilazione == 1 && p->status.stato_step == STATO_STEP_ASC &&
+            ((p->pmac.tipo_pausa_asciugatura == 0 &&
+              ((model_temperatura_aria_ciclo(p)) > (p->ptc_temperature))) ||
+             (p->pmac.tipo_pausa_asciugatura == 1 && ((model_temperatura_aria_ciclo(p)) > (p->sht_temperature))))) {
             set_digout(RISCALDAMENTO);
-        }
-        else
-        {
+        } else {
             clear_digout(RISCALDAMENTO);
         }
     }

@@ -42,8 +42,12 @@ typedef enum {
     STRINGS_GETTONI_TOTALI,
     STRINGS_ERRORE_FATALE_RAM,
     STRINGS_ERRORE_LIEVE_RAM,
+    STRINGS_SALVATAGGIO_IN_CORSO,
+    STRINGS_TEMPO_CICLO,
+    STRINGS_TEMPERATURA,
+    STRINGS_VELOCITA,
 } strings_t;
 
-extern const char *strings[40][2];
+extern const char *strings[44][2];
 
 #endif

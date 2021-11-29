@@ -1,4 +1,4 @@
-const char *strings[40][2] = {
+const char *strings[44][2] = {
     {"Inserire moneta", "Insert coin", },
     {"Inserire gettone", "Insert token", },
     {"Pagare cassa", "Pay at desk", },
@@ -39,5 +39,9 @@ const char *strings[40][2] = {
     {"Gettoni totali", "Total coins", },
     {"Si e' verificato un malfunzionamento fatale della eeprom. I parametri non verranno caricati", "", },
     {"I parametri caricati dalla eeprom non erano validi. Sono stati corretti", "", },
+    {"Salvataggio in corso...", "Saving...", },
+    {"TEMPO CICLO", "CYCLE TIME", },
+    {"TEMPERATURA", "TEMPERATURE", },
+    {"VELOCITA'", "SPEED", },
 };
 

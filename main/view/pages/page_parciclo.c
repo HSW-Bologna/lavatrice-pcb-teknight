@@ -88,9 +88,11 @@ static view_message_t process_page_event(model_t *model, void *arg, pman_event_t
                         break;
 
                     case BUTTON_STOP:
-                        msg.vmsg.code = VIEW_PAGE_COMMAND_CODE_BACK;
                         if (page_data.par_to_save) {
-                            msg.cmsg.code = VIEW_CONTROLLER_COMMAND_CODE_PARAMETERS_SAVE;
+                            msg.vmsg.code = VIEW_PAGE_COMMAND_CODE_CHANGE_PAGE;
+                            msg.vmsg.page = &page_wait;
+                        } else {
+                            msg.vmsg.code = VIEW_PAGE_COMMAND_CODE_BACK;
                         }
                         break;
                 }

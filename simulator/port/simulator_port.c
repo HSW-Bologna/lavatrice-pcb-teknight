@@ -1,8 +1,19 @@
 #include <stdint.h>
 #include "peripherals/digout.h"
+#include "peripherals/digin.h"
 #include "peripherals/led.h"
 
+
+
+int digin_get(digin_t digin) {
+    return 0;
+}
+
+void Nop(void) {}
+
 void digout_buzzer_bip(size_t r, unsigned long t_on, unsigned long t_off) {}
+
+void digout_buzzer_stop(void) {}
 
 void rele_set(rele_t rele, int val) {}
 

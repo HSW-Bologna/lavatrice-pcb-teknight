@@ -15,8 +15,6 @@
 /*                                                                            */
 /******************************************************************************/
 
-#include <xc.h>
-
 #include "gt_cesto.h"
 #include "model/model.h"
 
@@ -25,7 +23,7 @@
 #include "peripherals/digout.h"
 #include "peripherals/timer.h"
 #include "gel/timer/stopwatch.h"
-#include "pwm.h"
+#include "peripherals/pwm.h"
 
 stopwatch_t ct_moto_cesto = STOPWATCH_NULL;
 stopwatch_t ct_oblo_open_close_on = STOPWATCH_NULL;
@@ -54,7 +52,6 @@ void gt_cesto(model_t *p, unsigned long timestamp)
         if (model_not_in_test(p))
         {
             cesto_stop(p);
-            Nop();
         }
     }
     
@@ -681,10 +678,6 @@ void gt_velocita_cesto (model_t *p)
 ////    if (stato.f_in_test == 1) // SONO IN TEST
 ////    {
 //////        valore_DA_ces = 0;
-////        Nop();
-////        Nop();
-////        Nop();
-////        Nop();
 ////    }
 ////    else if (!stato_in_marcia(&stato)) // stato diverso da MARCIA
 ////    {
@@ -798,7 +791,7 @@ void cesto_avanti(model_t *p) /* ----------------------------- */
     
     //set_digout(ORARIO);
     rele_update(ORARIO, 1);
-    pwm_set((p), model_ciclo_corrente(p)->velocita_asciugatura, CH_VEL_CESTO); // % speed , CH ANALOG
+    pwm_set((p), model_velocita_ciclo(p), CH_VEL_CESTO); // % speed , CH ANALOG
 }
 
 void cesto_indietro(model_t *p) /* --------------------------- */
@@ -806,7 +799,7 @@ void cesto_indietro(model_t *p) /* --------------------------- */
     p->status.f_ava_ind = 2;
     
     set_digout(ANTIORARIO);
-    pwm_set((p), model_ciclo_corrente(p)->velocita_asciugatura, CH_VEL_CESTO); // % speed , CH ANALOG
+    pwm_set((p), model_velocita_ciclo(p), CH_VEL_CESTO); // % speed , CH ANALOG
 }
 
 
