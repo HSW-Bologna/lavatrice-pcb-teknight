@@ -57,11 +57,10 @@ static int controller_start_check(void);
 void controller_process_msg(view_controller_command_t *msg, model_t *pmodel) {
     switch (msg->code) {
         case VIEW_CONTROLLER_COMMAND_CODE_UPDATE_PWM: {
-            ////            pwm_set(msg->value, msg->output);
-            ////            if (msg->output == 1)
-            ////                pmodel->pwm1 = msg->value;
-            ////            if (msg->output == 2)
-            ////                pmodel->pwm2 = msg->value;
+            if (msg->output == 1)
+                pmodel->pwm1 = msg->value;
+            if (msg->output == 2)
+                pmodel->pwm2 = msg->value;
             break;
         }
 

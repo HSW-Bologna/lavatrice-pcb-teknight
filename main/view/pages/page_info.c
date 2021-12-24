@@ -5,8 +5,12 @@
 #include "lvgl/lvgl.h"
 #include "view/fonts/legacy_fonts.h"
 #include "view/common.h"
+#include "view/styles.h"
 #include "config/app_config.h"
 #include <stdio.h>
+
+
+extern const unsigned char versione_prg[];
 
 
 static struct {
@@ -32,6 +36,7 @@ static void open_page(model_t *pmodel, void *data) {
     lv_obj_t *l_version = lv_label_create(lv_scr_act(), NULL);
     lv_obj_set_auto_realign(l_version, 1);
     lv_obj_align(l_version, NULL, LV_ALIGN_IN_TOP_LEFT, 0, 20);
+    lv_obj_set_style(l_version, &style_label_6x8);
     page_data.label_version = l_version;
 
     lv_obj_t *mem_free = lv_label_create(lv_scr_act(), NULL);
@@ -74,7 +79,7 @@ static view_message_t process_page_event(model_t *pmodel, void *arg, pman_event_
 
 
 static view_t update_page(model_t *pmodel, void *arg) {
-    lv_label_set_text_fmt(page_data.label_version, "VERSION: %i.%i.%i", VERSION_MAJOR, VERSION_MINOR, VERSION_PATCH);
+    lv_label_set_text(page_data.label_version, (versione_prg));
     lv_label_set_text_fmt(page_data.label_low_watermark, "WMARK: %i", (int)pmodel->lvgl_mem.low_watermark);
     lv_label_set_text_fmt(page_data.label_mem_frag, "FRAG %%: %i%%", (int)pmodel->lvgl_mem.frag_percentage);
     lv_label_set_text_fmt(page_data.label_mem_free, "USED %%: %i%%", (int)pmodel->lvgl_mem.used_percentage);

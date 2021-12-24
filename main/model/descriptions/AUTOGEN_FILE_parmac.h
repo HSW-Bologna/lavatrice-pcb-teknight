@@ -70,8 +70,9 @@ typedef enum {
     PARMAC_DESCRIPTIONS_TEMPO_GIRO_RAFFREDDAMENTO,
     PARMAC_DESCRIPTIONS_TEMPO_PAUSA_RAFFREDDAMENTO,
     PARMAC_DESCRIPTIONS_ABILITA_ANTIPIEGA,
+    PARMAC_DESCRIPTIONS_EMERGENZA_NA_NC,
 } parmac_descriptions_t;
 
-extern const char *parmac_descriptions[68][2];
+extern const char *parmac_descriptions[69][2];
 
 #endif

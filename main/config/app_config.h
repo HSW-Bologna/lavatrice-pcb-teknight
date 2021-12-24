@@ -1,9 +1,5 @@
 #ifndef APP_CONFIG_H_INCLUDED
 #define APP_CONFIG_H_INCLUDED
 
-#define VERSION_MAJOR 0
-#define VERSION_MINOR 1
-#define VERSION_PATCH 0
-
 
 #endif

@@ -1,4 +1,4 @@
-const char *parmac_descriptions[68][2] = {
+const char *parmac_descriptions[69][2] = {
     {"T.TASTO X STOP", "T.TASTO X STOP  ", },
     {"VISUALIZZO TEMP.", "VISUALIZZO TEMP.", },
     {"TIPO PAUSA ASCI.", "TIPO PAUSA ASCI.", },
@@ -67,5 +67,6 @@ const char *parmac_descriptions[68][2] = {
     {"T.GIRO CESTO RAF", "T.GIRO CESTO RAF", },
     {"T.PAUSA CESTO RA", "T.PAUSA CESTO RA", },
     {"ABIL. ANTIPIEGA", "ABIL. ANTIPIEGA", },
+    {"EMERGENZA NA/NC", "EMERGENCY NO/NC", },
 };
 

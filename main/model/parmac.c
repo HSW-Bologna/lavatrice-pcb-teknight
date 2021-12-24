@@ -22,9 +22,9 @@
 #include "parmac.h"
 #include "descriptions/AUTOGEN_FILE_parmac.h"
 
-#define NUM_PARAMETERS           53
+#define NUM_PARAMETERS           54
 #define NUM_CHUNKS               ((NUM_PARAMETERS / MAX_PARAMETER_CHUNK) + ((NUM_PARAMETERS % MAX_PARAMETER_CHUNK) > 0))
-#define PARAMETERS_IN_LAST_CHUNK 8
+#define PARAMETERS_IN_LAST_CHUNK 9
 
 #define AL_USER 0x01
 #define AL_TECH 0x02
@@ -140,6 +140,7 @@ void parmac_setup_full(model_t *p, size_t chunk, int reset) {
             parameters[i++] = PARAMETER_C99(PARAMETER_TYPE_UINT8, &p->pmac.abilita_reset_gas_esteso,            NULL,   NULL,   0,      1,      0,      1,      AL_USER,     FINT(PARMAC_DESCRIPTIONS_ABILITA_RESET_GAS_ESTESO),                 NULL,       NULL);
             parameters[i++] = PARAMETER_C99(PARAMETER_TYPE_UINT8, &p->pmac.temperatura_raffreddo_allarme,       NULL,   NULL,   0,      240,    60,     1,      AL_TECH,     FINT(PARMAC_DESCRIPTIONS_TEMPERATURA_RAFFREDDO_ALLARME),      NULL,       NULL);
             parameters[i++] = PARAMETER_C99(PARAMETER_TYPE_UINT8, &p->pmac.macchina_libera_off_on,              NULL,   NULL,   0,      1,      0,      1,      AL_TECH,     FINT(PARMAC_DESCRIPTIONS_MACCHINA_LIBERA_OFF_ON),              NULL,       NULL);
+            parameters[i++] = PARAMETER_C99(PARAMETER_TYPE_UINT8, &p->pmac.emergenza_na_nc,                     NULL,   NULL,   0,      1,      0,      1,      AL_TECH,     FINT(PARMAC_DESCRIPTIONS_EMERGENZA_NA_NC),                  NULL,       NULL);
             assert(i == PARAMETERS_IN_LAST_CHUNK);
             // parameters[i++] = PARAMETER_C99(PARAMETER_TYPE_UINT8, &p->pmac.temperatura_stop_tempo_ciclo,NULL,   NULL,   0,   5,    0,    1,    AL_USER,     FINT(PARMAC_DESCRIPTIONS_MODELLO),              NULL,       NULL);
             break;

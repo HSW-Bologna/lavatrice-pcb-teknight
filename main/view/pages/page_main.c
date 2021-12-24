@@ -257,6 +257,7 @@ static view_message_t process_page_event(model_t *model, void *arg, pman_event_t
                             model_set_status_pause(model);
                             view_status_string(model);
                             update_timer(model);
+                            page_data.stop_timestamp = get_millis();
                         }
                         break;
                 }

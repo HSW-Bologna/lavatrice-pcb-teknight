@@ -11,7 +11,7 @@
 /*                                                                            */
 /*  Data  : 19/07/2021      REV  : 00.0                                       */
 /*                                                                            */
-/*  U.mod.: 04/10/2021      REV  : 01.0                                       */
+/*  U.mod.: 21/12/2021      REV  : 01.0                                       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -111,7 +111,7 @@ void gt_allarmi (model_t *p)
     
     
     
-    else if (digin_get(EMERGENZA_STOP)==0)     // ALL EMERGENZA --------------------------*
+    else if (model_allarme_emergenza(p, digin_get(EMERGENZA_STOP)))     // ALL EMERGENZA --------------------------*
     {
         p->status.n_allarme = ALL_EMERGENZA;
         

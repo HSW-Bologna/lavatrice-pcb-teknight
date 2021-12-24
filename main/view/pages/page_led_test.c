@@ -108,7 +108,7 @@ static view_message_t process_page_event(model_t *model, void *arg, pman_event_t
                 switch (event.key_event.code) {
                     case BUTTON_CALDO:
                         msg.vmsg.code = VIEW_PAGE_COMMAND_CODE_SWAP_PAGE;
-                        msg.vmsg.page = &page_digout_test;
+                        msg.vmsg.page = &page_coin_test;
                         break;
 
                     case BUTTON_MEDIO:

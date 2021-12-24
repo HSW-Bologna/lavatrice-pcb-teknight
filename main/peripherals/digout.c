@@ -57,7 +57,7 @@ void rele_update(rele_t rele, int val) {
 
 uint8_t rele_get_status(void) {
     uint8_t res = 0;
-    res         = RELE1_LAT << 0;
+    res = RELE1_LAT << 0;
     res |= RELE2_LAT << 1;
     res |= RELE3_LAT << 2;
     res |= RELE4_LAT << 3;
@@ -70,25 +70,18 @@ uint8_t rele_get(rele_t rele) {
     switch (rele) {
         case RELE_1:
             return RELE1_LAT;
-            break;
         case RELE_2:
-            return RELE1_LAT;
-            break;
+            return RELE2_LAT;
         case RELE_3:
-            return RELE1_LAT;
-            break;
+            return RELE3_LAT;
         case RELE_4:
-            return RELE1_LAT;
-            break;
+            return RELE4_LAT;
         case RELE_5:
-            return RELE1_LAT;
-            break;
+            return RELE5_LAT;
         case RELE_6:
-            return RELE1_LAT;
-            break;
+            return RELE6_LAT;
         default:
             return 0;
-            break;
     }
 }
 

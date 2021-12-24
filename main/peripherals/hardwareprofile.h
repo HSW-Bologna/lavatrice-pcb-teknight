@@ -52,20 +52,20 @@
 #define KEYBOARD_COL3_PORT PORTBbits.RB2
 
 // ingressi
-#define IN1_TRIS TRISBbits.TRISB8
-#define IN1_PORT PORTBbits.RB8
-#define IN2_TRIS TRISBbits.TRISB9
-#define IN2_PORT PORTBbits.RB9
-#define IN3_TRIS TRISCbits.TRISC6
-#define IN3_PORT PORTCbits.RC6
+#define IN7_TRIS TRISBbits.TRISB8
+#define IN7_PORT PORTBbits.RB8
+#define IN6_TRIS TRISBbits.TRISB9
+#define IN6_PORT PORTBbits.RB9
+#define IN5_TRIS TRISCbits.TRISC6
+#define IN5_PORT PORTCbits.RC6
 #define IN4_TRIS TRISCbits.TRISC7
 #define IN4_PORT PORTCbits.RC7
-#define IN5_TRIS TRISCbits.TRISC8
-#define IN5_PORT PORTCbits.RC8
-#define IN6_TRIS TRISCbits.TRISC9
-#define IN6_PORT PORTCbits.RC9
-#define IN7_TRIS TRISAbits.TRISA11
-#define IN7_PORT PORTAbits.RA11
+#define IN3_TRIS TRISCbits.TRISC8
+#define IN3_PORT PORTCbits.RC8
+#define IN2_TRIS TRISCbits.TRISC9
+#define IN2_PORT PORTCbits.RC9
+#define IN1_TRIS TRISAbits.TRISA11
+#define IN1_PORT PORTAbits.RA11
 
 //eeprom i2c
 #define I2C_CLK_TRIS TRISAbits.TRISA7

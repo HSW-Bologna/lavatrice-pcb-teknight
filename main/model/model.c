@@ -59,6 +59,14 @@ void model_reset_parameters(model_t *pmodel) {
 }
 
 
+int model_allarme_emergenza(model_t *pmodel, int emergenza) {
+    if (pmodel->pmac.emergenza_na_nc) {
+        return emergenza == 0;
+    } else {
+        return emergenza == 1;
+    }
+}
+
 
 char *model_get_output_status(model_t *pmodel, int output) {
     if ((pmodel->outputs >> output) & 1)
@@ -149,7 +157,7 @@ size_t model_pars_serialize(model_t *pmodel, uint8_t buff[static PARS_SERIALIZED
     i += serialize_uint8(&buff[i], pmodel->pmac.abilita_reset_gas_esteso);
     i += serialize_uint8(&buff[i], pmodel->pmac.temperatura_raffreddo_allarme);
     i += serialize_uint8(&buff[i], pmodel->pmac.macchina_libera_off_on);
-    // i += serialize_uint8(&buff[i], pmodel->pmac.temperatura_stop_tempo_ciclo);
+    i += serialize_uint8(&buff[i], pmodel->pmac.emergenza_na_nc);
     unsigned short crc = crc16_ccitt(&buff[2], i - 2, 0);
     serialize_uint16_be(&buff[0], crc);
     assert(i == PARS_SERIALIZED_SIZE);
@@ -234,7 +242,7 @@ size_t model_pars_deserialize(model_t *pmodel, uint8_t *buff) {
         i += deserialize_uint8(&pmodel->pmac.abilita_reset_gas_esteso, &buff[i]);
         i += deserialize_uint8(&pmodel->pmac.temperatura_raffreddo_allarme, &buff[i]);
         i += deserialize_uint8(&pmodel->pmac.macchina_libera_off_on, &buff[i]);
-        // i += deserialize_uint8(&pmodel->pmac.temperatura_stop_tempo_ciclo, &buff[i]);
+        i += deserialize_uint8(&pmodel->pmac.emergenza_na_nc, &buff[i]);
 
         pmodel->lingua_temporanea = pmodel->pmac.lingua;
     }
@@ -604,9 +612,9 @@ void model_seleziona_ciclo(model_t *pmodel, tipo_ciclo_t ciclo) {
     assert(pmodel != NULL);
     pmodel->delta_temperatura = 0;
     pmodel->delta_velocita    = 0;
-    model_set_status_work(pmodel);
     model_set_status_step_asc(pmodel);
     pmodel->status.ciclo = ciclo;
+    model_set_status_work(pmodel);
 }
 
 

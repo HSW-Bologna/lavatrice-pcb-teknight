@@ -11,7 +11,7 @@
 #define TEMPERATURA_MASSIMA_ARIA   100
 
 
-#define PARS_SERIALIZED_SIZE         130
+#define PARS_SERIALIZED_SIZE         131
 #define PRIVATE_PARS_SERIALIZED_SIZE 3
 #define PWOFF_SERIALIZED_SIZE        8
 #define MAX_PARAMETER_CHUNK          15
@@ -120,6 +120,7 @@ typedef struct {
     uint8_t abilita_reset_gas_esteso;
     uint8_t temperatura_raffreddo_allarme;
     uint8_t macchina_libera_off_on;
+    uint8_t emergenza_na_nc;
 } parmac_t;
 
 typedef struct {
@@ -286,6 +287,6 @@ void         model_modifica_durata_asciugatura(model_t *pmodel, int minuti);
 void         model_modifica_temperatura_aria(model_t *pmodel, int gradi);
 void         model_modifica_velocita(model_t *pmodel, int giri);
 int          model_modifica_abilitata(model_t *pmodel);
-
+int model_allarme_emergenza(model_t *pmodel, int emergenza);
 
 #endif

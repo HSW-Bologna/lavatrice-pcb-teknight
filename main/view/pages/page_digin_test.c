@@ -19,15 +19,19 @@ static void *create_page(model_t *model, void *extra) {
 
 static void open_page(model_t *model, void *data) {
     view_common_title(lv_scr_act(), "TEST INGRESSI");
+    
+    lv_obj_t *lblnum = lv_label_create(lv_scr_act(), NULL);
+    lv_label_set_text(lblnum, "7654321");
+    lv_obj_align(lblnum, NULL, LV_ALIGN_IN_TOP_RIGHT, 0, 22);
 
     lv_obj_t *lblin = lv_label_create(lv_scr_act(), NULL);
     lv_obj_set_auto_realign(lblin, 1);
-    lv_obj_align(lblin, NULL, LV_ALIGN_IN_TOP_LEFT, 2, 20);
+    lv_obj_align(lblin, NULL, LV_ALIGN_IN_TOP_LEFT, 2, 32);
     page_data.digin_in = lblin;
 
     lv_obj_t *lblstato = lv_label_create(lv_scr_act(), NULL);
     lv_obj_set_auto_realign(lblstato, 1);
-    lv_obj_align(lblstato, NULL, LV_ALIGN_IN_TOP_RIGHT, 0, 20);
+    lv_obj_align(lblstato, NULL, LV_ALIGN_IN_TOP_RIGHT, 0, 32);
     page_data.digin_status = lblstato;
 }
 

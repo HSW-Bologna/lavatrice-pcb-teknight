@@ -17,7 +17,7 @@
 /*                                                                            */
 /*  ver. 00.0:  05/05/2021  dalla da MiniEco V:17.4   D:11/04/2021            */
 /*                                                                            */
-/*  ver. att.:  23/11/2021  00.3                                              */
+/*  ver. att.:  21/12/2021  00.4                                              */
 /*                                                                            */
 /*  BY:         Maldus (Mattia MALDINI) & Virginia NEGRI & Massimo ZANNA      */
 /*                                                                            */
@@ -32,7 +32,7 @@
 /* ************************************************************************** */
 
 //                                    12345678901234567890
-const unsigned char versione_prg[] = "V:00.3  D:23/11/2021";
+const unsigned char versione_prg[] = "V:00.4  D:21/12/2021";
 
 
 
@@ -74,6 +74,15 @@ const unsigned char versione_prg[] = "V:00.3  D:23/11/2021";
 /*  rev.:       22/11/2021 (00.3)                                             */
 /*                                                                            */
 /*      - implementazione ciclo                                               */
+/*                                                                            */
+/*----------------------------------------------------------------------------*/
+/*                                                                            */
+/*  rev.:       21/12/2021 (00.4) (a MI con PRIMO PROTOTIPO e Flavio)         */
+/*                                                                            */
+/*      - migliorata gestione velocita' ventilazione come originaria          */
+/*      - rigestito MENU OPERATORE                                            */
+/*      - migliorate visualizzazioni                                          */
+/*      - corretti alcuni errori rilevati alla 'prima accensione'             */
 /*                                                                            */
 /******************************************************************************/
 
@@ -207,6 +216,10 @@ int main(void)
 
             if (update.event != KEY_NOTHING) {
                 view_event((view_event_t){.code = VIEW_EVENT_KEYPAD, .key_event = update});
+            }
+            if (model_is_in_test(&model)) {
+                pwm_set_test(model.pwm1, 1);
+                pwm_set_test(model.pwm2, 2);
             }
             tskp = get_millis();
         }

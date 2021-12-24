@@ -11,7 +11,7 @@
 /*                                                                            */
 /*  Data  : 19/07/2021      REV  : 00.0                                       */
 /*                                                                            */
-/*  U.mod.: 19/10/2021      REV  : 01.0                                       */
+/*  U.mod.: 20/12/2021      REV  : 01.0                                       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -246,12 +246,24 @@ void ventilazione_marcia(model_t *p)
     
     if (p->status.stato_step==STATO_STEP_RAF)
     {
-        pwm_set((p), 80, CH_VEL_VENTILAZIONE); // % speed , CH ANALOG
+        pwm_set((p), 100, CH_VEL_VENTILAZIONE); // % speed , CH ANALOG
     }
     
     if (p->status.stato_step==STATO_STEP_ANT)
     {
-        pwm_set((p), 20, CH_VEL_VENTILAZIONE); // % speed , CH ANALOG
+        pwm_set((p), 100, CH_VEL_VENTILAZIONE); // % speed , CH ANALOG
     }
+    
+    
+    
+//                i += deserialize_uint8(&pmodel->pciclo[j].temperatura_aria_1, &buff[i]);
+
+    
+    
+//        i += deserialize_uint8(&pmodel->pmac.percentuale_velocita_min_ventola, &buff[i]);
+//        i += deserialize_uint8(&pmodel->pmac.percentuale_anticipo_temperatura_ventola, &buff[i]);
+    
+    
+    
 }
 

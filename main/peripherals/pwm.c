@@ -68,6 +68,24 @@ void pwm_init(void) {
     CCP2CON1Lbits.CCPON = 1;          // Turn on MCCP module
 }
 
+
+void pwm_set_test(uint8_t perc, uint8_t ch) {
+    uint16_t res = (uint16_t)((unsigned long)PERIOD/100)*perc;
+    if (res==0) {
+        res = 1;
+    }
+
+    if (perc >= 100)
+        res = PERIOD;
+    
+    if (ch==1)
+        CCP1RA = res;
+    
+    if (ch==2)
+        CCP2RA = res;
+}
+
+
 void pwm_set(model_t *p, uint8_t giri, uint8_t ch) {
     Nop();
     Nop();
