@@ -134,10 +134,10 @@ model_t model;
 int main(void)
 {
     unsigned long tskp = 0, ts_input = 0, ts_temperature = 0, ts_spi = 0;
-
+    
     // inizializzazioni ----------------------- //
     system_init();
-
+    
     spi_init();
     nt7534_init();
     digout_init();
@@ -160,15 +160,11 @@ int main(void)
     digout_buzzer_bip(2, 100, 100);
     
     
-    
-    
-    
     // MAIN LOOP ============================================================ //
     for (;;)
     {
         controller_manage_gui(&model);
         modbus_server_manage();
-        
         
         
         // gestione macchina ------------------ //
@@ -189,16 +185,21 @@ int main(void)
         
         if (is_expired(ts_input, get_millis(), 2))
         {
-            if (digin_take_reading()) {
+            if (digin_take_reading())
+            {
                 view_event((view_event_t){.code = VIEW_EVENT_MODEL_UPDATE});
 
                 model.inputs = digin_get_inputs();
             }
 
-            if (gettoniera_take_insert()) {
-                if (model_is_in_test(&model)) {
+            if (gettoniera_take_insert())
+            {
+                if (model_is_in_test(&model))
+                {
                     view_event((view_event_t){.code = VIEW_EVENT_COIN, .coins = gettoniera_get_count()});
-                } else {
+                }
+                else
+                {
                     view_event((view_event_t){.code = VIEW_EVENT_COIN});
                     model_aggiungi_gettoni(&model, gettoniera_get_count(), gettoniera_get_count_ingresso());
                     controller_update_pwoff(&model);

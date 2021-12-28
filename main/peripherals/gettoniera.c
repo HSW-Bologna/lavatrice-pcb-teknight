@@ -13,6 +13,7 @@ static pulse_filter_t filter;
 
 void gettoniera_init(void) {
     GETT_TRIS=TRIS_INPUT;
+    ANSBbits.ANSELB13 = 0;
     pulse_filter_init(&filter, COUNT_LOW_PULSE, 1);
 }
 
@@ -21,13 +22,14 @@ void gettoniera_reset_count(void) {
     pulse_clear(&filter, 1);
 }
 
-int gettoniera_take_insert(void) {   
-    unsigned int input=GETT_PORT | (1 << !IN3_PORT);
+int gettoniera_take_insert(void) {
+    unsigned int input = (GETT_PORT | (!IN5_PORT << 1));
+    
     return pulse_filter(&filter, input, 10);
 }
 
 unsigned int gettoniera_get_count(void) {
-    return pulse_count(&filter,0) ;
+    return pulse_count(&filter,0);
 }
 
 

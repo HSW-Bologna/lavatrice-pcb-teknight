@@ -42,6 +42,9 @@ void ptc_init(void) {
     // unsigned, right-justified; SAMP disabled; SSRC Clearing sample bit ends sampling and starts conversion; AD12B
     // 12-bit; ADON enabled; SSRCG disabled;
     AD1CON1 = 0x0000;
+    
+    
+    
     // CSCNA disabled; VCFG0 AVDD; VCFG1 AVSS; ALTS disabled; BUFM disabled; SMPI Generates interrupt after completion
     // of every sample/conversion operation; CHPS 1 Channel;
     AD1CON2 = 0x00;
@@ -61,6 +64,7 @@ void ptc_init(void) {
     //AD1CHS123      = 0x00;
     IFS0bits.AD1IF = 0;
 }
+
 
 
 // Routine che richiede fino a 50 microsecondi, da usare con parsimonia.
@@ -94,12 +98,14 @@ unsigned long ptc_read_input(int channel) {
 }
 
 
+
 void ptc_read_temperature(void) {
     temperature_average[index] = ptc_read_input(PTC_CHANNEL);
     if (index==NUM_READINGS-1) 
         first_loop=0;
     index=(index+1)%NUM_READINGS;
 }
+
 
 
 uint16_t ptc_get_adc_value(void) {
@@ -120,6 +126,7 @@ uint16_t ptc_get_adc_value(void) {
 }
 
 
+
 int ptc_get_temperature(void) {
     uint16_t temp = ptc_get_adc_value();
     if (temp<=MINIMUM_AD_VALUE)
@@ -129,4 +136,3 @@ int ptc_get_temperature(void) {
     else
         return (int) (COEFF_M_TIMES(temp)+COEFF_Q);
 }
-
