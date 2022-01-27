@@ -131,13 +131,12 @@ model_t model;
 
 
 
-int main(void)
-{
+int main(void) {
     unsigned long tskp = 0, ts_input = 0, ts_temperature = 0, ts_spi = 0;
-    
+
     // inizializzazioni ----------------------- //
     system_init();
-    
+
     spi_init();
     nt7534_init();
     digout_init();
@@ -158,48 +157,41 @@ int main(void)
     view_init(&model, nt7534_flush, nt7534_rounder, nt7534_set_px, keyboard_reset);
     controller_init(&model);
     digout_buzzer_bip(2, 100, 100);
-    
-    
+
+
     // MAIN LOOP ============================================================ //
-    for (;;)
-    {
+    for (;;) {
         controller_manage_gui(&model);
         modbus_server_manage();
-        
-        
+
+
         // gestione macchina ------------------ //
         gt_allarmi(&model);
-        
+
         gt_ciclo(&model, get_millis());
-        
+
         gt_ventilazione(&model, get_millis());
         gt_presenza_aria(&model, get_millis());
         gt_riscaldamento(&model, get_millis());
-        
+
         gt_cesto(&model, get_millis());
         gt_macchina_occupata(&model);
         gt_reset_bruciatore(&model, get_millis());
         model.outputs = rele_get_status();
-        
+
         ClrWdt();
-        
-        if (is_expired(ts_input, get_millis(), 2))
-        {
-            if (digin_take_reading())
-            {
+
+        if (is_expired(ts_input, get_millis(), 2)) {
+            if (digin_take_reading()) {
                 view_event((view_event_t){.code = VIEW_EVENT_MODEL_UPDATE});
 
                 model.inputs = digin_get_inputs();
             }
 
-            if (gettoniera_take_insert())
-            {
-                if (model_is_in_test(&model))
-                {
+            if (gettoniera_take_insert()) {
+                if (model_is_in_test(&model)) {
                     view_event((view_event_t){.code = VIEW_EVENT_COIN, .coins = gettoniera_get_count()});
-                }
-                else
-                {
+                } else {
                     view_event((view_event_t){.code = VIEW_EVENT_COIN});
                     model_aggiungi_gettoni(&model, gettoniera_get_count(), gettoniera_get_count_ingresso());
                     controller_update_pwoff(&model);
@@ -208,11 +200,10 @@ int main(void)
             }
             ts_input = get_millis();
         }
-        
-        
-        
-        if (is_expired(tskp, get_millis(), 5))
-        {
+
+
+
+        if (is_expired(tskp, get_millis(), 5)) {
             keypad_update_t update = keyboard_manage(get_millis());
 
             if (update.event != KEY_NOTHING) {
@@ -224,53 +215,48 @@ int main(void)
             }
             tskp = get_millis();
         }
-        
-        
-        
-        if (is_expired(ts_temperature, get_millis(), 50))
-        {
+
+
+
+        if (is_expired(ts_temperature, get_millis(), 50)) {
             ptc_read_temperature();
             view_event((view_event_t){.code = VIEW_EVENT_MODEL_UPDATE});
 
             model.ptc_adc         = ptc_get_adc_value();
             model.ptc_temperature = ptc_get_temperature();
             ts_temperature        = get_millis();
-            
-            if (model.pmac.tipo_pausa_asciugatura==0)
-            {
+
+            if (model.pmac.tipo_pausa_asciugatura == 0) {
                 model.status.temperatura_rilevata = model.ptc_temperature;
             }
         }
-        
-        
-        
-        if (is_expired(ts_spi, get_millis(), 500))
-        {
+
+
+
+        if (is_expired(ts_spi, get_millis(), 500)) {
             uint16_t temp, hum;
 
             if (temperature_read(&temp, &hum) == 0) {
                 model.sht_temperature = temp;
                 model.sht_umidity     = hum / 100;
             }
-            
-            if (model.pmac.tipo_pausa_asciugatura==1)
-            {
+
+            if (model.pmac.tipo_pausa_asciugatura == 1) {
                 model.status.temperatura_rilevata = model.sht_temperature;
             }
             ts_spi = get_millis();
         }
-        
-        
-        
-        if (timer_second_passed())
-        {
+
+
+
+        if (timer_second_passed()) {
             model_add_second(&model);
             controller_update_pwoff(&model);
         }
-        
+
         // controllo buzzer
         digout_buzzer_check();
-        
+
         __delay_us(10);
     }
     return 0;

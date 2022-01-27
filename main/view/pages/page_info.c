@@ -10,7 +10,11 @@
 #include <stdio.h>
 
 
+#ifdef PC_SIMULATOR
+const unsigned char versione_prg[] = "V:simulata";
+#else
 extern const unsigned char versione_prg[];
+#endif
 
 
 static struct {
@@ -79,7 +83,7 @@ static view_message_t process_page_event(model_t *pmodel, void *arg, pman_event_
 
 
 static view_t update_page(model_t *pmodel, void *arg) {
-    lv_label_set_text(page_data.label_version, (versione_prg));
+    lv_label_set_text(page_data.label_version, (char*)(versione_prg));
     lv_label_set_text_fmt(page_data.label_low_watermark, "WMARK: %i", (int)pmodel->lvgl_mem.low_watermark);
     lv_label_set_text_fmt(page_data.label_mem_frag, "FRAG %%: %i%%", (int)pmodel->lvgl_mem.frag_percentage);
     lv_label_set_text_fmt(page_data.label_mem_free, "USED %%: %i%%", (int)pmodel->lvgl_mem.used_percentage);

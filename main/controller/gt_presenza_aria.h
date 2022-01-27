@@ -20,6 +20,6 @@
 
 #include "model/model.h"
 
-void gt_pesenza_aria(model_t *p, unsigned long timestamp);
+void gt_presenza_aria(model_t *p, unsigned long timestamp);
 
 #endif  /* GT_PRESENZA_ARIA_H_INCLUDED */

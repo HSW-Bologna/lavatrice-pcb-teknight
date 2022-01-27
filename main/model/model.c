@@ -869,6 +869,18 @@ void model_aggiungi_gettoni(model_t *pmodel, unsigned int gettoniera, unsigned i
 }
 
 
+int model_get_temperatura_corrente(model_t *pmodel) {
+    switch (pmodel->pmac.tipo_pausa_asciugatura) {
+        case 0:
+            return pmodel->ptc_temperature;
+        case 1:
+            return pmodel->sht_temperature;
+        default:
+            return 0;
+    }
+}
+
+
 uint16_t model_temperatura_aria_ciclo(model_t *pmodel) {
     assert(pmodel != NULL);
     return model_ciclo_corrente(pmodel)->temperatura_aria_1 + pmodel->delta_temperatura;

@@ -56,4 +56,6 @@ typedef struct {
     char ** unita;
 } parameter_user_data_t;
 
+#define GEL_PARAMETER_USER_DATA parameter_user_data_t
+
 #endif

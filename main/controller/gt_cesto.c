@@ -126,6 +126,29 @@ void gt_cesto(model_t *p, unsigned long timestamp)
                         p->status.nf_ava_ind = 1;
                     }
                     stopwatch_start(&ct_moto_cesto, timestamp);
+                } else if (stopwatch_get_state(&ct_moto_cesto) == TIMER_PAUSED) {
+                    if (p->status.nf_ava_ind==0) // avvio prima volta
+                    {
+                        cesto_avanti(p);
+                        p->status.nf_ava_ind = 1;
+                    }
+                    else if (p->status.nf_ava_ind==1) // ORARIO
+                    {              
+                        cesto_avanti(p);
+                    }
+                    else if (p->status.nf_ava_ind==2) // pausa ORARIO
+                    {
+                        cesto_stop(p);
+                    }
+                    else if (p->status.nf_ava_ind==3) // ANTIORARIO
+                    {
+                        cesto_indietro(p);
+                    }
+                    else if (p->status.nf_ava_ind==4) // pausa ANTIORARIO
+                    {
+                        cesto_stop(p);
+                    }
+                    stopwatch_start(&ct_moto_cesto, timestamp);
                 }
             }
         }

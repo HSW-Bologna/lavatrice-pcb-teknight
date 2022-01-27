@@ -100,16 +100,6 @@ static void open_page(model_t *model, void *data) {
     view_status_string(model);
     update_timer(model);
     update_temperatura(model);
-    ////    if (model->status.n_allarme == ALL_NO)
-    ////    {
-    ////        lv_label_set_text(page_data.status, view_intl_get_string(model, STRINGS_SCELTA_PROGRAMMA));
-    ////    }
-    //////    else
-    //////    {
-    //////        lv_label_set_text(page_data.status, view_intl_get_string(model, STRINGS_SCELTA_PROGRAMMA));
-    //////    }
-
-    ////model->status.n_allarme = 2;
 }
 
 static view_message_t process_page_event(model_t *model, void *arg, pman_event_t event) {
@@ -409,7 +399,7 @@ void view_status_legacy_img(model_t *p) {
 
 static void update_temperatura(model_t *pmodel) {
     if (pmodel->pmac.abilita_visualizzazione_temperatura) {
-        lv_label_set_text_fmt(page_data.ltemperature, "\xCE\xCF %iC %s", pmodel->status.temperatura_rilevata,
+        lv_label_set_text_fmt(page_data.ltemperature, "\xCE\xCF %iC %2s", pmodel->status.temperatura_rilevata,
                               model_get_riscaldamento_attivo(pmodel) ? "\xFF" : "\xFE");
     } else if (model_get_riscaldamento_attivo(pmodel)) {
         lv_label_set_text(page_data.ltemperature, "ON");

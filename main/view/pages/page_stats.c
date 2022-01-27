@@ -24,7 +24,7 @@ static void update_page(model_t *pmodel) {
 
     switch (page_data.index) {
         case 0: {
-            uint32_t time = pmodel->pwoff.tempo_attivita;
+            unsigned long time = pmodel->pwoff.tempo_attivita;
             sprintf(string, "%06luh %02lum %02lus", time / 3600, (time / 60) % 60, time % 60);
             lv_label_set_text(page_data.label, view_intl_get_string(pmodel, STRINGS_TEMPO_ACCENSIONE));
             lv_label_set_text(page_data.lbl_stat, string);
@@ -32,7 +32,7 @@ static void update_page(model_t *pmodel) {
         }
 
         case 1: {
-            uint32_t time = pmodel->pwoff.tempo_lavoro;
+            unsigned long time = pmodel->pwoff.tempo_lavoro;
             sprintf(string, "%06luh %02lum %02lus", time / 3600, (time / 60) % 60, time % 60);
             lv_label_set_text(page_data.label, view_intl_get_string(pmodel, STRINGS_TEMPO_LAVORO));
             lv_label_set_text(page_data.lbl_stat, string);
@@ -40,7 +40,7 @@ static void update_page(model_t *pmodel) {
         }
 
         case 2: {
-            uint32_t time = pmodel->pwoff.tempo_moto;
+            unsigned long time = pmodel->pwoff.tempo_moto;
             sprintf(string, "%06luh %02lum %02lus", time / 3600, (time / 60) % 60, time % 60);
             lv_label_set_text(page_data.label, view_intl_get_string(pmodel, STRINGS_TEMPO_MOTO));
             lv_label_set_text(page_data.lbl_stat, string);
@@ -48,7 +48,7 @@ static void update_page(model_t *pmodel) {
         }
 
         case 3: {
-            uint32_t time = pmodel->pwoff.tempo_ventilazione;
+            unsigned long time = pmodel->pwoff.tempo_ventilazione;
             sprintf(string, "%06luh %02lum %02lus", time / 3600, (time / 60) % 60, time % 60);
             lv_label_set_text(page_data.label, view_intl_get_string(pmodel, STRINGS_TEMPO_VENTILAZIONE));
             lv_label_set_text(page_data.lbl_stat, string);
@@ -56,7 +56,7 @@ static void update_page(model_t *pmodel) {
         }
 
         case 4: {
-            uint32_t time = pmodel->pwoff.tempo_riscaldamento;
+            unsigned long time = pmodel->pwoff.tempo_riscaldamento;
             sprintf(string, "%06luh %02lum %02lus", time / 3600, (time / 60) % 60, time % 60);
             lv_label_set_text(page_data.label, view_intl_get_string(pmodel, STRINGS_TEMPO_RISCALDAMENTO));
             lv_label_set_text(page_data.lbl_stat, string);

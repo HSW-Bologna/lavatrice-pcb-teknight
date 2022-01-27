@@ -60,6 +60,8 @@ CFLAGS = [
     "-DPC_SIMULATOR",
     "-DLV_CONF_INCLUDE_SIMPLE",
     "-DLV_LVGL_H_INCLUDE_SIMPLE",
+    '-DGEL_PARAMETER_CONFIGURATION_HEADER="\\"gel_conf.h\\""',
+    '-DGEL_PAGEMANAGER_CONFIGURATION_HEADER="\\"gel_conf.h\\""',
     "-Wno-unused-parameter",
     "-static-libgcc",
     "-static-libstdc++",

@@ -165,6 +165,7 @@ typedef struct {
     uint32_t tempo_moto;
     uint32_t tempo_ventilazione;
     uint32_t tempo_riscaldamento;
+    
     uint16_t credito;
     uint16_t cicli_parziali;
     uint16_t cicli_totali;
@@ -282,6 +283,7 @@ int          model_in_antipiega(model_t *pmodel);
 void         model_seleziona_ciclo(model_t *pmodel, tipo_ciclo_t ciclo);
 uint16_t     model_velocita_ciclo(model_t *pmodel);
 uint16_t     model_temperatura_aria_ciclo(model_t *pmodel);
+int          model_get_temperatura_corrente(model_t *pmodel);
 int          model_ciclo_selezionato(model_t *pmodel);
 void         model_modifica_durata_asciugatura(model_t *pmodel, int minuti);
 void         model_modifica_temperatura_aria(model_t *pmodel, int gradi);

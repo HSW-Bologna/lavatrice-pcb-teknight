@@ -8,6 +8,7 @@
 #include "controller/ciclo.h"
 #include "model/model.h"
 #include "view/view_types.h"
+#include "view/view.h"
 #include "peripherals/timer.h"
 
 extern stopwatch_t ct_moto_cesto;
