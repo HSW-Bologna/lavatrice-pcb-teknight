@@ -36,26 +36,33 @@ static void *create_page(model_t *pmodel, void *extra) {
 static void open_page(model_t *pmodel, void *data) {
     lv_task_set_prio(page_data.task, LV_TASK_PRIO_MID);
     view_common_title(lv_scr_act(), "INFO");
-
+    
     lv_obj_t *l_version = lv_label_create(lv_scr_act(), NULL);
     lv_obj_set_auto_realign(l_version, 1);
-    lv_obj_align(l_version, NULL, LV_ALIGN_IN_TOP_LEFT, 0, 20);
+    lv_obj_align(l_version, NULL, LV_ALIGN_IN_TOP_LEFT, 4, 15);
     lv_obj_set_style(l_version, &style_label_6x8);
     page_data.label_version = l_version;
+    
+    
+    lv_obj_t *lbl_model = lv_label_create(lv_scr_act(), NULL);
+    lv_obj_set_style(lbl_model, &style_label_6x8);
+    lv_label_set_text_fmt(lbl_model, "[%i] %s", model_get_machine_model(pmodel), view_common_modello_str(pmodel));
+    lv_obj_align(lbl_model, NULL, LV_ALIGN_IN_TOP_LEFT, 4, 24);
 
+    
     lv_obj_t *mem_free = lv_label_create(lv_scr_act(), NULL);
     lv_obj_set_auto_realign(mem_free, 1);
-    lv_obj_align(mem_free, NULL, LV_ALIGN_IN_TOP_LEFT, 4, 30);
+    lv_obj_align(mem_free, NULL, LV_ALIGN_IN_TOP_LEFT, 4, 35);
     page_data.label_mem_free = mem_free;
-
+    
     lv_obj_t *mem_frag = lv_label_create(lv_scr_act(), NULL);
     lv_obj_set_auto_realign(mem_frag, 1);
-    lv_obj_align(mem_frag, NULL, LV_ALIGN_IN_TOP_LEFT, 4, 40);
+    lv_obj_align(mem_frag, NULL, LV_ALIGN_IN_TOP_LEFT, 4, 45);
     page_data.label_mem_frag = mem_frag;
-
+    
     lv_obj_t *low_watermark = lv_label_create(lv_scr_act(), NULL);
     lv_obj_set_auto_realign(low_watermark, 1);
-    lv_obj_align(low_watermark, NULL, LV_ALIGN_IN_TOP_LEFT, 4, 50);
+    lv_obj_align(low_watermark, NULL, LV_ALIGN_IN_TOP_LEFT, 4, 55);
     page_data.label_low_watermark = low_watermark;
 }
 

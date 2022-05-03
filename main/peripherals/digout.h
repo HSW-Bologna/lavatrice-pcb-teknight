@@ -9,9 +9,9 @@ typedef enum { RELE_1 = 0, RELE_2, RELE_3, RELE_4, RELE_5, RELE_6, NUM_RELE } re
 #define ORARIO            RELE_1
 #define ANTIORARIO        RELE_2
 #define RISCALDAMENTO     RELE_3
-#define MACCHINA_OCCUPATA RELE_6
-#define RESET_BRUCIATORE  RELE_5
 #define VENTILAZIONE      RELE_4
+#define RESET_BRUCIATORE  RELE_5
+#define MACCHINA_OCCUPATA RELE_6
 
 void digout_init(void);
 

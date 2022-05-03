@@ -13,7 +13,7 @@ def main(indir, outdir):
 
     for csvfile in files:
         with open(csvfile, 'r') as f:
-            csvreader = csv.reader(f, delimiter=',', skipinitialspace=True)
+            csvreader = csv.reader(f, delimiter=';', skipinitialspace=True)
             arrayname = os.path.basename(csvfile).replace(".csv", "")
             tmp = {}
             csvreader.__next__() # Drop the first line

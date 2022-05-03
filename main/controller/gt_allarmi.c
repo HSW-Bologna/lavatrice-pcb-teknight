@@ -11,7 +11,7 @@
 /*                                                                            */
 /*  Data  : 19/07/2021      REV  : 00.0                                       */
 /*                                                                            */
-/*  U.mod.: 21/12/2021      REV  : 01.0                                       */
+/*  U.mod.: 19/04/2022      REV  : 01.1                                       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -23,7 +23,7 @@
 #include "view/view_types.h"
 #include "view/view.h"
 #include "model/model.h"
-
+#include "peripherals/digout.h"
 
 
 
@@ -43,7 +43,7 @@ void gt_allarmi (model_t *p)
     
     
     
-    if (p->status.f_start_ok==1 || p->status.f_no_gt_all==1)
+    if (p->status.f_start_ok==1 || p->status.f_no_gt_all==1 || p->status.f_in_test == 1)
     {
         p->status.n_allarme = ALL_NO;
         return;
@@ -51,18 +51,18 @@ void gt_allarmi (model_t *p)
     
     
     
-    
     if (p->status.n_allarme != n_old_allarme)
     {
-//        n_old_allarme = p->status.n_allarme;
         
+        // digout_buzzer_bip(1, 200, 200);
         
         if (p->status.n_allarme!=AVV_ANTIPIEGA)
         {
             n_old_allarme = p->status.n_allarme;
         }
         
-        if (n_old_allarme>0 && n_old_allarme<AVV_ANTIPIEGA)
+//      if (n_old_allarme>0 && n_old_allarme<AVV_ANTIPIEGA)
+        if (n_old_allarme>0 && n_old_allarme<ALL_TEMPERATURA_1)
         {
             if (model_get_status_work(p))
             {
@@ -111,12 +111,14 @@ void gt_allarmi (model_t *p)
     
     
     
-    else if (model_allarme_emergenza(p, digin_get(EMERGENZA_STOP)))     // ALL EMERGENZA --------------------------*
+    else if ((digin_get(EMERGENZA_STOP)==1 && p->pmac.emergenza_na_nc==0) || (digin_get(EMERGENZA_STOP)==0 && p->pmac.emergenza_na_nc==1))  // ALL EMERGENZA --------------*
     {
         p->status.n_allarme = ALL_EMERGENZA;
         
         if (model_get_status_not_stopped(p)) // SOLO MARCIA
         {
+            p->status.n_allarme = ALL_EMERGENZA;
+            
             p->status.f_all_emergenza = 1;
             p->status.f_all = 1;
         }
@@ -128,9 +130,9 @@ void gt_allarmi (model_t *p)
 //////        f_all = 1;
 //////    }
     
-    else if ((digin_get(ALLARME_INVERTER)==0 && p->pmac.allarme_inverter_off_on==0) || (digin_get(ALLARME_INVERTER)==1 && p->pmac.allarme_inverter_off_on==1))  // ALL inverter --------------*
+    else if ((digin_get(ALLARME_INVERTER)==1 && p->pmac.allarme_inverter_off_on==0) || (digin_get(ALLARME_INVERTER)==0 && p->pmac.allarme_inverter_off_on==1))  // ALL inverter --------------*
     {
-         p->status.n_allarme = ALL_INVERTER;
+        p->status.n_allarme = ALL_INVERTER;
         
         if (model_get_status_not_stopped(p)) // SOLO MARCIA
         {
@@ -139,7 +141,7 @@ void gt_allarmi (model_t *p)
         }
     }
     
-    else if ((digin_get(FILTRO_APERTO)==0 && p->pmac.allarme_filtro_off_on==0) || (digin_get(FILTRO_APERTO)==1 && p->pmac.allarme_filtro_off_on==1))  // ALL filtro aperto ---------*
+    else if ((digin_get(FILTRO_APERTO)==1 && p->pmac.allarme_filtro_off_on==0) || (digin_get(FILTRO_APERTO)==0 && p->pmac.allarme_filtro_off_on==1))  // ALL filtro aperto ---------*
     {
          p->status.n_allarme =ALL_FILTRO_APERTO;
         
@@ -177,9 +179,12 @@ void gt_allarmi (model_t *p)
     
     else if (digin_get(OBLO_APERTO)==0)    // ALL oblo'aperto  ---------------------------*
     {
-        if (model_in_antipiega(p)) {
+        if (model_in_antipiega(p))
+        {
+            p->status.f_anti_piega = 0;
             model_fine_ciclo(p);
-             p->status.f_anti_piega = 0;
+            gt_allarmi_azzera(p); // -TODO
+            
             view_event((view_event_t){.code = VIEW_EVENT_STATO_UPDATE});
             view_event((view_event_t){.code = VIEW_EVENT_STEP_UPDATE});
         }
@@ -260,7 +265,6 @@ void gt_allarmi (model_t *p)
             p->status.f_all = 1;
         }
     }
-        
     
     else if ( (p->pmac.tipo_pausa_asciugatura==0 && (p->ptc_temperature >= 120)) || (p->pmac.tipo_pausa_asciugatura==1 && (p->sht_temperature >= 120)) /*|| (temp_ingresso <=2 && ct_antigelo==0)*/ )                        // ALL temperatura 1 ---------*
     {
@@ -284,7 +288,7 @@ void gt_allarmi (model_t *p)
 //////        }
 //////    }
     
-//////    else if ((tipo_pausa_asc==7 && (temperatura_t_rh/100) >= temp_sicurezza_1_out) || 
+//////    else if ((tipo_pausa_asc==7 && (temperatura_t_rh/100) >= temp_sicurezza_1_out) ||  -TODO SIC !!!!
 //////                /*(tipo_pausa_asc!=3 && temp_ingresso >= temp_sicurezza_1 && sonda_temp_in_out==0) || */
 //////                (tipo_pausa_asc!=3 && tipo_pausa_asc!=7 && temp_ingresso >= temp_sicurezza_1 && sonda_temp_in_out==0) || 
 //////                (tipo_pausa_asc==3 && temp_ingresso >= temp_sicurezza_1 && sonda_temp_in_out==0) ||
@@ -324,10 +328,11 @@ void gt_allarmi (model_t *p)
 //////        f_all = 1;
 //////    }
 //////    
-//////    else if (f_all_pw_off==1)       // AVV / ALL flag allarme PW-OFF ----------*
-//////    {
-//////        n_allarme = 8;
-//////    }
+        else if (p->status.f_all_pw_off==1)       // AVV / ALL flag allarme PW-OFF ----------*
+        {
+            p->status.n_allarme = AVV_PW_OFF;
+            p->status.f_all = 1;
+        }
 //////    
 //////    else if (FILTRO_INTASATO==0 && ab_in_filtro_aria==0) // ALL filtro intasato ---------*
 //////    {
@@ -347,9 +352,9 @@ void gt_allarmi (model_t *p)
     else if (p->status.f_all_flusso_aria==1) // AVV flusso aria ---------------*
     {
         p->status.n_allarme = ALL_FLUSSO_ARIA;
-        p->status.f_all = 1;
+        //p->status.f_all = 1;
     }
-    else if (p->status.f_anti_piega==1) // AVV ANTIPIEGA ----------------------*
+    else if (p->status.f_anti_piega != 0) // AVV ANTIPIEGA ----------------------*
     {
         p->status.n_allarme = AVV_ANTIPIEGA;
         //p->status.f_all = 1;
@@ -424,14 +429,16 @@ void gt_allarmi (model_t *p)
 
 void gt_allarmi_azzera(model_t *pmodel)
 {
-    pmodel->status.f_all = 0;
-    pmodel->status.f_all_anomalia_aria = 0;
-    pmodel->status.f_all_blocco_bruciatore = 0;
-    pmodel->status.f_all_emergenza = 0;
-    pmodel->status.f_all_filtro_aperto = 0;
-    pmodel->status.f_all_flusso_aria = 0;
-    pmodel->status.f_all_inverter = 0;
-    pmodel->status.f_anti_piega = 0;
     pmodel->status.n_old_allarme = ALL_NO;
     pmodel->status.n_allarme = ALL_NO;
+    pmodel->status.f_all = ALL_NO;
+    
+    pmodel->status.f_all_pw_off = ALL_NO;
+    pmodel->status.f_all_anomalia_aria = ALL_NO;
+    pmodel->status.f_all_blocco_bruciatore = ALL_NO;
+    pmodel->status.f_all_emergenza = ALL_NO;
+    pmodel->status.f_all_filtro_aperto = ALL_NO;
+    pmodel->status.f_all_flusso_aria = ALL_NO;
+    pmodel->status.f_all_inverter = ALL_NO;
+    pmodel->status.f_anti_piega = ALL_NO;
 }

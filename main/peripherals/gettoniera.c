@@ -11,6 +11,7 @@
 
 static pulse_filter_t filter;
 
+// GETTONIERA DIGITALE
 void gettoniera_init(void) {
     GETT_TRIS=TRIS_INPUT;
     ANSBbits.ANSELB13 = 0;
@@ -23,7 +24,7 @@ void gettoniera_reset_count(void) {
 }
 
 int gettoniera_take_insert(void) {
-    unsigned int input = (GETT_PORT | (!IN5_PORT << 1));
+    unsigned int input = (GETT_PORT | (!IN3_PORT << 1)); // SAREBBE " GETTONE1 "
     
     return pulse_filter(&filter, input, 10);
 }

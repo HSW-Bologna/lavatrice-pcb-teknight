@@ -51,15 +51,7 @@ static void update_strings(model_t *pmodel, int clear) {
 
     if (page_data.index == PARMAC_COMMISSIONING_MODELLO || index_old == PARMAC_COMMISSIONING_MODELLO || clear) {
         lv_label_set_text_fmt(page_data.lbl_codice_modello_macchina, "MOD MAC [%02i]", model_get_machine_model(pmodel));
-
-        const char *strings_modello[] = {
-            "TEST MODEL",       "EDS RE SELF C.A.", "EDS RE LAB  C.A.", "EDS RG SELF C.A.", "EDS RG LAB  C.A.",
-            "EDS RV SELF C.A.", "EDS RV LAB  C.A.", "EDS RE SELF C.C.", "EDS RV SELF C.C.", "EDS RE LAB  C.C.",
-            "EDS RV LAB  C.C.", "EDS RP SELF C.A.", "EDS RP LAB  C.A.", "EDS RP SELF C.C.", "EDS RP LAB  C.C.",
-            "EDS RE LAB TH CA", "EDS RG LAB TH CA", "EDS RV LAB TH CA", "EDS RE LAB TH CC", "EDS RV LAB TH CC",
-        };
-
-        lv_label_set_text(page_data.lbl_modello_macchina, strings_modello[model_get_machine_model(pmodel)]);
+        lv_label_set_text(page_data.lbl_modello_macchina, view_common_modello_str(pmodel));
     }
 
     if (page_data.index != index_old || clear) {

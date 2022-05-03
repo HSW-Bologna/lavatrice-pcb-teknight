@@ -24,6 +24,9 @@
 
 #define PWOFF_DATA_ADDRESS (PRIVATE_PARS_ADDRESS + 128UL)
 
+static uint8_t pwoff_data[PWOFF_SERIALIZED_SIZE] = {0};
+#ifdef ENABLE_WEARLEVELING
+
 #if (PWOFF_DATA_ADDRESS % 16) != 0
 #error "Wear leveled memory should be aligned to page size!"
 #endif
@@ -38,11 +41,6 @@
 #error "Wear leveled blocks are too small!"
 #endif
 
-//#define ENABLE_WEARLEVELING 1
-
-
-static uint8_t pwoff_data[PWOFF_SERIALIZED_SIZE] = {0};
-#ifdef ENABLE_WEARLEVELING
 static wear_leveled_memory_t memory;
 
 static int read_marker(size_t block_num, uint8_t *marker);
@@ -122,16 +120,20 @@ void controller_process_msg(view_controller_command_t *msg, model_t *pmodel) {
 }
 
 
-void controller_init(model_t *pmodel) {
+void controller_init(model_t *pmodel)
+{
 #ifdef ENABLE_WEARLEVELING
     wearleveling_init(&memory, read_block, write_block, read_marker, WL_BLOCK_NUM);
 #endif
     size_t i = 0;
 
-    if (!controller_start_check()) {
+    if (!controller_start_check())
+    {
         uint8_t data[PARS_SERIALIZED_SIZE] = {0};
         parmac_init(pmodel, 1);
-        for (i = 0; i < NUM_CICLI; i++) {
+        
+        for (i = 0; i < NUM_CICLI; i++)
+        {
             parciclo_init(pmodel, i, 1);
         }
         uint8_t check_byte = CHECK_BYTE;
@@ -142,7 +144,9 @@ void controller_init(model_t *pmodel) {
 
         i = model_private_parameters_serialize(pmodel, data);
         EE24LC16_SEQUENTIAL_WRITE(eeprom_driver, PRIVATE_PARS_ADDRESS, data, i);
-    } else {
+    }
+    else
+    {
         uint8_t data[PARS_SERIALIZED_SIZE] = {0};
         EE24CL16_SEQUENTIAL_READ(eeprom_driver, PAR_START_ADDRESS, data, PARS_SERIALIZED_SIZE);
         model_pars_deserialize(pmodel, data);
@@ -151,7 +155,9 @@ void controller_init(model_t *pmodel) {
         model_private_parameters_deserialize(pmodel, data);
 
         parmac_init(pmodel, 0);
-        for (i = 0; i < NUM_CICLI; i++) {
+        
+        for (i = 0; i < NUM_CICLI; i++)
+        {
             parciclo_init(pmodel, i, 0);
         }
 
@@ -164,10 +170,14 @@ void controller_init(model_t *pmodel) {
         model_pwoff_deserialize(pmodel, pwoff_data);
         controller_update_pwoff(pmodel);
     }
-
+    
     pwoff_set_callback(controller_save_pwoff);
     nt7534_reconfigure(pmodel->hsw.contrasto);
     view_change_page(pmodel, &page_splash);
+    
+    
+    
+    
 }
 
 

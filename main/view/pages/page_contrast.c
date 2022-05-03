@@ -67,6 +67,12 @@ static view_message_t process_page_event(model_t *pmodel, void *arg, pman_event_
                         msg.cmsg.code = VIEW_CONTROLLER_COMMAND_CODE_UPDATE_CONTRAST;
                         update_page(pmodel);
                         break;
+
+                    case BUTTON_MENU:
+                        pmodel->hsw.contrasto = 26;
+                        msg.cmsg.code = VIEW_CONTROLLER_COMMAND_CODE_UPDATE_CONTRAST;
+                        update_page(pmodel);
+                        break;
                 }
             }
             break;

@@ -11,7 +11,7 @@
 /*                                                                            */
 /*  Data  : 19/07/2021      REV  : 00.0                                       */
 /*                                                                            */
-/*  U.mod.: 20/12/2021      REV  : 01.0                                       */
+/*  U.mod.: 18/02/2022      REV  : 01.0                                       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -29,8 +29,5 @@ void ventilazione_marcia(model_t *p);
 
 void gt_velocita_ventilazione(model_t *p);
 void gt_velocita_ventilazione_simulata(model_t *p);
-
-
-
 
 #endif  /* GT_VENTILAZIONE_H_INCLUDED */

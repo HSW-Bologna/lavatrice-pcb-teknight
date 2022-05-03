@@ -51,5 +51,3 @@ void __attribute__((interrupt, no_auto_psv)) _IOCInterrupt() {
     }
     IFS1bits.IOCIF = 0;
 }
-
-

@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <string.h>
 
 #include "controller/gt_allarmi.h"
 #include "gel/pagemanager/page_manager.h"
@@ -21,21 +22,23 @@
 
 
 
-strings_t allarme_codice[15] = {
+strings_t allarme_codice[ALLARMI_NUM] =
+{
     STRINGS_ALLARME_ERRORE_RAM,
 
-    STRINGS_ALLARME_OBLO_APERTO,       STRINGS_ALLARME_OBLO_SBLOCCATO, STRINGS_ALLARME_EMERGENZA,
-    STRINGS_ALLARME_TEMPO_SCADUTO_T1,  STRINGS_ALLARME_INVERTER,       STRINGS_ALLARME_FILTRO_APERTO,
-    STRINGS_ALLARME_BLOCCO_BRUCIATORE, STRINGS_ALLARME_TEMPERATURA_1,  STRINGS_ALLARME_FLUSSO_ARIA,
+    STRINGS_ALLARME_OBLO_APERTO,       STRINGS_ALLARME_OBLO_SBLOCCATO,  STRINGS_ALLARME_EMERGENZA,
+    STRINGS_ALLARME_TEMPO_SCADUTO_T1,  STRINGS_ALLARME_INVERTER,        STRINGS_ALLARME_FILTRO_APERTO,
+    STRINGS_ALLARME_BLOCCO_BRUCIATORE, STRINGS_ALLARME_TEMPERATURA_1,   STRINGS_ALLARME_FLUSSO_ARIA,
     STRINGS_ALLARME_ANOMALIA_ARIA,
 
-    STRINGS_AVVISO_ANTIPIEGA,          STRINGS_AVVISO_DRY_CONTROL,     STRINGS_AVVISO_SOVRATEMPERATURA,
-    STRINGS_AVVISO_MANUTENZIONE,
+    STRINGS_AVVISO_ANTIPIEGA,          STRINGS_AVVISO_APRIRE_OBLO,      STRINGS_AVVISO_DRY_CONTROL,
+    STRINGS_AVVISO_SOVRATEMPERATURA,   STRINGS_AVVISO_MANUTENZIONE,     STRINGS_AVVISO_ALL_PW_OFF,
 };
 
 
 
-static struct {
+static struct
+{
     size_t                 index;
     view_common_password_t password;
 
@@ -44,10 +47,12 @@ static struct {
     lv_obj_t *label;
     lv_obj_t *ltimer;
     lv_obj_t *ltemperature;
+    lv_obj_t *lcycle_temperature;
     lv_obj_t *status;
     lv_obj_t *image;
 
     unsigned long stop_timestamp;
+    int blink_antipiega;
 } page_data;
 
 static void view_status_string(model_t *p);
@@ -90,6 +95,12 @@ static void open_page(model_t *model, void *data) {
     lv_obj_set_auto_realign(lbl, 1);
     lv_obj_align(lbl, NULL, LV_ALIGN_IN_TOP_RIGHT, 0, 25);
     page_data.ltemperature = lbl;
+    
+    lbl = lv_label_create(lv_scr_act(), NULL);
+    //lv_obj_set_style(lbl, &style_label_6x8);
+    lv_obj_set_auto_realign(lbl, 1);
+    lv_obj_align(lbl, page_data.ltemperature, LV_ALIGN_OUT_BOTTOM_RIGHT, 0, 0);
+    page_data.lcycle_temperature = lbl;
 
     lv_obj_t *lbltimer = lv_label_create(lv_scr_act(), NULL);
     lv_obj_set_style(lbltimer, &style_label_8x16);
@@ -163,11 +174,14 @@ static view_message_t process_page_event(model_t *model, void *arg, pman_event_t
                         break;
 
                     case BUTTON_CALDO:
-                        if (model->status.n_allarme == ALL_NO) {
+                        if (model->status.n_allarme == ALL_NO)
+                        {
                             model_seleziona_ciclo(model, CICLO_CALDO);
                             view_status_string(model);
                             update_timer(model);
-                        } else {
+                        }
+                        else
+                        {
                             gt_allarmi_azzera(model);
                         }
                         break;
@@ -231,23 +245,40 @@ static view_message_t process_page_event(model_t *model, void *arg, pman_event_t
                     case BUTTON_STOP:
                         break;
                 }
-            } else if (event.key_event.event == KEY_PRESSING || event.key_event.event == KEY_LONGPRESS) {
-                switch (event.key_event.code) {
+            }
+            else if (event.key_event.event == KEY_PRESSING || event.key_event.event == KEY_LONGPRESS)
+            {
+                switch (event.key_event.code)
+                {
                     case BUTTON_STOP:
                         if (model_get_status_pause(model) &&
                             is_expired(page_data.stop_timestamp, get_millis(),
-                                       model->pmac.tempo_azzeramento_ciclo_stop * 1000UL)) {
+                                model->pmac.tempo_azzeramento_ciclo_stop * 1000UL)) // -TODO !!!!
+                        {
                             model_set_status_stopped(model);
                             view_status_string(model);
                             view_status_legacy_img(model);
                             update_timer(model);
-                        } else if (model_get_status_work(model) &&
-                                   is_expired(page_data.stop_timestamp, get_millis(),
-                                              model->pmac.tempo_azzeramento_ciclo_pausa * 1000UL)) {
-                            model_set_status_pause(model);
-                            view_status_string(model);
-                            update_timer(model);
-                            page_data.stop_timestamp = get_millis();
+                        }
+                        else if (model_get_status_work(model) &&
+                            is_expired(page_data.stop_timestamp, get_millis(),
+                                model->pmac.tempo_azzeramento_ciclo_pausa * 1000UL))
+                        {
+                            if (model_get_status_step(model)!=STATO_STEP_ANT)
+                            {
+                                model_set_status_pause(model);
+                                view_status_string(model);
+                                update_timer(model);
+                                page_data.stop_timestamp = get_millis();
+                            }
+                            else
+                            {
+                                model_set_status_stopped(model);
+                                gt_allarmi_azzera(model);
+                                view_status_string(model);
+                                view_status_legacy_img(model);
+                                update_timer(model);
+                            }
                         }
                         break;
                 }
@@ -268,22 +299,23 @@ static view_message_t process_page_event(model_t *model, void *arg, pman_event_t
 
         case VIEW_EVENT_STATO_UPDATE: {
             if (model_get_stato(model) == STATO_WORK) {
-                //                lv_label_set_text(page_data.status, "STATO ON");
                 view_status_string(model);
             } else if (model_get_stato(model) == STATO_PAUSE) {
-                //                lv_label_set_text(page_data.status, view_intl_get_string(model,
-                //                STRINGS_SCELTA_PROGRAMMA));
                 view_status_string(model);
             } else if (model_get_stato(model) == STATO_STOPPED) {
-                //                lv_label_set_text(page_data.status, view_intl_get_string(model,
-                //                STRINGS_SCELTA_PROGRAMMA));
                 view_status_string(model);
             }
             break;
         }
-        case VIEW_EVENT_CODE_TIMER: {
+        case VIEW_EVENT_CODE_TIMER: // CADENZA 500msec
+        {
             update_timer(model);
             update_temperatura(model);
+            page_data.blink_antipiega ++;
+            
+            if (page_data.blink_antipiega > 4)
+                page_data.blink_antipiega = 0;
+            view_status_string(model);
             break;
         }
         default:
@@ -301,7 +333,7 @@ static void page_destroy(void *data, void *extra) {
     lv_task_del(page_data.task);
 }
 
-static void view_close(void *data) {
+static void page_close(void *data) {
     (void)data;
     lv_obj_clean(lv_scr_act());
     lv_task_set_prio(page_data.task, LV_TASK_PRIO_OFF);
@@ -312,7 +344,7 @@ const pman_page_t page_main = {
     .open          = open_page,
     .update        = update_page,
     .process_event = process_page_event,
-    .close         = view_close,
+    .close         = page_close,
     .destroy       = page_destroy,
 };
 
@@ -320,13 +352,20 @@ const pman_page_t page_main = {
 
 
 
-void view_status_string(model_t *p) {
-    if (p->status.n_allarme == ALL_NO) {
-        if (model_get_status_stopped(p)) {
-            if (model_consenso_raggiunto(p)) {
+void view_status_string(model_t *p)
+{
+    if (p->status.n_allarme == ALL_NO)
+    {
+        if (model_get_status_stopped(p))
+        {
+            if (model_consenso_raggiunto(p))
+            {
                 lv_label_set_text(page_data.status, view_intl_get_string(p, STRINGS_SCELTA_PROGRAMMA));
-            } else {
-                switch (p->pmac.tipo_visualizzazione_get_mon_cas) {
+            }
+            else
+            {
+                switch (p->pmac.tipo_visualizzazione_get_mon_cas)
+                {
                     case VISUALIZZAZIONE_CASSA:
                         lv_label_set_text(page_data.status, view_intl_get_string(p, STRINGS_PAGARE_CASSA));
                         break;
@@ -342,26 +381,52 @@ void view_status_string(model_t *p) {
                 }
             }
             view_status_legacy_img(p);
-        } else if (model_get_status_pause(p)) {
+        }
+        else if (model_get_status_pause(p))
+        {
             lv_label_set_text(page_data.status, view_intl_get_string(p, STRINGS_MACCHINA_IN_PAUSA));
             view_status_legacy_img(p);
-        } else if (model_get_status_work(p)) {
+        }
+        else if (model_get_status_work(p))
+        {
             lv_label_set_text(page_data.status, view_intl_get_string(p, STRINGS_MACCHINA_AL_LAVORO));
             view_status_legacy_img(p);
         }
-    } else {
-        lv_label_set_text(page_data.status, view_intl_get_string(p, allarme_codice[p->status.n_allarme - 1]));
-        view_status_legacy_img(p);
+    }
+    else
+    {
+        if (p->status.n_allarme != AVV_ANTIPIEGA)
+        {
+            lv_label_set_text(page_data.status, view_intl_get_string(p, allarme_codice[p->status.n_allarme - 1]));
+            view_status_legacy_img(p);
+        }
+        else
+        {
+            if (page_data.blink_antipiega < 2)
+            {
+                lv_label_set_text(page_data.status, view_intl_get_string(p, allarme_codice[p->status.n_allarme - 1]));
+                view_status_legacy_img(p);
+            }
+            else
+            {
+                lv_label_set_text(page_data.status, view_intl_get_string(p, allarme_codice[AVV_APRIRE_OBLO - 1])); 
+                view_status_legacy_img(p);
+            }
+        }
     }
 }
 
 
 
-void view_status_legacy_img(model_t *p) {
-    if (p->status.n_allarme == ALL_NO || p->status.n_allarme == AVV_ANTIPIEGA) {
-        if (model_get_status_stopped(p)) {
+void view_status_legacy_img(model_t *p)
+{
+    if (p->status.n_allarme == ALL_NO || p->status.n_allarme == AVV_ANTIPIEGA)
+    {
+        if (model_get_status_stopped(p))
+        {
             custom_lv_img_set_src(page_data.image, &legacy_img_programs);     // PRG
-        } else if (model_get_status_work(p) || model_get_status_pause(p))     // ASC / PAU
+        }
+        else if (model_get_status_work(p) || model_get_status_pause(p))     // ASC / PAU
         {
             if (model_get_status_step(p) == STATO_STEP_ASC)     // ASC
             {
@@ -379,34 +444,63 @@ void view_status_legacy_img(model_t *p) {
 
                 if (p->status.ciclo == CICLO_LANA)
                     custom_lv_img_set_src(page_data.image, &legacy_img_program_lana);
-            } else if (model_get_status_step(p) == STATO_STEP_RAF)     // RAF
+            }
+            else if (model_get_status_step(p) == STATO_STEP_RAF)     // RAF
             {
                 custom_lv_img_set_src(page_data.image, &legacy_img_raffreddamento);
-            } else if (model_get_status_step(p) == STATO_STEP_ANT)     // ANT
+            }
+            else if (model_get_status_step(p) == STATO_STEP_ANT)     // ANT
             {
                 custom_lv_img_set_src(page_data.image, &legacy_img_antipiega);
             }
         }
-    } else {
-        if ((p->status.n_allarme - 1) < 12) {
-            custom_lv_img_set_src(page_data.image, &legacy_img_stop);     // ALL
-        } else {
-            custom_lv_img_set_src(page_data.image, &legacy_img_warning);     // AVV
+    }
+    else
+    {
+        if ((p->status.n_allarme - 1) < 9)
+        {
+            if (p->status.n_allarme==ALL_OBLO_APERTO)
+            {
+                custom_lv_img_set_src(page_data.image, &legacy_img_chiudere_oblo);  // AVV/ALL
+            }
+            else
+            {
+                custom_lv_img_set_src(page_data.image, &legacy_img_stop);           // ALL
+            }
+        }
+        else
+        {
+            custom_lv_img_set_src(page_data.image, &legacy_img_warning);            // AVV
         }
     }
 }
 
 
+
 static void update_temperatura(model_t *pmodel) {
-    if (pmodel->pmac.abilita_visualizzazione_temperatura) {
-        lv_label_set_text_fmt(page_data.ltemperature, "\xCE\xCF %iC %2s", pmodel->status.temperatura_rilevata,
-                              model_get_riscaldamento_attivo(pmodel) ? "\xFF" : "\xFE");
-    } else if (model_get_riscaldamento_attivo(pmodel)) {
-        lv_label_set_text(page_data.ltemperature, "ON");
-    } else {
-        lv_label_set_text(page_data.ltemperature, "OFF");
+    if (pmodel->pmac.abilita_visualizzazione_temperatura)
+    {
+        lv_label_set_text_fmt(page_data.ltemperature,  "\xCE\xCF%4iC %s", pmodel->status.temperatura_rilevata,
+                model_get_riscaldamento_attivo(pmodel) ? "\xFF" : "\xFE");
+        
+        if (model_get_status_stopped(pmodel)) {
+            lv_label_set_text(page_data.lcycle_temperature, "[---C]");
+        } else {
+            lv_label_set_text_fmt(page_data.lcycle_temperature, "[%3iC]", model_temperatura_aria_ciclo(pmodel));
+        }
+    }
+    else if (model_get_riscaldamento_attivo(pmodel))
+    {
+        lv_label_set_text(page_data.ltemperature, "\xCE\xCF     ON");
+        lv_label_set_text(page_data.lcycle_temperature, "");
+    }
+    else
+    {
+        lv_label_set_text(page_data.ltemperature, "\xCE\xCF    OFF");
+        lv_label_set_text(page_data.lcycle_temperature, "");
     }
 }
+
 
 
 static void update_timer(model_t *pmodel) {

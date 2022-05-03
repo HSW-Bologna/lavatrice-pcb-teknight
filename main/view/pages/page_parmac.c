@@ -55,7 +55,7 @@ static view_message_t process_page_event(model_t *model, void *arg, pman_event_t
 
     switch (event.code) {
         case VIEW_EVENT_KEYPAD: {
-            if (event.key_event.event == KEY_CLICK) {
+            if (event.key_event.event == KEY_CLICK || event.key_event.event == KEY_LONGPRESS) {
                 switch (event.key_event.code) {
                     case BUTTON_MEDIO:
                         if (page_data.parameter > 0) {
@@ -85,7 +85,7 @@ static view_message_t process_page_event(model_t *model, void *arg, pman_event_t
 
                     case BUTTON_STOP:
                         msg.vmsg.code = VIEW_PAGE_COMMAND_CODE_BACK;
-#warning "Rimuovere i parametri estesi in uscita dalla pagina!"
+#warning "Rimuovere i parametri estesi in uscita dalla pagina!" // -TODO !!!!
                         // model->pmac.abilita_parametri_ridotti = 1;
                         if (page_data.par_to_save) {
                             msg.vmsg.code = VIEW_PAGE_COMMAND_CODE_CHANGE_PAGE;

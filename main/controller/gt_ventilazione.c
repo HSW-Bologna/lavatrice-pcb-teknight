@@ -11,7 +11,7 @@
 /*                                                                            */
 /*  Data  : 19/07/2021      REV  : 00.0                                       */
 /*                                                                            */
-/*  U.mod.: 20/12/2021      REV  : 01.0                                       */
+/*  U.mod.: 18/02/2022      REV  : 01.0                                       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -28,155 +28,42 @@
 // ************************************************************************** //
 void gt_ventilazione(model_t *p, unsigned long timestamp)
 {
-    
     if (model_get_status_stopped(p) || model_get_status_pause(p))
     {
         if (p->status.f_in_test==0)
             ventilazione_stop(p);
     }
-
+    
     if (model_get_status_work(p))
     {
         if (p->status.f_in_test==0)
-            ventilazione_marcia(p);
+        {
+            if ((p->status.stato_step==STATO_STEP_ASC) || (p->status.stato_step==STATO_STEP_RAF))
+            {
+                ventilazione_marcia(p);
+            }
+            else
+            {
+                if ((rele_get(ORARIO)==0) && (rele_get(ANTIORARIO)==0))
+                {
+                    ventilazione_stop(p);
+                }
+                else
+                {
+                    ventilazione_marcia(p);
+                }
+            }
+        }
     }
+    
     
     
     return;
     
     
+    
+    
     /*
-    if (ct_sec == 0)
-    {
-    
-    
-    
-    // GT VENTOLA VENTILAZIONE ============================================== //
-    if (p->status.f_in_test==0 && p->status.stato==2 && p->status.n_allarme!=4) // MARCIA + NO SOVRA T ------ //
-    {
-        if (f_anti_piega==0)
-        {
-            set_digout (VENTILAZIONE);
-        }
-        
-////////        if (f_asc_raf==0 && f_anti_piega==0)
-////////        {
-////////            if (ab_rotondi==0 && ab_vapo==0)
-////////            {
-////////                set_digout (FRIGO_ASC);
-////////            }
-////////        }
-////////        else
-////////        {
-////////            if (ab_rotondi==0 && ab_vapo==0)
-////////            {
-////////                clear_digout (FRIGO_ASC);
-////////            }
-////////        }
-    }
-    else if (!f_in_test && (stato==1 || stato==3) && n_allarme!=4) // PAUSA o ATT AZZ T CIC + NO SOVRA T - M 16/05/11
-    {
-        if (ab_gas==0)
-        {
-            clear_digout (VENTILAZIONE);
-            
-            if (ab_rotondi==0 && ab_vapo==0)
-            {
-////////                clear_digout (FRIGO_ASC);
-            }
-        }
-        else if (ab_gas!=0 && OBLO_APERTO==0)
-        {
-            if (f_ventilo==0)
-            {
-                set_digout (VENTILAZIONE);
-                ct_tempo_ventola_gas = ab_gas;
-                f_ventilo = 1;
-            }
-            
-            if (f_ventilo==1 && ct_tempo_ventola_gas==0)
-            {
-                clear_digout (VENTILAZIONE);
-                f_ventilo = 2;
-            }
-            
-            if (ab_rotondi==0 && ab_vapo==0)
-            {
-////////                clear_digout (FRIGO_ASC);
-            }
-        }
-        else if (ab_gas!=0 && OBLO_APERTO==1)
-        {
-            clear_digout (VENTILAZIONE);
-            ct_tempo_ventola_gas = 0;
-            f_ventilo = 0;
-            
-            if (ab_rotondi==0 && ab_vapo==0)
-            {
-////////                clear_digout (FRIGO_ASC);
-            }
-        }
-    }
-    else if (!f_in_test && n_allarme==4) // CP SI ALL SOVRATEMP ------------- //
-    {
-        if (ab_rotondi==0 && ab_vapo==0)
-        {
-////////            clear_digout (FRIGO_ASC);
-        }
-    }
-    else if (!f_in_test) // FERMO ------------------------------------------- //
-    {
-        if (ab_gas==0)
-        {
-            clear_digout (VENTILAZIONE);
-            
-            if (ab_rotondi==0 && ab_vapo==0)
-            {
-////////                clear_digout (FRIGO_ASC);
-            }
-        }
-        else if (ab_gas!=0 && OBLO_APERTO==0)
-        {
-            if (f_ventilo==0)
-            {
-                set_digout (VENTILAZIONE);
-                ct_tempo_ventola_gas = ab_gas;
-                f_ventilo = 1;
-            }
-            
-            if (f_ventilo==1 && ct_tempo_ventola_gas==0)
-            {
-                clear_digout (VENTILAZIONE);
-                f_ventilo = 2;
-            }
-            
-            if (ab_rotondi==0 && ab_vapo==0)
-            {
-////////                clear_digout (FRIGO_ASC);
-            }
-        }
-        else if (ab_gas!=0 && OBLO_APERTO==1)
-        {
-            clear_digout (VENTILAZIONE);
-            ct_tempo_ventola_gas = 0;
-            f_ventilo = 0;
-            
-            if (ab_rotondi==0 && ab_vapo==0)
-            {
-////////                clear_digout (FRIGO_ASC);
-            }
-        }
-    }
-    
-    
-    
-    
-    }
-    
-    
-    
-    
-    
     // GT VEL VENTOLA VENTILAZIONE ========================================== //
     if ((get_digout (VENTILAZIONE)==0) || (ct_sec!=0))
     {
@@ -227,12 +114,17 @@ void gt_ventilazione(model_t *p, unsigned long timestamp)
         }
     }
 */
+    
+    
 }
+
+
+
 void ventilazione_stop(model_t *p)
 {
     clear_digout(VENTILAZIONE);
    
-    pwm_set((p), 0, CH_VEL_VENTILAZIONE); // % speed , CH ANALOG
+    pwm_set((p), 0, CH_VEL_VENTILAZIONE);       // % speed , CH ANALOG
 }
 
 void ventilazione_marcia(model_t *p)
@@ -241,7 +133,7 @@ void ventilazione_marcia(model_t *p)
    
     if (p->status.stato_step==STATO_STEP_ASC)
     {
-        pwm_set((p), 100, CH_VEL_VENTILAZIONE); // % speed , CH ANALOG
+        pwm_set((p), 100, CH_VEL_VENTILAZIONE); // % speed , CH ANALOG  # CP SE MACCHINA RE => % VEL @ TEMP -TODO 
     }
     
     if (p->status.stato_step==STATO_STEP_RAF)
@@ -253,17 +145,4 @@ void ventilazione_marcia(model_t *p)
     {
         pwm_set((p), 100, CH_VEL_VENTILAZIONE); // % speed , CH ANALOG
     }
-    
-    
-    
-//                i += deserialize_uint8(&pmodel->pciclo[j].temperatura_aria_1, &buff[i]);
-
-    
-    
-//        i += deserialize_uint8(&pmodel->pmac.percentuale_velocita_min_ventola, &buff[i]);
-//        i += deserialize_uint8(&pmodel->pmac.percentuale_anticipo_temperatura_ventola, &buff[i]);
-    
-    
-    
 }
-

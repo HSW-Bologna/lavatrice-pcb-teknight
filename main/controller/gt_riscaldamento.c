@@ -1,10 +1,19 @@
-/*
- * File:   gt_riscaldamento.c
- * Author: Virginia
- *
- * Created on 19 luglio 2021, 9.35
- */
-// ************************************************************************** //
+/******************************************************************************/
+/*                                                                            */
+/*  HSW snc - Casalecchio di Reno (BO) ITALY                                  */
+/*  ----------------------------------------                                  */
+/*                                                                            */
+/*  modulo: gt_riscaldamento.c                                                */
+/*                                                                            */
+/*      gestione attivazione riscaldamento                                    */
+/*                                                                            */
+/*  Autore: Maldus (Mattia MALDINI) & Virginia NEGRI & Massimo ZANNA          */
+/*                                                                            */
+/*  Data  : 19/07/2021      REV  : 00.0                                       */
+/*                                                                            */
+/*  U.mod.: 16/02/2022      REV  : 01.0                                       */
+/*                                                                            */
+/******************************************************************************/
 
 #include "model/model.h"
 
@@ -19,37 +28,49 @@
 #define ISTERESI_TEMPERATURA 2
 
 
-static int temperatura_scesa(model_t *p);
-static int temperatura_raggiunta(model_t *p);
 
-
-
-void gt_riscaldamento(model_t *p, unsigned long timestamp) {
-    if (model_get_status_stopped(p) || model_get_status_pause(p)) {
-        if (p->status.f_in_test == 0) {
+void gt_riscaldamento(model_t *p, unsigned long timestamp)
+{
+    if (model_get_status_stopped(p) || model_get_status_pause(p))
+    {
+        if (p->status.f_in_test == 0)
+        {
             clear_digout(RISCALDAMENTO);
         }
     }
 
 
 
-    if (model_get_status_work(p)) {
-        if (p->status.f_ventilazione == 1 && p->status.stato_step == STATO_STEP_ASC) {
-            if (temperatura_scesa(p)) {
-                set_digout(RISCALDAMENTO);
-            } else if (temperatura_raggiunta(p)) {
-                clear_digout(RISCALDAMENTO);
+    if (model_get_status_work(p))
+    {
+        static unsigned char f_in_temp = 0;
+        
+        if (p->status.f_ventilazione == 0 ||  p->status.stato_step != STATO_STEP_ASC)
+        {
+            clear_digout(RISCALDAMENTO);
+        }
+        else if (p->status.f_ventilazione == 1 && p->status.stato_step == STATO_STEP_ASC)
+        {
+            if (f_in_temp == 0)
+            {
+                if (model_get_temperatura_corrente(p) < (model_temperatura_aria_ciclo(p) +  model_ciclo_corrente(p)->offset_temperatura_aria_alto))
+                {
+                    set_digout(RISCALDAMENTO);
+                }
+                else
+                {
+                    clear_digout(RISCALDAMENTO);
+                    f_in_temp = 1;
+                }
+            }
+            else if (f_in_temp == 1)
+            {
+                if (model_get_temperatura_corrente(p) < (model_temperatura_aria_ciclo(p) - model_ciclo_corrente(p)->offset_temperatura_aria_basso))
+                {
+                    set_digout(RISCALDAMENTO);
+                    f_in_temp = 0;
+                }
             }
         }
     }
-}
-
-
-static int temperatura_raggiunta(model_t *p) {
-    return model_temperatura_aria_ciclo(p) > model_get_temperatura_corrente(p) + ISTERESI_TEMPERATURA;
-}
-
-
-static int temperatura_scesa(model_t *p) {
-    return model_temperatura_aria_ciclo(p) < model_get_temperatura_corrente(p) - ISTERESI_TEMPERATURA;
 }

@@ -10,6 +10,18 @@ static int  find_password_start(view_common_password_t *password);
 static const button_t preamble[3]                          = {BUTTON_STOP, BUTTON_STOP, BUTTON_STOP};
 
 
+const char * view_common_modello_str(model_t *pmodel) {
+    const char *strings_modello[] = {
+        "TEST MODEL",       "EDS RE SELF C.A.", "EDS RE LAB  C.A.", "EDS RG SELF C.A.", "EDS RG LAB  C.A.",
+        "EDS RV SELF C.A.", "EDS RV LAB  C.A.", "EDS RE SELF C.C.", "EDS RV SELF C.C.", "EDS RE LAB  C.C.",
+        "EDS RV LAB  C.C.", "EDS RP SELF C.A.", "EDS RP LAB  C.A.", "EDS RP SELF C.C.", "EDS RP LAB  C.C.",
+        "EDS RE LAB TH CA", "EDS RG LAB TH CA", "EDS RV LAB TH CA", "EDS RE LAB TH CC", "EDS RV LAB TH CC",
+    };
+
+    return strings_modello[model_get_machine_model(pmodel)];
+}
+
+
 lv_obj_t *view_common_title(lv_obj_t *root, const char *str) {
     lv_obj_t *cont = lv_cont_create(root, NULL);
 

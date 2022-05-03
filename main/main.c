@@ -17,7 +17,7 @@
 /*                                                                            */
 /*  ver. 00.0:  05/05/2021  dalla da MiniEco V:17.4   D:11/04/2021            */
 /*                                                                            */
-/*  ver. att.:  21/12/2021  00.4                                              */
+/*  ver. att.:  29/04/2022  01.2                                              */
 /*                                                                            */
 /*  BY:         Maldus (Mattia MALDINI) & Virginia NEGRI & Massimo ZANNA      */
 /*                                                                            */
@@ -32,7 +32,7 @@
 /* ************************************************************************** */
 
 //                                    12345678901234567890
-const unsigned char versione_prg[] = "V:00.4  D:21/12/2021";
+const unsigned char versione_prg[] = "V:01.2  D:29/04/2022";
 
 
 
@@ -84,6 +84,39 @@ const unsigned char versione_prg[] = "V:00.4  D:21/12/2021";
 /*      - migliorate visualizzazioni                                          */
 /*      - corretti alcuni errori rilevati alla 'prima accensione'             */
 /*                                                                            */
+/*----------------------------------------------------------------------------*/
+/*                                                                            */
+/*  rev.:       27/01/2022 (00.5)                                             */
+/*                                                                            */
+/*      - migliorata gestione riscaldamento                                   */
+/*                                                                            */
+/*----------------------------------------------------------------------------*/
+/*                                                                            */
+/*  rev.:       15/02/2022 (00.6)                                             */
+/*                                                                            */
+/*      - modifiche dopo test con Danilo                                      */
+/*                                                                            */
+/*----------------------------------------------------------------------------*/
+/*                                                                            */
+/*  rev.:       24/02/2022 (01.0)                                             */
+/*                                                                            */
+/*      - ultima release mandata a Milano (200 schede)                        */
+/*                                                                            */
+/*----------------------------------------------------------------------------*/
+/*                                                                            */
+/*  rev.:       19/04/2022 (01.1)                                             */
+/*                                                                            */
+/*      - corretto errore GT EMERGENZA (lo faceva solo in MARCIA)             */
+/*      - modificato ordine GT ALLARMI (RAM,EME,INV,FIL,OBL)                  */
+/*                                                                            */
+/*----------------------------------------------------------------------------*/
+/*                                                                            */
+/*  rev.:       19/04/2022 (01.2)                                             */
+/*                                                                            */
+/*      - aggiunti valori STD in PAR CIC  OFFSET TH/TL e RH RES               */
+/*      - corretto errore GT INPUT PAGAMENTO ( GETTONE1 ) da IN5 a IN3        */
+/*      - in "PAGINA CONTRASTO" con [ MEUNU ] set contrasto base; 26          */
+/*                                                                            */
 /******************************************************************************/
 
 
@@ -132,7 +165,7 @@ model_t model;
 
 
 int main(void) {
-    unsigned long tskp = 0, ts_input = 0, ts_temperature = 0, ts_spi = 0;
+    unsigned long tskp = 0, ts_input = 0, ts_temperature = 0, ts_spi = 0, ts_allarmi = 0;
 
     // inizializzazioni ----------------------- //
     system_init();
@@ -143,7 +176,7 @@ int main(void) {
     led_init();
     keyboard_init();
 
-    i2c_bitbang_init(5);
+    i2c_bitbang_init(2);
     digin_init();
     timer_init();
     ptc_init();
@@ -155,18 +188,26 @@ int main(void) {
 
     model_init(&model);
     view_init(&model, nt7534_flush, nt7534_rounder, nt7534_set_px, keyboard_reset);
+    
     controller_init(&model);
+    
+    model_get_pwoff(&model);
+    
+    
+    
     digout_buzzer_bip(2, 100, 100);
-
 
     // MAIN LOOP ============================================================ //
     for (;;) {
         controller_manage_gui(&model);
         modbus_server_manage();
-
-
+        
+        
         // gestione macchina ------------------ //
-        gt_allarmi(&model);
+        if (is_expired(ts_allarmi, get_millis(), 2000))
+        {
+            gt_allarmi(&model);
+        }
 
         gt_ciclo(&model, get_millis());
 

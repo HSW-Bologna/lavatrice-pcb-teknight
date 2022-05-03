@@ -12,6 +12,7 @@
 #include "view/intl/intl.h"
 
 
+
 enum {
     TIMER_BACK   = 0,
     TIMER_UPDATE = 1,
@@ -128,7 +129,7 @@ static view_message_t process_page_event(model_t *pmodel, void *arg, pman_event_
                     break;
 
                 case TIMER_UPDATE:
-                    if (page_data.current == INDEX_TEMPO_CICLO) {
+                    if (page_data.current == INDEX_TEMPO_CICLO || page_data.current == INDEX_TEMPERATURA) {
                         update_values(pmodel);
                     }
                     break;
@@ -208,6 +209,7 @@ static void close_page(void *data) {
     (void)data;
     lv_obj_clean(lv_scr_act());
     lv_task_del(page_data.task);
+    lv_task_del(page_data.time_task);
 }
 
 
