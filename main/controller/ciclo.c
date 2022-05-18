@@ -11,7 +11,7 @@
 /*                                                                            */
 /*  Data  : 19/07/2021      REV  : 00.0                                       */
 /*                                                                            */
-/*  U.mod.: 23/02/2022      REV  : 01.0                                       */
+/*  U.mod.: 03/04/2022      REV  : 01.3                                       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -57,7 +57,85 @@ void gt_ciclo(model_t *p, uint32_t timestamp)
         stopwatch_pause(&ct_anti_piega, get_millis());
         stopwatch_pause(&ct_anti_piega_pausa, get_millis());
         
-        model_metti_tempo_lavoro_in_pausa(p, get_millis());
+        if (p->pmac.abilita_stop_tempo_ciclo==1)
+        {
+            model_metti_tempo_lavoro_in_pausa(p, get_millis());
+        }
+        
+        if (p->pmac.abilita_stop_tempo_ciclo==0)
+        {
+            switch (p->status.stato_step)
+            {
+                case STATO_STEP_ASC:
+                    if (model_tempo_lavoro_scaduto(p, get_millis()))
+                    {
+                        if (model_ciclo_corrente(p)->abilita_raffreddamento)
+                        {
+                            model_comincia_raffreddamento(p);
+                        }
+                        else if (model_ciclo_corrente(p)->abilita_antipiega)
+                        {
+//                          model_comincia_antipiega(p);
+                            model_set_status_stopped(p);
+                        }
+                        else
+                        {
+                            model_set_status_stopped(p);
+                        }
+                        view_event((view_event_t){.code = VIEW_EVENT_STEP_UPDATE});
+                    }
+                    break;
+
+                case STATO_STEP_RAF:
+                    if (model_tempo_lavoro_scaduto(p, get_millis()))
+                    {
+                        if (model_ciclo_corrente(p)->abilita_antipiega)
+                        {
+//                          model_comincia_antipiega(p);
+                            model_set_status_stopped(p);
+                        }
+                        else
+                        {
+                            model_set_status_stopped(p);
+                        }
+                        view_event((view_event_t){.code = VIEW_EVENT_STEP_UPDATE});
+                    }
+                    break;
+
+                case STATO_STEP_ANT:
+                    if (p->pmac.tempo_max_antipiega==0 && p->pmac.numero_cicli_max_antipiega==0)
+                    {
+                        // -TODO INFINITA !!!!
+                    }
+                    else
+                    {
+                        if (p->pmac.numero_cicli_max_antipiega != 0)
+                        {
+                            if (p->status.cnro_c_anti_piega_max == 0)
+                            {
+                                Nop();
+                            }
+                        }
+                        else if (p->pmac.tempo_max_antipiega !=0 )
+                        {
+                            if (stopwatch_is_timer_reached(&ct_anti_piega_max, get_millis()))
+                            {
+                                //stopwatch_init(&ct_anti_piega_max);
+
+                                Nop();
+
+    //                            p->status.nf_anti_piega = ANTIPIEGA_ATTESA_APERTURA_OBLO; // TERMINE TEMPO
+    //                            p->status.f_anti_piega = 2;   // !!!! ToDO
+                            }
+                        }
+                    }
+                    view_event((view_event_t){.code = VIEW_EVENT_STEP_UPDATE});
+                    break;
+
+                default:
+                    break;
+            }
+        }
     }
     
     

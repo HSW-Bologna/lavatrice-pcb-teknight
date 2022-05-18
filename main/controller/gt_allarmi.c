@@ -11,7 +11,7 @@
 /*                                                                            */
 /*  Data  : 19/07/2021      REV  : 00.0                                       */
 /*                                                                            */
-/*  U.mod.: 19/04/2022      REV  : 01.1                                       */
+/*  U.mod.: 03/05/2022      REV  : 01.3                                       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -130,7 +130,7 @@ void gt_allarmi (model_t *p)
 //////        f_all = 1;
 //////    }
     
-    else if ((digin_get(ALLARME_INVERTER)==1 && p->pmac.allarme_inverter_off_on==0) || (digin_get(ALLARME_INVERTER)==0 && p->pmac.allarme_inverter_off_on==1))  // ALL inverter --------------*
+    else if ((digin_get(ALLARME_INVERTER)==1 && p->pmac.allarme_inverter_na_nc==0) || (digin_get(ALLARME_INVERTER)==0 && p->pmac.allarme_inverter_na_nc==1))  // ALL inverter --------------*
     {
         p->status.n_allarme = ALL_INVERTER;
         
@@ -141,7 +141,7 @@ void gt_allarmi (model_t *p)
         }
     }
     
-    else if ((digin_get(FILTRO_APERTO)==1 && p->pmac.allarme_filtro_off_on==0) || (digin_get(FILTRO_APERTO)==0 && p->pmac.allarme_filtro_off_on==1))  // ALL filtro aperto ---------*
+    else if ((digin_get(FILTRO_APERTO)==1 && p->pmac.allarme_filtro_na_nc==0) || (digin_get(FILTRO_APERTO)==0 && p->pmac.allarme_filtro_na_nc==1))  // ALL filtro aperto ---------*
     {
          p->status.n_allarme =ALL_FILTRO_APERTO;
         

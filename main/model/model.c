@@ -1,3 +1,4 @@
+#include <xc.h>
 #include "utils/assert.h"
 #include "gel/timer/stopwatch.h"
 #include "model.h"
@@ -99,14 +100,17 @@ size_t model_pars_serialize(model_t *pmodel, uint8_t *buff) {
         i += serialize_uint8(&buff[i], pmodel->pciclo[j].tempo_pausa_asciugatura);
         i += serialize_uint8(&buff[i], pmodel->pciclo[j].velocita_asciugatura);
         i += serialize_uint8(&buff[i], pmodel->pciclo[j].temperatura_aria_1);
+        
         i += serialize_uint8(&buff[i], pmodel->pciclo[j].offset_temperatura_aria_alto);
         i += serialize_uint8(&buff[i], pmodel->pciclo[j].offset_temperatura_aria_basso);
         i += serialize_uint8(&buff[i], pmodel->pciclo[j].umidita_residua_dry_auto);
+        
         i += serialize_uint8(&buff[i], pmodel->pciclo[j].abilita_raffreddamento);
         i += serialize_uint8(&buff[i], pmodel->pciclo[j].tempo_durata_raffreddamento);
         i += serialize_uint8(&buff[i], pmodel->pciclo[j].abilita_inversione_raffreddamento);
         i += serialize_uint8(&buff[i], pmodel->pciclo[j].tempo_giro_raffreddamento);
         i += serialize_uint8(&buff[i], pmodel->pciclo[j].tempo_pausa_raffreddamento);
+        
         i += serialize_uint8(&buff[i], pmodel->pciclo[j].abilita_antipiega);
     }
 
@@ -127,8 +131,8 @@ size_t model_pars_serialize(model_t *pmodel, uint8_t *buff) {
     i += serialize_uint8(&buff[i], pmodel->pmac.lingua_max);
     i += serialize_uint8(&buff[i], pmodel->pmac.abilita_gas);
     i += serialize_uint8(&buff[i], pmodel->pmac.numero_gettoni_consenso);
-    i += serialize_uint8(&buff[i], pmodel->pmac.allarme_inverter_off_on);
-    i += serialize_uint8(&buff[i], pmodel->pmac.allarme_filtro_off_on);
+    i += serialize_uint8(&buff[i], pmodel->pmac.allarme_inverter_na_nc);
+    i += serialize_uint8(&buff[i], pmodel->pmac.allarme_filtro_na_nc);
     i += serialize_uint8(&buff[i], pmodel->pmac.velocita_min_lavoro);
     i += serialize_uint8(&buff[i], pmodel->pmac.velocita_max_lavoro);
     i += serialize_uint8(&buff[i], pmodel->pmac.abilita_visualizzazione_cicli_totali);
@@ -214,8 +218,8 @@ size_t model_pars_deserialize(model_t *pmodel, uint8_t *buff) {
         i += deserialize_uint8(&pmodel->pmac.lingua_max, &buff[i]);
         i += deserialize_uint8(&pmodel->pmac.abilita_gas, &buff[i]);
         i += deserialize_uint8(&pmodel->pmac.numero_gettoni_consenso, &buff[i]);
-        i += deserialize_uint8(&pmodel->pmac.allarme_inverter_off_on, &buff[i]);
-        i += deserialize_uint8(&pmodel->pmac.allarme_filtro_off_on, &buff[i]);
+        i += deserialize_uint8(&pmodel->pmac.allarme_inverter_na_nc, &buff[i]);
+        i += deserialize_uint8(&pmodel->pmac.allarme_filtro_na_nc, &buff[i]);
         i += deserialize_uint8(&pmodel->pmac.velocita_min_lavoro, &buff[i]);
         i += deserialize_uint8(&pmodel->pmac.velocita_max_lavoro, &buff[i]);
         i += deserialize_uint8(&pmodel->pmac.abilita_visualizzazione_cicli_totali, &buff[i]);
@@ -394,7 +398,7 @@ void model_cambia_lingua(model_t *pmodel) {
     
 #warning "Da cambiare con controllo - lingua_max- con piu' di 2 lingue !!!!"
     
-    pmodel->lingua_temporanea = (pmodel->lingua_temporanea + 1) % 2; 
+    pmodel->lingua_temporanea = (pmodel->lingua_temporanea + 1) % pmodel->pmac.lingua_max; 
 }
 
 stato_t model_get_stato(model_t *pmodel) {
@@ -437,7 +441,7 @@ void model_init_parametri_ciclo(model_t *pmodel) {
     switch (modello) {
         case MODELLO_MACCHINA_TEST:
             tipo                                  = 1;
-            pmodel->pmac.abilita_stop_tempo_ciclo = 0;
+            pmodel->pmac.abilita_stop_tempo_ciclo = 1; // -TODO da 0 a 1 03-05-2022
             pmodel->pmac.tempo_azzeramento_ciclo_pausa       = 0;
             pmodel->pmac.tempo_azzeramento_ciclo_stop        = 1;
             break;
@@ -451,7 +455,7 @@ void model_init_parametri_ciclo(model_t *pmodel) {
 
         case MODELLO_MACCHINA_EDS_RE_LAB_CA:
             tipo                                  = 1;
-            pmodel->pmac.abilita_stop_tempo_ciclo = 1;
+            pmodel->pmac.abilita_stop_tempo_ciclo = 0; // -TODO da 1 a 0 03-05-2022
             pmodel->pmac.abilita_gas              = 0;
             init_comune_parametri_2(pmodel);
             break;
@@ -465,7 +469,7 @@ void model_init_parametri_ciclo(model_t *pmodel) {
 
         case MODELLO_MACCHINA_EDS_RG_LAB_CA:
             tipo                                  = 1;
-            pmodel->pmac.abilita_stop_tempo_ciclo = 1;
+            pmodel->pmac.abilita_stop_tempo_ciclo = 0; // -TODO da 1 a 0 03-05-2022
             pmodel->pmac.abilita_gas              = 1;
             init_comune_parametri_2(pmodel);
             break;
@@ -479,7 +483,7 @@ void model_init_parametri_ciclo(model_t *pmodel) {
 
         case MODELLO_MACCHINA_EDS_RV_LAB_CA:
             tipo                                  = 1;
-            pmodel->pmac.abilita_stop_tempo_ciclo = 1;
+            pmodel->pmac.abilita_stop_tempo_ciclo = 0; // -TODO da 1 a 0 03-05-2022
             pmodel->pmac.abilita_gas              = 0;
             init_comune_parametri_2(pmodel);
             break;
@@ -500,14 +504,14 @@ void model_init_parametri_ciclo(model_t *pmodel) {
 
         case MODELLO_MACCHINA_EDS_RE_LAB_CC:
             tipo                                  = 1;
-            pmodel->pmac.abilita_stop_tempo_ciclo = 1;
+            pmodel->pmac.abilita_stop_tempo_ciclo = 0; // -TODO da 1 a 0 03-05-2022
             pmodel->pmac.abilita_gas              = 0;
             init_comune_parametri_2(pmodel);
             break;
 
         case MODELLO_MACCHINA_EDS_RV_LAB_CC:
             tipo                                  = 1;
-            pmodel->pmac.abilita_stop_tempo_ciclo = 1;
+            pmodel->pmac.abilita_stop_tempo_ciclo = 0; // -TODO da 1 a 0 03-05-2022
             pmodel->pmac.abilita_gas              = 0;
             init_comune_parametri_2(pmodel);
             break;
@@ -521,7 +525,7 @@ void model_init_parametri_ciclo(model_t *pmodel) {
 
         case MODELLO_MACCHINA_EDS_RP_LAB_CA:
             tipo                                  = 0;
-            pmodel->pmac.abilita_stop_tempo_ciclo = 1;
+            pmodel->pmac.abilita_stop_tempo_ciclo = 0; // -TODO da 1 a 0 03-05-2022
             pmodel->pmac.abilita_gas              = 0;
             init_comune_parametri_2(pmodel);
             break;
@@ -535,42 +539,42 @@ void model_init_parametri_ciclo(model_t *pmodel) {
 
         case MODELLO_MACCHINA_EDS_RP_LAB_CC:
             tipo                                  = 0;
-            pmodel->pmac.abilita_stop_tempo_ciclo = 1;
+            pmodel->pmac.abilita_stop_tempo_ciclo = 0; // -TODO da 1 a 0 03-05-2022
             pmodel->pmac.abilita_gas              = 0;
             init_comune_parametri_2(pmodel);
             break;
 
         case MODELLO_MACCHINA_EDS_RE_LAB_TH_CA:
             tipo                                  = 0;
-            pmodel->pmac.abilita_stop_tempo_ciclo = 1;
+            pmodel->pmac.abilita_stop_tempo_ciclo = 0; // -TODO da 1 a 0 03-05-2022
             pmodel->pmac.abilita_gas              = 0;
             init_comune_parametri_2(pmodel);
             break;
 
         case MODELLO_MACCHINA_EDS_RG_LAB_TH_CA:
             tipo                                  = 0;
-            pmodel->pmac.abilita_stop_tempo_ciclo = 1;
+            pmodel->pmac.abilita_stop_tempo_ciclo = 0; // -TODO da 1 a 0 03-05-2022
             pmodel->pmac.abilita_gas              = 1;
             init_comune_parametri_2(pmodel);
             break;
 
         case MODELLO_MACCHINA_EDS_RV_LAB_TH_CA:
             tipo                                  = 1;
-            pmodel->pmac.abilita_stop_tempo_ciclo = 1;
+            pmodel->pmac.abilita_stop_tempo_ciclo = 0; // -TODO da 1 a 0 03-05-2022
             pmodel->pmac.abilita_gas              = 0;
             init_comune_parametri_2(pmodel);
             break;
 
         case MODELLO_MACCHINA_EDS_RE_LAB_TH_CC:
             tipo                                  = 1;
-            pmodel->pmac.abilita_stop_tempo_ciclo = 1;
+            pmodel->pmac.abilita_stop_tempo_ciclo = 0; // -TODO da 1 a 0 03-05-2022
             pmodel->pmac.abilita_gas              = 0;
             init_comune_parametri_2(pmodel);
             break;
 
         case MODELLO_MACCHINA_EDS_RV_LAB_TH_CC:
             tipo                                  = 1;
-            pmodel->pmac.abilita_stop_tempo_ciclo = 1;
+            pmodel->pmac.abilita_stop_tempo_ciclo = 0; // -TODO da 1 a 0 03-05-2022
             pmodel->pmac.abilita_gas              = 0;
             init_comune_parametri_2(pmodel);
             break;
@@ -588,7 +592,8 @@ void model_init_parametri_ciclo(model_t *pmodel) {
         pmodel->pmac.abilita_parametri_ridotti      = 1;
         pmodel->pmac.tempo_ritardo_antipiega        = 10;
         pmodel->pmac.tempo_max_antipiega            = 0;
-        pmodel->pmac.tempo_cadenza_antipiega        = 20; //sec
+        pmodel->pmac.tempo_cadenza_antipiega        = 2;
+//        pmodel->pmac.tempo_cadenza_antipiega        = 20; //sec
 #warning "tempo_cadenza_antipiega sarebbe in minuti => poi 1 !" // -TODO !!!!
         pmodel->pmac.numero_cicli_max_antipiega     = 0;
         pmodel->pmac.tempo_giro_antipiega           = 5;
@@ -748,12 +753,13 @@ int model_get_status_not_stopped(model_t *p) {
 }
 
 
-void model_comincia_raffreddamento(model_t *pmodel) {
-    if (model_get_status_work(pmodel)) {
+void model_comincia_raffreddamento(model_t *pmodel)
+{
+    if (model_get_status_work(pmodel) || (model_get_status_pause(pmodel) && (pmodel->pmac.abilita_stop_tempo_ciclo==0)))
+    {
         pmodel->status.stato_step = STATO_STEP_RAF;
         stopwatch_init(&pmodel->status.tempo_asciugatura);
-        stopwatch_setngo(&pmodel->status.tempo_asciugatura,
-            model_ciclo_corrente(pmodel)->tempo_durata_raffreddamento * 60 * 1000UL, get_millis());
+        stopwatch_setngo(&pmodel->status.tempo_asciugatura, model_ciclo_corrente(pmodel)->tempo_durata_raffreddamento * 60 * 1000UL, get_millis());
     }
 }
 
@@ -871,8 +877,11 @@ int model_get_status_not_work(model_t *p) {
 void model_set_status_pause(model_t *p) {
     assert(p != NULL);
     p->status.stato = STATO_PAUSE;
-
-    stopwatch_pause(&p->status.tempo_asciugatura, get_millis());
+    
+    if (p->pmac.abilita_stop_tempo_ciclo==1)
+    {
+        stopwatch_pause(&p->status.tempo_asciugatura, get_millis());
+    }
 }
 
 int model_get_status_pause(model_t *p) {
@@ -1065,7 +1074,7 @@ unsigned int model_secondi_durata_asciugatura(model_t *pmodel)
     {
         unsigned int secondi = 0;
         
-        if (pmodel->pmac.tempo_gettone_min_sec)
+        if (pmodel->pmac.tempo_gettone_min_sec==1)
         {
             secondi = pmodel->pwoff.credito * pmodel->pmac.tempo_gettone_1;
         }
@@ -1086,6 +1095,21 @@ unsigned int model_secondi_durata_asciugatura(model_t *pmodel)
     else 
     {
         return model_ciclo_corrente(pmodel)->tempo_durata_asciugatura * 60;
+    }
+}
+
+
+unsigned int model_secondi_durata_asciugatura_da_mostrare(model_t *pmodel)
+{
+    assert(pmodel != NULL);
+    
+    if (pmodel->pmac.abilita_gettoniera)
+    {
+        return model_secondi_durata_asciugatura(pmodel);
+    }
+    else 
+    {
+        return 0;
     }
 }
 

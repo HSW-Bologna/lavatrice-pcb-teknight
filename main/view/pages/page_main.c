@@ -506,10 +506,15 @@ static void update_temperatura(model_t *pmodel) {
 static void update_timer(model_t *pmodel) {
     unsigned int secondi = 0;
 
-    if (model_ciclo_selezionato(pmodel)) {
-        if (model_get_status_stopped(pmodel)) {
-            secondi = model_secondi_durata_asciugatura(pmodel);
-        } else {
+    if (model_ciclo_selezionato(pmodel))
+    {
+        if (model_get_status_stopped(pmodel))
+        {
+//          secondi = model_secondi_durata_asciugatura(pmodel);
+            secondi = model_secondi_durata_asciugatura_da_mostrare(pmodel);
+        }
+        else
+        {
             secondi = model_get_stato_timer(pmodel);
         }
     }

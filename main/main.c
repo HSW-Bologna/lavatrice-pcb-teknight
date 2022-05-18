@@ -17,7 +17,7 @@
 /*                                                                            */
 /*  ver. 00.0:  05/05/2021  dalla da MiniEco V:17.4   D:11/04/2021            */
 /*                                                                            */
-/*  ver. att.:  29/04/2022  01.2                                              */
+/*  ver. att.:  06/05/2022  01.4                                              */
 /*                                                                            */
 /*  BY:         Maldus (Mattia MALDINI) & Virginia NEGRI & Massimo ZANNA      */
 /*                                                                            */
@@ -32,7 +32,7 @@
 /* ************************************************************************** */
 
 //                                    12345678901234567890
-const unsigned char versione_prg[] = "V:01.2  D:29/04/2022";
+const unsigned char versione_prg[] = "V:01.4  D:06/05/2022";
 
 
 
@@ -116,6 +116,22 @@ const unsigned char versione_prg[] = "V:01.2  D:29/04/2022";
 /*      - aggiunti valori STD in PAR CIC  OFFSET TH/TL e RH RES               */
 /*      - corretto errore GT INPUT PAGAMENTO ( GETTONE1 ) da IN5 a IN3        */
 /*      - in "PAGINA CONTRASTO" con [ MEUNU ] set contrasto base; 26          */
+/*                                                                            */
+/*----------------------------------------------------------------------------*/
+/*                                                                            */
+/*  rev.:       04/05/2022 (01.3)                                             */
+/*                                                                            */
+/*      - messa a posto tabella PAR CIC "uint8_t valori[NUM_CICLI][17]"       */
+/*      - corretto errore GT PAR MAC "abilita_stop_tempo_ciclo"               */
+/*      - messo a 1 senso INPUT di EMERGENZA, ALL MOTORE e FILTRO APERTO      */
+/*      - messo a 0 "pmac.abilita_stop_tempo_ciclo" in macchine SELF e OPL    */
+/*      - messo a posto visualizzazione tempo da fermo (0) senza gettoniera   */
+/*                                                                            */
+/*----------------------------------------------------------------------------*/
+/*                                                                            */
+/*  rev.:       06/05/2022 (01.4)                                             */
+/*                                                                            */
+/*      - rivista GT modelli GAS                                              */
 /*                                                                            */
 /******************************************************************************/
 

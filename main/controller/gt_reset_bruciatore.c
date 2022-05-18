@@ -31,12 +31,12 @@ void gt_reset_bruciatore(model_t *p, uint32_t timestamp) {
 
 
     // ====================================================================== //
-    if (model_not_in_test(p) && nfx_all_blocco_bruciatore == 0) {
+    if (model_not_in_test(p) && nfx_all_blocco_bruciatore == 0)
+    {
         if (p->pmac.abilita_gas != 0 && p->pmac.numero_tentativi_reset_gas != 0)     // CP se MACCINA A GAS
         {
-
-
-            if ((digin_get(BLOCCO_BRUCIATORE) == 1) && (model_get_status_stopped(p)))     // 04/01/21
+//          if ((digin_get(BLOCCO_BRUCIATORE) == 1) && (model_get_status_stopped(p)))     // 04/01/21
+            if ((digin_get(BLOCCO_BRUCIATORE) == 0) && (model_get_status_stopped(p)))     // 04/01/21
             {
                 p->status.f_all_blocco_bruciatore = 0;
                 return;
@@ -44,7 +44,9 @@ void gt_reset_bruciatore(model_t *p, uint32_t timestamp) {
 
 
 
-            if ((digin_get(BLOCCO_BRUCIATORE) == 1)) {
+//          if ((digin_get(BLOCCO_BRUCIATORE) == 0))
+            if ((digin_get(BLOCCO_BRUCIATORE) == 1))
+            {
                 if (model_get_status_not_work(p))     // 10/09/2020
                 {
                     p->status.f_all_blocco_bruciatore = 1;
@@ -80,6 +82,7 @@ void gt_reset_bruciatore(model_t *p, uint32_t timestamp) {
             {
                 stopwatch_init(&ct_reset_blocco);
                 stopwatch_set(&ct_reset_blocco, 3 * 1000UL);
+                stopwatch_start(&ct_reset_blocco, timestamp);
                 set_digout(RESET_BRUCIATORE);
                 nf_all_blocco_bruciatore = 3;
             }
@@ -89,6 +92,7 @@ void gt_reset_bruciatore(model_t *p, uint32_t timestamp) {
             {
                 stopwatch_init(&ct_reset_blocco);
                 stopwatch_set(&ct_reset_blocco, 5 * 1000UL);
+                stopwatch_start(&ct_reset_blocco, timestamp);
                 clear_digout(RESET_BRUCIATORE);
                 nf_all_blocco_bruciatore = 4;
             }

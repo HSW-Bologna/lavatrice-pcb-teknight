@@ -127,7 +127,7 @@ void controller_init(model_t *pmodel)
 #endif
     size_t i = 0;
 
-    if (!controller_start_check())
+    if (!controller_start_check()) // controllo prima accensione scheda vergine
     {
         uint8_t data[PARS_SERIALIZED_SIZE] = {0};
         parmac_init(pmodel, 1);
@@ -245,6 +245,10 @@ static int write_block(size_t block_num, uint8_t marker, uint8_t *buffer, size_t
 #endif
 
 
+
+
+
+// controllo prima accensione scheda se vergine ================================
 static int controller_start_check(void) {
     uint8_t buff = 0;
     size_t  i;

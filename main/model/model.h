@@ -84,8 +84,8 @@ typedef struct {
     uint8_t tempo_flusso_aria_blocco_gas;   // new TODO
     uint8_t abilita_blocco_no_aria;
     
-    uint8_t allarme_inverter_off_on;
-    uint8_t allarme_filtro_off_on;
+    uint8_t allarme_inverter_na_nc;
+    uint8_t allarme_filtro_na_nc;
     uint8_t emergenza_na_nc;
     uint8_t macchina_libera_off_on;
     uint8_t tipo_out_macchina_occupata;
@@ -312,5 +312,6 @@ void         model_modifica_temperatura_aria(model_t *pmodel, int gradi);
 void         model_modifica_velocita(model_t *pmodel, int giri);
 int          model_modifica_abilitata(model_t *pmodel);
 int model_allarme_emergenza(model_t *pmodel, int emergenza);
+unsigned int model_secondi_durata_asciugatura_da_mostrare(model_t *pmodel);
 
 #endif
