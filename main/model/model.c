@@ -16,6 +16,7 @@
 parameter_handle_t parameters[MAX_PARAMETER_CHUNK];
 static void        init_comune_parametri_1(model_t *pmodel);
 static void        init_comune_parametri_2(model_t *pmodel);
+static unsigned int tempo_da_credito(model_t *pmodel, uint16_t credito);
 
 extern stopwatch_t ct_anti_piega_max;
 
@@ -1091,25 +1092,7 @@ unsigned int model_secondi_durata_asciugatura(model_t *pmodel)
     
     if (pmodel->pmac.abilita_gettoniera)
     {
-        unsigned int secondi = 0;
-        
-        if (pmodel->pmac.tempo_gettone_min_sec==1)
-        {
-            secondi = pmodel->pwoff.credito * pmodel->pmac.tempo_gettone_1;
-        }
-        else
-        {
-            secondi = pmodel->pwoff.credito * pmodel->pmac.tempo_gettone_1 * 60;
-        }
-        
-        if (secondi > 99 * 60 + 59)
-        {
-            return 99 * 60 + 59;
-        }
-        else 
-        {
-            return secondi;
-        }
+        return tempo_da_credito(pmodel, pmodel->pwoff.credito);
     }
     else 
     {
@@ -1156,10 +1139,30 @@ void model_aggiungi_gettoni(model_t *pmodel, unsigned int gettoniera, unsigned i
         case GETTONIERA_NC:
         case GETTONIERA_NA:
             pmodel->pwoff.credito += ingresso;
+            if (!model_get_status_stopped(pmodel) && pmodel->status.stato_step == STATO_STEP_ASC) {
+                uint32_t rimanente = stopwatch_get_remaining(&pmodel->status.tempo_asciugatura, get_millis());
+                rimanente += tempo_da_credito(pmodel, ingresso) * 1000;
+                
+                if (rimanente > (99 * 60 + 59) * 1000) {
+                    rimanente = (99 * 60 + 59) * 1000;
+                }
+                
+                stopwatch_setngo(&pmodel->status.tempo_asciugatura, rimanente, get_millis());
+            }
             break;
 
         case GETTONIERA_INGRESSO:
             pmodel->pwoff.credito += gettoniera;
+            if (!model_get_status_stopped(pmodel) && pmodel->status.stato_step == STATO_STEP_ASC) {
+                uint32_t rimanente = stopwatch_get_remaining(&pmodel->status.tempo_asciugatura, get_millis());
+                rimanente += tempo_da_credito(pmodel, ingresso) * 1000;
+                
+                if (rimanente > (99 * 60 + 59) * 1000) {
+                    rimanente = (99 * 60 + 59) * 1000;
+                }
+                
+                stopwatch_setngo(&pmodel->status.tempo_asciugatura, rimanente, get_millis());
+            }
             break;
 
         default:
@@ -1197,5 +1200,29 @@ int model_modifica_abilitata(model_t *pmodel) {
         return 1;
     } else {
         return 0;
+    }
+}
+
+
+
+static unsigned int tempo_da_credito(model_t *pmodel, uint16_t credito) {
+    unsigned int secondi = 0;
+    
+    if (pmodel->pmac.tempo_gettone_min_sec==1)
+    {
+        secondi = credito * pmodel->pmac.tempo_gettone_1;
+    }
+    else
+    {
+        secondi = credito * pmodel->pmac.tempo_gettone_1 * 60;
+    }
+
+    if (secondi > 99 * 60 + 59)
+    {
+        return 99 * 60 + 59;
+    }
+    else 
+    {
+        return secondi;
     }
 }
