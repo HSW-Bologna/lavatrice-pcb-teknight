@@ -17,7 +17,7 @@
 /*                                                                            */
 /*  ver. 00.0:  05/05/2021  dalla da MiniEco V:17.4   D:11/04/2021            */
 /*                                                                            */
-/*  ver. att.:  06/05/2022  01.4                                              */
+/*  ver. att.:  30/05/2022  01.6                                              */
 /*                                                                            */
 /*  BY:         Maldus (Mattia MALDINI) & Virginia NEGRI & Massimo ZANNA      */
 /*                                                                            */
@@ -32,7 +32,7 @@
 /* ************************************************************************** */
 
 //                                    12345678901234567890
-const unsigned char versione_prg[] = "V:01.4  D:06/05/2022";
+const unsigned char versione_prg[] = "V:01.6  D:30/05/2022";
 
 
 
@@ -133,6 +133,19 @@ const unsigned char versione_prg[] = "V:01.4  D:06/05/2022";
 /*                                                                            */
 /*      - rivista GT modelli GAS                                              */
 /*                                                                            */
+/*----------------------------------------------------------------------------*/
+/*                                                                            */
+/*  rev.:       19/05/2022 (01.5)                                             */
+/*                                                                            */
+/*      - rivista GT prorgrammazione                                          */
+/*      - creata ventilazione con apertura oblo                               */
+/*                                                                            */
+/*----------------------------------------------------------------------------*/
+/*                                                                            */
+/*  rev.:       30/05/2022 (01.6)                                             */
+/*                                                                            */
+/*      - corretto errore scambio OUT 6 con 4 (digout.h in una "dir temp"!!!) */
+/*                                                                            */
 /******************************************************************************/
 
 
@@ -211,6 +224,16 @@ int main(void) {
     
     
     
+    
+    
+#warning "DA Rimuovere !!!! FATTA PER DANILO !!!!!" // -TODO !!!!
+    
+//    model.status.f_no_gt_all = 1; // ###########################################
+    
+    
+    
+    
+    
     digout_buzzer_bip(2, 100, 100);
 
     // MAIN LOOP ============================================================ //
@@ -228,6 +251,8 @@ int main(void) {
         gt_ciclo(&model, get_millis());
 
         gt_ventilazione(&model, get_millis());
+        //ventilazione_apertura_oblo(&model, get_millis());
+        
         gt_presenza_aria(&model, get_millis());
         gt_riscaldamento(&model, get_millis());
 

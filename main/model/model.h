@@ -12,7 +12,7 @@
 
 
 //#define PARS_SERIALIZED_SIZE         136
-#define PARS_SERIALIZED_SIZE         141
+#define PARS_SERIALIZED_SIZE         142+2
 #define PRIVATE_PARS_SERIALIZED_SIZE 3
 #define PWOFF_SERIALIZED_SIZE        42
 #define MAX_PARAMETER_CHUNK          17
@@ -67,76 +67,76 @@ typedef enum {
 } tipo_ciclo_t;
 
 typedef struct {
-    uint8_t lingua;
-    uint8_t lingua_max;
-    uint8_t logo_ditta;
-    uint8_t abilita_visualizzazione_temperatura;
-    uint8_t abilita_tasto_menu;
-    uint8_t abilita_visualizzazione_cicli_totali;
-    uint8_t abilita_parametri_ridotti;
+    uint8_t lingua; // 01 *
+    uint8_t lingua_max; // *
+    uint8_t logo_ditta; // *
+    uint8_t abilita_visualizzazione_temperatura; // TM *
+    uint8_t abilita_tasto_menu; // TM *
+    uint8_t abilita_visualizzazione_cicli_totali; // NU ----
+    uint8_t abilita_parametri_ridotti; // 07 *
+    uint8_t modello_macchina; // 08 TM *
+    uint8_t abilita_autoavvio; // *
+    uint8_t tipo_pausa_asciugatura; // 10 *
+    uint8_t abilita_gas; // TM *
+    uint8_t numero_tentativi_reset_gas; // *
+    uint8_t abilita_reset_gas_esteso; // NU ----
+    uint8_t abilita_blocco_no_aria; // 14 NU ----
+    uint8_t allarme_inverter_na_nc; // 15 *
+    uint8_t allarme_filtro_na_nc;  // *
+    uint8_t emergenza_na_nc; // 17 *
     
-    uint8_t modello_macchina;
-    uint8_t abilita_autoavvio;
-    uint8_t tipo_pausa_asciugatura;
-    uint8_t abilita_gas;
-    uint8_t numero_tentativi_reset_gas;
-    uint8_t abilita_reset_gas_esteso;
-    uint8_t tempo_flusso_aria_blocco_gas;   // new TODO
-    uint8_t abilita_blocco_no_aria;
+    uint8_t macchina_libera_off_on; // 18 *
+    uint8_t tipo_out_macchina_occupata; // 19 *
+    uint8_t tempo_uscita_pagine; // 20 NU ---- ????
+    uint8_t tempo_reset_lingua; // TM NU ---- ????
+    uint8_t tempo_azzeramento_ciclo_pausa; // TM *
+    uint8_t tempo_azzeramento_ciclo_stop; // TM *
+    uint8_t abilita_stop_tempo_ciclo; // TM *
+    uint8_t tempo_attesa_azzeramento_ciclo; // TM 25 *
+    uint8_t sonda_temperatura_in_out; // 26 *
+    uint8_t temperatura_max_1_in; // *
+    uint8_t temperatura_sicurezza_1; // * NU ----
+    uint8_t temperatura_max_1_out; // *
+    uint8_t temperatura_sicurezza_1_out; // 30 NU ----
+    uint8_t tempo_allarme_temperatura_1; // TM NU ----
+    uint8_t tempo_allarme_no_umidita;       // 32 NS NU ND
+    uint8_t tempo_antigelo; // NU ----
+    uint8_t tempo_attesa_partenza_ciclo; // 34 NU ----
     
-    uint8_t allarme_inverter_na_nc;
-    uint8_t allarme_filtro_na_nc;
-    uint8_t emergenza_na_nc;
-    uint8_t macchina_libera_off_on;
-    uint8_t tipo_out_macchina_occupata;
+    uint8_t percentuale_anticipo_temperatura_ventola; // 35 NU ----
+    uint8_t percentuale_velocita_min_ventola; // 36 NU ----
+    uint8_t tempo_allarme_flusso_aria; // 37 *
+    uint8_t tempo_flusso_aria_blocco_gas; // new TODO // 38 NU ----
+    uint8_t velocita_min_lavoro; // 39 *
+    uint8_t velocita_max_lavoro; // 40 *
+    uint8_t abilita_gettoniera; // 41 *
+    uint8_t numero_gettoni_consenso; // *
+    uint8_t tempo_gettone_1; // TM *
+    uint8_t tempo_gettone_min_sec; // *
+    uint8_t tipo_visualizzazione_get_mon_cas; // 45 *
+    uint8_t numero_cicli_manutenzione; // 46 NU ----
+    uint8_t tempo_cadenza_avviso_manutenzione; // NU ----
+    uint8_t tempo_durata_avviso_manutenzione; // 48 NU ---
+    uint8_t tempo_ritardo_antipiega; // TM 49 *
+    uint8_t tempo_max_antipiega; // *
+    uint8_t tempo_cadenza_antipiega; // 51 *
     
-    uint8_t tempo_uscita_pagine;
-    uint8_t tempo_reset_lingua;
-    uint8_t tempo_azzeramento_ciclo_pausa;
-    uint8_t tempo_azzeramento_ciclo_stop;
-    uint8_t abilita_stop_tempo_ciclo;
-    uint8_t tempo_attesa_azzeramento_ciclo;
+    uint8_t numero_cicli_max_antipiega; // TM 52 *
+    uint8_t tempo_giro_antipiega; // TM *
+    uint8_t tempo_pausa_antipiega; // TM *
+    uint8_t velocita_antipiega; // TM 55 *
+    uint8_t temperatura_raffreddo_allarme; // 56
+    uint8_t tempo_ventilazione_oblo_aperto; // 57
     
-    uint8_t sonda_temperatura_in_out;
-    uint8_t temperatura_max_1_in;
-    uint8_t temperatura_sicurezza_1;
-    uint8_t temperatura_max_1_out;
-    uint8_t temperatura_sicurezza_1_out;
-    uint8_t tempo_allarme_temperatura_1;
-    uint8_t tempo_allarme_no_umidita;       // new TODO
-    uint8_t tempo_antigelo;
-    uint8_t temperatura_stop_tempo_ciclo;
-    uint8_t percentuale_anticipo_temperatura_ventola;
-    uint8_t percentuale_velocita_min_ventola;
-    uint8_t temperatura_raffreddo_allarme;
-    uint8_t tempo_allarme_flusso_aria;
     
-    uint8_t velocita_min_lavoro;
-    uint8_t velocita_max_lavoro;
     
-    uint8_t abilita_gettoniera;
-    uint8_t numero_gettoni_consenso;
-    uint8_t tempo_gettone_1;
-    uint8_t tempo_gettone_min_sec;
-    uint8_t tipo_visualizzazione_get_mon_cas;
+///////////////    uint8_t temperatura_stop_tempo_ciclo; // XX NU
     
-    uint8_t numero_cicli_manutenzione;
-    uint8_t tempo_durata_avviso_manutenzione;
-    uint8_t tempo_cadenza_avviso_manutenzione;
-
-    uint8_t tempo_ritardo_antipiega;
-    uint8_t tempo_giro_antipiega;
-    uint8_t tempo_pausa_antipiega;
-    uint8_t tempo_cadenza_antipiega;
-    uint8_t velocita_antipiega;
-    uint8_t tempo_max_antipiega;
-    uint8_t numero_cicli_max_antipiega;
     
-    uint8_t tempo_attesa_partenza_ciclo;
 } parmac_t;
 
 typedef struct {
-    uint8_t tipo_asciugatura_m_a;
+    uint8_t tipo_asciugatura_m_a; // 01
     uint8_t tempo_durata_asciugatura;
     uint8_t abilita_attesa_temperatura;
     uint8_t abilita_inversione_asciugatura;
@@ -155,7 +155,7 @@ typedef struct {
     uint8_t tempo_giro_raffreddamento;
     uint8_t tempo_pausa_raffreddamento;
     
-    uint8_t abilita_antipiega;
+    uint8_t abilita_antipiega; // 17
 } parciclo_t;
 
 typedef struct {
@@ -222,6 +222,7 @@ typedef struct {
         uint8_t      f_start_ok;
         uint8_t      f_ok_gettone;
         uint8_t      f_ventilazione;
+        uint8_t      f_ventilazione_oblo;
         uint8_t      f_ava_ind;
         uint8_t      nf_ava_ind;
         uint8_t      f_anti_piega;

@@ -27,6 +27,8 @@ void gt_ventilazione(model_t *p,  unsigned long timestamp);
 void ventilazione_stop(model_t *p);
 void ventilazione_marcia(model_t *p);
 
+void ventilazione_apertura_oblo(model_t *p, unsigned long timestamp);
+
 void gt_velocita_ventilazione(model_t *p);
 void gt_velocita_ventilazione_simulata(model_t *p);
 

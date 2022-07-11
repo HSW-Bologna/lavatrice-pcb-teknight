@@ -1,4 +1,4 @@
-const char *parmac_descriptions[73][2] = {
+const char *parmac_descriptions[74][2] = {
     {"LINGUA", "LANGUAGE", },
     {"N.MAX.LINGUE BAN", "N.MAX.LINGUE BAN", },
     {"LOGO IN TESTATA", "LOGO IN TESTATA", },
@@ -9,7 +9,7 @@ const char *parmac_descriptions[73][2] = {
     {"MODELLO MACCHINA", "MODELLO MACCHINA", },
     {"AB. AUTOAVVIO", "AB. AUTOAVVIO", },
     {"TIPO PAUSA ASCI.", "TIPO PAUSA ASCI.", },
-    {"AB.GAS + T.VENT.", "AB.GAS + T.VENT.", },
+    {"AB.RISCALDAM.GAS", "AB.RISCALDAM.GAS", },
     {"NRO RESET BR.GAS", "NRO RESET BR.GAS", },
     {"AB.RESET GAS EST", "AB.RESET GAS EST", },
     {"AB.BLOCC.NO ARIA", "AB.BLOCC.NO ARIA", },
@@ -55,6 +55,7 @@ const char *parmac_descriptions[73][2] = {
     {"T.PAUSA ANTIPIE.", "T.PAUSA ANTIPIE", },
     {"VELOCITA' ANTIP.", "VELOCITA' ANTIP.", },
     {"TEMP.RAFFR.ALLAR", "TEMP.RAFFR.ALLAR", },
+    {"T.VENT.OBLO APER", "T.VENT.OBLO APER", },
     {"ASCIUGA MAN/AUT.", "ASCIUGA MAN/AUT", },
     {"T.DURATA ASCIUG.", "T.DURATA ASCIUG.", },
     {"AB. ATTESA TEMP.", "AB. ATTESA TEMP.", },

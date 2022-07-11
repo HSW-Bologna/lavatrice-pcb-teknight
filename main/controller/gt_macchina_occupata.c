@@ -20,6 +20,8 @@
 #include "model/model.h"
 #include "peripherals/digout.h"
 
+#include "gt_allarmi.h"
+
 
 
 
@@ -33,7 +35,7 @@ void gt_macchina_occupata(model_t *p)
         {
             if (p->status.f_in_test==0 && p->status.stato!=0)
             {
-                if (p->status.f_all==1 && p->status.n_allarme==1) // PORTA APERTA
+                if (p->status.f_all==1 && p->status.n_allarme==ALL_OBLO_APERTO) // PORTA APERTA
                 {
                     clear_digout (MACCHINA_OCCUPATA);
                 }

@@ -46,6 +46,8 @@ void gt_allarmi (model_t *p)
     if (p->status.f_start_ok==1 || p->status.f_no_gt_all==1 || p->status.f_in_test == 1)
     {
         p->status.n_allarme = ALL_NO;
+        p->status.f_all = ALL_NO;
+        p->status.n_old_allarme = ALL_NO;
         return;
     }
     
@@ -429,9 +431,9 @@ void gt_allarmi (model_t *p)
 
 void gt_allarmi_azzera(model_t *pmodel)
 {
-    pmodel->status.n_old_allarme = ALL_NO;
     pmodel->status.n_allarme = ALL_NO;
     pmodel->status.f_all = ALL_NO;
+    pmodel->status.n_old_allarme = ALL_NO;
     
     pmodel->status.f_all_pw_off = ALL_NO;
     pmodel->status.f_all_anomalia_aria = ALL_NO;

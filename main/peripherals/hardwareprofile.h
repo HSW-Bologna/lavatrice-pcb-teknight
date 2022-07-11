@@ -29,8 +29,8 @@
 #define RELE6_LAT LATBbits.LATB4
 #define RELE5_TRIS TRISAbits.TRISA8
 #define RELE5_LAT LATAbits.LATA8
-#define RELE4_TRIS TRISAbits.TRISA3
-#define RELE4_LAT LATAbits.LATA3
+#define RELE4_TRIS TRISAbits.TRISA3         // bit che balla in PROG
+#define RELE4_LAT LATAbits.LATA3            // bit che balla in PROG
 #define RELE3_TRIS TRISAbits.TRISA2
 #define RELE3_LAT LATAbits.LATA2
 #define RELE2_TRIS TRISAbits.TRISA13
