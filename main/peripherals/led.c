@@ -3,11 +3,11 @@
 #include "spi.h"
 #include "led.h"
 
-
 static int spi_exchange(uint8_t *writebuf, uint8_t *readbuf, size_t length, void *data);
 static int spi_cs_control(int level);
 
 static spi_driver_t driver = {.spi_cs_control = spi_cs_control, .spi_exchange = spi_exchange, .user_data = NULL};
+
 
 
 void led_init(void) {
@@ -35,7 +35,7 @@ static int spi_exchange(uint8_t *writebuf, uint8_t *readbuf, size_t length, void
             readbuf[i] = response;
         }
     }
-
+    
     return 0;
 }
 

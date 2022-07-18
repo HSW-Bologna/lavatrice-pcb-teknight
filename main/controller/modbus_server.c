@@ -14,18 +14,20 @@ ModbusError myRegisterCallback(const ModbusSlave *status, const ModbusRegisterCa
                                ModbusRegisterCallbackResult *result);
 LIGHTMODBUS_WARN_UNUSED ModbusError modbusStaticAllocator(ModbusBuffer *buffer, uint16_t size, void *context);
 
-void modbus_server_init(void) {
-    ModbusErrorInfo err;
-    err = modbusSlaveInit(&slave,
-                          myRegisterCallback,                 // Callback for register operations
-                          slaveExceptionCallback,             // Callback for handling slave exceptions (optional)
-                          modbusStaticAllocator,              // Memory allocator for allocating responses
-                          modbusSlaveDefaultFunctions,        // Set of supported functions
-                          modbusSlaveDefaultFunctionCount     // Number of supported functions
-    );
 
-    // Check for errors
-    assert(modbusIsOk(err) && "modbusSlaveInit() failed");
+
+void modbus_server_init(void) {
+//////    ModbusErrorInfo err;
+//////    err = modbusSlaveInit(&slave,
+//////                          myRegisterCallback,                 // Callback for register operations
+//////                          slaveExceptionCallback,             // Callback for handling slave exceptions (optional)
+//////                          modbusStaticAllocator,              // Memory allocator for allocating responses
+//////                          modbusSlaveDefaultFunctions,        // Set of supported functions
+//////                          modbusSlaveDefaultFunctionCount     // Number of supported functions
+//////    );
+//////
+//////    // Check for errors
+//////    assert(modbusIsOk(err) && "modbusSlaveInit() failed");
 }
 
 void modbus_server_manage(void) {
@@ -43,7 +45,6 @@ void modbus_server_manage(void) {
         uart_clean_rx_buffer();
     }
 }
-
 
 ModbusError slaveExceptionCallback(const ModbusSlave *slave, uint8_t function, ModbusExceptionCode code) {
     // Always return MODBUS_OK

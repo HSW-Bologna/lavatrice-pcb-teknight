@@ -16,7 +16,7 @@
 parameter_handle_t parameters[MAX_PARAMETER_CHUNK];
 static void        init_comune_parametri_1(model_t *pmodel);
 static void        init_comune_parametri_2(model_t *pmodel);
-static unsigned int tempo_da_credito(model_t *pmodel, uint16_t credito);
+static unsigned long tempo_da_credito(model_t *pmodel, uint16_t credito);
 
 extern stopwatch_t ct_anti_piega_max;
 
@@ -1141,10 +1141,10 @@ void model_aggiungi_gettoni(model_t *pmodel, unsigned int gettoniera, unsigned i
             pmodel->pwoff.credito += ingresso;
             if (!model_get_status_stopped(pmodel) && pmodel->status.stato_step == STATO_STEP_ASC) {
                 uint32_t rimanente = stopwatch_get_remaining(&pmodel->status.tempo_asciugatura, get_millis());
-                rimanente += tempo_da_credito(pmodel, ingresso) * 1000;
+                rimanente += tempo_da_credito(pmodel, ingresso) * 1000UL;
                 
-                if (rimanente > (99 * 60 + 59) * 1000) {
-                    rimanente = (99 * 60 + 59) * 1000;
+                if (rimanente > (99 * 60 + 59) * 1000UL) {
+                    rimanente = (99 * 60 + 59) * 1000UL;
                 }
                 
                 stopwatch_setngo(&pmodel->status.tempo_asciugatura, rimanente, get_millis());
@@ -1155,10 +1155,10 @@ void model_aggiungi_gettoni(model_t *pmodel, unsigned int gettoniera, unsigned i
             pmodel->pwoff.credito += gettoniera;
             if (!model_get_status_stopped(pmodel) && pmodel->status.stato_step == STATO_STEP_ASC) {
                 uint32_t rimanente = stopwatch_get_remaining(&pmodel->status.tempo_asciugatura, get_millis());
-                rimanente += tempo_da_credito(pmodel, ingresso) * 1000;
+                rimanente += tempo_da_credito(pmodel, ingresso) * 1000UL;
                 
-                if (rimanente > (99 * 60 + 59) * 1000) {
-                    rimanente = (99 * 60 + 59) * 1000;
+                if (rimanente > (99 * 60 + 59) * 1000UL) {
+                    rimanente = (99 * 60 + 59) * 1000UL;
                 }
                 
                 stopwatch_setngo(&pmodel->status.tempo_asciugatura, rimanente, get_millis());
@@ -1205,7 +1205,7 @@ int model_modifica_abilitata(model_t *pmodel) {
 
 
 
-static unsigned int tempo_da_credito(model_t *pmodel, uint16_t credito) {
+static unsigned long tempo_da_credito(model_t *pmodel, uint16_t credito) {
     unsigned int secondi = 0;
     
     if (pmodel->pmac.tempo_gettone_min_sec==1)
@@ -1216,12 +1216,12 @@ static unsigned int tempo_da_credito(model_t *pmodel, uint16_t credito) {
     {
         secondi = credito * pmodel->pmac.tempo_gettone_1 * 60;
     }
-
+    
     if (secondi > 99 * 60 + 59)
     {
         return 99 * 60 + 59;
     }
-    else 
+    else
     {
         return secondi;
     }

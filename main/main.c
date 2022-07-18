@@ -17,7 +17,7 @@
 /*                                                                            */
 /*  ver. 00.0:  05/05/2021  dalla da MiniEco V:17.4   D:11/04/2021            */
 /*                                                                            */
-/*  ver. att.:  30/05/2022  01.6                                              */
+/*  ver. att.:  12/07/2022  01.7                                              */
 /*                                                                            */
 /*  BY:         Maldus (Mattia MALDINI) & Virginia NEGRI & Massimo ZANNA      */
 /*                                                                            */
@@ -32,7 +32,7 @@
 /* ************************************************************************** */
 
 //                                    12345678901234567890
-const unsigned char versione_prg[] = "V:01.6  D:30/05/2022";
+const unsigned char versione_prg[] = "V:01.7  D:12/07/2022";
 
 
 
@@ -146,6 +146,13 @@ const unsigned char versione_prg[] = "V:01.6  D:30/05/2022";
 /*                                                                            */
 /*      - corretto errore scambio OUT 6 con 4 (digout.h in una "dir temp"!!!) */
 /*                                                                            */
+/*----------------------------------------------------------------------------*/
+/*                                                                            */
+/*  rev.:       12/07/2022 (01.7)                                             */
+/*                                                                            */
+/*      - riscambiati in "digout.h" OUT 4 con OUT 6 (per recupero v 01.5 !!!) */
+/*      - corretta "somma di tempi" con macchina IN MARCIA in "model.c"       */
+/*                                                                            */
 /******************************************************************************/
 
 
@@ -212,8 +219,8 @@ int main(void) {
     pwoff_init();
     pwm_init();
     gettoniera_init();
-    uart_init();
-    modbus_server_init();
+//    uart_init();
+//    modbus_server_init();
 
     model_init(&model);
     view_init(&model, nt7534_flush, nt7534_rounder, nt7534_set_px, keyboard_reset);
@@ -226,7 +233,7 @@ int main(void) {
     
     
     
-#warning "DA Rimuovere !!!! FATTA PER DANILO !!!!!" // -TODO !!!!
+#warning "  ####  DA Rimuovere !!!! FATTA PER DANILO !!!!  #### " // -TODO !!!!
     
 //    model.status.f_no_gt_all = 1; // ###########################################
     
@@ -239,7 +246,7 @@ int main(void) {
     // MAIN LOOP ============================================================ //
     for (;;) {
         controller_manage_gui(&model);
-        modbus_server_manage();
+//////        modbus_server_manage();
         
         
         // gestione macchina ------------------ //

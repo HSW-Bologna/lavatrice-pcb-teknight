@@ -23,4 +23,4 @@ typedef enum
 void led_init(void);
 void led_set_color(led_color_t color);
 
-#endif
+#endif  /* LED_H_INCLUDED */
