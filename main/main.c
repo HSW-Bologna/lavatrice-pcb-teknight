@@ -17,7 +17,7 @@
 /*                                                                            */
 /*  ver. 00.0:  05/05/2021  dalla da MiniEco V:17.4   D:11/04/2021            */
 /*                                                                            */
-/*  ver. att.:  12/07/2022  01.7                                              */
+/*  ver. att.:  20/07/2022  01.8                                              */
 /*                                                                            */
 /*  BY:         Maldus (Mattia MALDINI) & Virginia NEGRI & Massimo ZANNA      */
 /*                                                                            */
@@ -32,7 +32,7 @@
 /* ************************************************************************** */
 
 //                                    12345678901234567890
-const unsigned char versione_prg[] = "V:01.7  D:12/07/2022";
+const unsigned char versione_prg[] = "V:01.8  D:20/07/2022";
 
 
 
@@ -153,6 +153,17 @@ const unsigned char versione_prg[] = "V:01.7  D:12/07/2022";
 /*      - riscambiati in "digout.h" OUT 4 con OUT 6 (per recupero v 01.5 !!!) */
 /*      - corretta "somma di tempi" con macchina IN MARCIA in "model.c"       */
 /*                                                                            */
+/*----------------------------------------------------------------------------*/
+/*                                                                            */
+/*  rev.:       20/07/2022 (01.8)                                             */
+/*                                                                            */
+/*      - gestita sonda T/RH per asciugatura AUTO con "DRY CONTROL"           */
+/*      - mod.limiti 'temperatura_sicurezza_1': ora 1-130 D=130 ( ROTTA 140)  */
+/*      - messo DEF a  0 PAR MAC "pmac.allarme_inverter_na_nc"                */
+/*      - messo DEF a 30 PAR MAC "pmac.tempo_uscita_pagine"                   */
+/*                                                                            */
+/*                                                                            */
+/*                                                                            */
 /******************************************************************************/
 
 
@@ -262,6 +273,7 @@ int main(void) {
         
         gt_presenza_aria(&model, get_millis());
         gt_riscaldamento(&model, get_millis());
+        gt_umidita(&model, get_millis());
 
         gt_cesto(&model, get_millis());
         gt_macchina_occupata(&model);
@@ -276,7 +288,7 @@ int main(void) {
 
                 model.inputs = digin_get_inputs();
             }
-
+            
             if (gettoniera_take_insert()) {
                 if (model_is_in_test(&model)) {
                     view_event((view_event_t){.code = VIEW_EVENT_COIN, .coins = gettoniera_get_count()});
@@ -331,7 +343,7 @@ int main(void) {
             }
 
             if (model.pmac.tipo_pausa_asciugatura == 1) {
-                model.status.temperatura_rilevata = model.sht_temperature;
+                model.status.temperatura_rilevata = model.sht_temperature/100;
             }
             ts_spi = get_millis();
         }

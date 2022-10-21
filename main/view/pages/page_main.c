@@ -47,6 +47,7 @@ static struct
     lv_obj_t *label;
     lv_obj_t *ltimer;
     lv_obj_t *ltemperature;
+    lv_obj_t *lhumidity;        /////// 19/07/2022                 //// STR AAAA
     lv_obj_t *lcycle_temperature;
     lv_obj_t *status;
     lv_obj_t *image;
@@ -107,7 +108,26 @@ static void open_page(model_t *model, void *data) {
     lv_obj_set_auto_realign(lbltimer, 1);
     lv_obj_align(lbltimer, NULL, LV_ALIGN_IN_TOP_RIGHT, 0, 5);
     page_data.ltimer = lbltimer;
-
+    
+        
+//    lbl = lv_label_create(lv_scr_act(), NULL);                     //// STR AAAA PPPP
+//    //lv_obj_set_style(lbl, &style_label_6x8);
+//    lv_obj_set_auto_realign(lbl, 1);
+//    lv_obj_align(lbl, page_data.ltimer, LV_ALIGN_OUT_BOTTOM_RIGHT, 0, 0);
+//    page_data.lhumidity = lbl;
+    
+    
+    
+/*    
+    lbl = lv_label_create(lv_scr_act(), NULL);                     //// STR AAAA PPPP
+    //lv_obj_set_style(lbl, &style_label_6x8);
+    lv_obj_set_auto_realign(lbl, 1);
+    lv_obj_align(lbl, page_data.ltimer, LV_ALIGN_OUT_BOTTOM_RIGHT, 0, 0);
+    page_data.lhumidity = lbl;
+*/
+    
+    
+    
     view_status_string(model);
     update_timer(model);
     update_temperatura(model);
@@ -154,7 +174,7 @@ static view_message_t process_page_event(model_t *model, void *arg, pman_event_t
                 } else if (view_common_check_password_started(&page_data.password)) {
                     break;
                 }
-
+                
                 switch (event.key_event.code) {
                     case BUTTON_STOP_LANA:
                         msg.vmsg.code = VIEW_PAGE_COMMAND_CODE_CHANGE_PAGE;
@@ -520,4 +540,11 @@ static void update_timer(model_t *pmodel) {
     }
 
     lv_label_set_text_fmt(page_data.ltimer, "\xCC\xCD %02im%02is", secondi / 60, secondi % 60);
+    
+//    lv_label_set_text_fmt(page_data.lhumidity,  "\xCE\xCF%4iC %s", pmodel->sht_umidity);  // 19/07/2022
+    
+    
+////////    lv_label_set_text_fmt(page_data.lhumidity,  "%4i%U  ", pmodel->sht_umidity);  // 20/07/2022 //// STR AAAA PPPP
+//   lv_label_set_text_fmt(page_data.lhumidity,  "%4i%U  ", pmodel->sht_umidity);  // 20/07/2022 //// STR AAAA PPPP
+                
 }

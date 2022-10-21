@@ -1,4 +1,5 @@
-const char *strings[46][2] = {
+//const char *strings[46][2] = {
+const char *strings[47][2] = {                                     //// STR AAAA
     {"Inserire moneta", "Insert coin", },
     {"Inserire gettone", "Insert token", },
     {"Pagare cassa", "Pay at desk", },
@@ -44,6 +45,7 @@ const char *strings[46][2] = {
     {"Salvataggio in corso...", "Saving...", },
     {"TEMPO CICLO", "CYCLE TIME", },
     {"TEMPERATURA", "TEMPERATURE", },
+    {"UMIDITA'", "HUMIDITY", },                                   //// STR AAAA
     {"VELOCITA'", "SPEED", },
 };
 

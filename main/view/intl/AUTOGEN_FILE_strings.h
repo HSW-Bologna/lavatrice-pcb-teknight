@@ -47,9 +47,11 @@ typedef enum {
     STRINGS_SALVATAGGIO_IN_CORSO,
     STRINGS_TEMPO_CICLO,
     STRINGS_TEMPERATURA,
+    STRINGS_UMIDITA,                                               //// STR AAAA
     STRINGS_VELOCITA,
 } strings_t;
 
-extern const char *strings[46][2];
+// extern const char *strings[46][2];                              //// STR AAAA
+extern const char *strings[47][2];
 
 #endif

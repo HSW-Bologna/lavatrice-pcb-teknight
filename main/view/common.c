@@ -78,8 +78,8 @@ int view_common_check_password(view_common_password_t *inserted, button_t *passw
     } else if (length + sizeof(preamble) / sizeof(preamble[0]) > VIEW_PASSWORD_MAX_SIZE) {
         return 0;
     }
-
-
+    
+    
     size_t i = 0;
 
     int res = find_password_start(inserted);
