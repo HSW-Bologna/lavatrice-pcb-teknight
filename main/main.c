@@ -17,7 +17,7 @@
 /*                                                                            */
 /*  ver. 00.0:  05/05/2021  dalla da MiniEco V:17.4   D:11/04/2021            */
 /*                                                                            */
-/*  ver. att.:  12/07/2022  01.7                                              */
+/*  ver. att.:  24/11/2022  02.3                                              */
 /*                                                                            */
 /*  BY:         Maldus (Mattia MALDINI) & Virginia NEGRI & Massimo ZANNA      */
 /*                                                                            */
@@ -32,7 +32,7 @@
 /* ************************************************************************** */
 
 //                                    12345678901234567890
-const unsigned char versione_prg[] = "V:01.7  D:12/07/2022";
+const unsigned char versione_prg[] = "V:02.3  D:24/11/2022";
 
 
 
@@ -153,6 +153,55 @@ const unsigned char versione_prg[] = "V:01.7  D:12/07/2022";
 /*      - riscambiati in "digout.h" OUT 4 con OUT 6 (per recupero v 01.5 !!!) */
 /*      - corretta "somma di tempi" con macchina IN MARCIA in "model.c"       */
 /*                                                                            */
+/*----------------------------------------------------------------------------*/
+/*                                                                            */
+/*  rev.:       20/07/2022 (01.8)                                             */
+/*                                                                            */
+/*      - gestita sonda T/RH per asciugatura AUTO con "DRY CONTROL"           */
+/*      - mod.limiti 'temperatura_sicurezza_1': ora 1-130 D=130 ( ROTTA 140)  */
+/*      - messo DEF a  0 PAR MAC "pmac.allarme_inverter_na_nc"                */
+/*      - messo DEF a 30 PAR MAC "pmac.tempo_uscita_pagine"                   */
+/*                                                                            */
+/*----------------------------------------------------------------------------*/
+/*                                                                            */
+/*  rev.:       21/10/2022 (01.9)                                             */
+/*                                                                            */
+/*      - migliorata gestione DEBOUNCE IN gettoniera/cassa (prima con impulsi */
+/*        con PERIODO di 100ms dt/50% perdeva 1 su 3 GETT: ora arrivo a 80/75 */
+/*                                                                            */
+/*      - corretto errore in CICLO: ora aggiungendo credito in RAFFREDDAMENTO */
+/*        si ripassa in ASCIUGATURA con stessa TEMPERATURA e TEMPO NUOVO      */
+/*                                                                            */
+/*----------------------------------------------------------------------------*/
+/*                                                                            */
+/*  rev.:       26/10/2022 (02.0)                                             */
+/*                                                                            */
+/*      - portata gestione DIGIN (INPUT, GETTONI/CASSA, IN MONETE) in INT ms, */
+/*        => testati TUTTI IN con impulso di 20ms con 40ms PERIODO dt 50%     */
+/*                                                                            */
+/*      - provato a correggere errore in marcia che non faceva partire venti- */
+/*        lazione forzata se impostata != 0                                   */
+/*                                                                            */
+/*----------------------------------------------------------------------------*/
+/*                                                                            */
+/*  rev.:       07/11/2022 (02.1)                                             */
+/*                                                                            */
+/*      - corretto errore in RAFFREDDAMENTO che non faceva ripartire il moto  */
+/*        cesto dopo aver aperto oblo' e ridato START (in "gt_cesto")         */
+/*                                                                            */
+/*----------------------------------------------------------------------------*/
+/*                                                                            */
+/*  rev.:       24/11/2022 (02.2)                                             */
+/*                                                                            */
+/*      - corretto errore in inserimento monete con gettoniera in moto        */
+/*      - aggiunte 2 lingue (F, D) solo "MESSAGGI" non "PAR MAC"              */
+/*                                                                            */
+/*----------------------------------------------------------------------------*/
+/*                                                                            */
+/*  rev.:       24/11/2022 (02.3)                                             */
+/*                                                                            */
+/*      - Server modbus                                                       */
+/*                                                                            */
 /******************************************************************************/
 
 
@@ -262,6 +311,7 @@ int main(void) {
         
         gt_presenza_aria(&model, get_millis());
         gt_riscaldamento(&model, get_millis());
+        gt_umidita(&model, get_millis());
 
         gt_cesto(&model, get_millis());
         gt_macchina_occupata(&model);
@@ -270,24 +320,15 @@ int main(void) {
 
         ClrWdt();
 
-        if (is_expired(ts_input, get_millis(), 2)) {
-            if (digin_take_reading()) {
+        if (is_expired(ts_input, get_millis(), 2))
+        {
+            if (digin_take_reading())
+            {
                 view_event((view_event_t){.code = VIEW_EVENT_MODEL_UPDATE});
 
                 model.inputs = digin_get_inputs();
             }
-
-            if (gettoniera_take_insert()) {
-                if (model_is_in_test(&model)) {
-                    view_event((view_event_t){.code = VIEW_EVENT_COIN, .coins = gettoniera_get_count()});
-                } else {
-                    view_event((view_event_t){.code = VIEW_EVENT_COIN});
-                    model_event(&model, EVENT_COIN);
-                    model_aggiungi_gettoni(&model, gettoniera_get_count(), gettoniera_get_count_ingresso());
-                    controller_update_pwoff(&model);
-                }
-                gettoniera_reset_count();
-            }
+            
             ts_input = get_millis();
         }
 
@@ -314,11 +355,29 @@ int main(void) {
 
             model.ptc_adc         = ptc_get_adc_value();
             model.ptc_temperature = ptc_get_temperature();
-            ts_temperature        = get_millis();
 
             if (model.pmac.tipo_pausa_asciugatura == 0) {
                 model.status.temperatura_rilevata = model.ptc_temperature;
             }
+            
+            uint16_t gettoni_gettoniera = 0;
+            uint16_t gettoni_ingresso = 0;
+            if (timer_get_gettoni(&gettoni_gettoniera, &gettoni_ingresso))
+            {
+                if (model_is_in_test(&model))
+                {
+                    view_event((view_event_t){.code = VIEW_EVENT_COIN, .coins = gettoni_gettoniera + gettoni_ingresso});
+                }
+                else
+                {
+                    view_event((view_event_t){.code = VIEW_EVENT_COIN});
+                    model_event(&model, EVENT_COIN);
+                    model_aggiungi_gettoni(&model, gettoni_gettoniera, gettoni_ingresso);
+                    controller_update_pwoff(&model);
+                }
+            }
+                        
+            ts_temperature        = get_millis();
         }
 
 
@@ -332,7 +391,7 @@ int main(void) {
             }
 
             if (model.pmac.tipo_pausa_asciugatura == 1) {
-                model.status.temperatura_rilevata = model.sht_temperature;
+                model.status.temperatura_rilevata = model.sht_temperature/100;
             }
             ts_spi = get_millis();
         }

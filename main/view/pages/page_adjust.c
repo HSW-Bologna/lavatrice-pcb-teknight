@@ -22,6 +22,7 @@ enum {
 typedef enum {
     INDEX_TEMPO_CICLO = 0,
     INDEX_TEMPERATURA,
+    INDEX_UMIDITA,                                                 //// STR AAAA
     INDEX_VELOCITA,
     INDEX_NUM,
 } index_t;
@@ -52,6 +53,13 @@ static void update_values(model_t *pmodel) {
                                   model_temperatura_aria_ciclo(pmodel), pmodel->status.temperatura_rilevata);
             break;
 
+        case INDEX_UMIDITA:                                        //// STR AAAA
+            lv_label_set_text_fmt(page_data.value, "%03iU (%03iU)",
+//            lv_label_set_text_fmt(page_data.value, "%03i'%' (%03i'%')",
+                                  //model_get_riscaldamento_attivo(pmodel) ? '*' : ' ',
+                                  model_umidita_aria_ciclo(pmodel), pmodel->sht_umidity);
+            break;
+
         case INDEX_VELOCITA:
             lv_label_set_text_fmt(page_data.value, "%03i    g/min", model_velocita_ciclo(pmodel));
             break;
@@ -69,6 +77,10 @@ static void update_all(model_t *pmodel) {
 
         case INDEX_TEMPERATURA:
             lv_label_set_text(page_data.label, view_intl_get_string(pmodel, STRINGS_TEMPERATURA));
+            break;
+
+        case INDEX_UMIDITA:                                        //// STR AAAA
+            lv_label_set_text(page_data.label, view_intl_get_string(pmodel, STRINGS_UMIDITA));
             break;
 
         case INDEX_VELOCITA:
@@ -91,7 +103,8 @@ static void *create_page(model_t *pmodel, void *extra) {
 static void open_page(model_t *pmodel, void *args) {
     (void)args;
 
-    page_data.task      = view_register_periodic_task(5000UL, LV_TASK_PRIO_MID, TIMER_BACK);
+//  page_data.task      = view_register_periodic_task(5000UL, LV_TASK_PRIO_MID, TIMER_BACK);
+    page_data.task      = view_register_periodic_task(pmodel->pmac.tempo_uscita_pagine * 1000UL, LV_TASK_PRIO_MID, TIMER_BACK);
     page_data.time_task = view_register_periodic_task(500UL, LV_TASK_PRIO_MID, TIMER_UPDATE);
     page_data.current   = INDEX_TEMPO_CICLO;
 
@@ -129,7 +142,7 @@ static view_message_t process_page_event(model_t *pmodel, void *arg, pman_event_
                     break;
 
                 case TIMER_UPDATE:
-                    if (page_data.current == INDEX_TEMPO_CICLO || page_data.current == INDEX_TEMPERATURA) {
+                    if (page_data.current == INDEX_TEMPO_CICLO || page_data.current == INDEX_TEMPERATURA || page_data.current == INDEX_UMIDITA) {
                         update_values(pmodel);
                     }
                     break;
@@ -164,6 +177,10 @@ static view_message_t process_page_event(model_t *pmodel, void *arg, pman_event_
                                 model_modifica_temperatura_aria(pmodel, 1);
                                 break;
 
+                            case INDEX_UMIDITA:                    //// STR AAAA
+                                model_modifica_umidita_aria(pmodel, 1);
+                                break;
+
                             case INDEX_VELOCITA:
                                 model_modifica_velocita(pmodel, 1);
                                 break;
@@ -182,6 +199,10 @@ static view_message_t process_page_event(model_t *pmodel, void *arg, pman_event_
 
                             case INDEX_TEMPERATURA:
                                 model_modifica_temperatura_aria(pmodel, -1);
+                                break;
+
+                            case INDEX_UMIDITA:                    //// STR AAAA
+                                model_modifica_umidita_aria(pmodel, -1);
                                 break;
 
                             case INDEX_VELOCITA:

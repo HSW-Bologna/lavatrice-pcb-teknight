@@ -11,7 +11,7 @@
 /*                                                                            */
 /*  Data  : 19/07/2021      REV  : 00.0                                       */
 /*                                                                            */
-/*  U.mod.: 16/02/2022      REV  : 01.0                                       */
+/*  U.mod.: 19/07/2022      REV  : 01.8                                       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -31,16 +31,39 @@
 
 void gt_riscaldamento(model_t *p, unsigned long timestamp)
 {
-    if (model_get_status_stopped(p) || model_get_status_pause(p))
+    if ( model_get_status_not_stopped(p))
+    {
+        if ( (p->pmac.sonda_temperatura_in_out==0 && (p->status.temperatura_rilevata >= (p->pmac.temperatura_sicurezza_1)) ) || (p->pmac.sonda_temperatura_in_out==1 && (p->status.temperatura_rilevata >= (p->pmac.temperatura_sicurezza_1_out)) ) )
+        {
+            p->status.f_all_sovratemperatura = 1;
+        }
+        else
+        {
+            p->status.f_all_sovratemperatura = 0;
+        }
+    }
+    else
+    {
+        p->status.f_all_sovratemperatura = 0;
+    }
+    
+    
+    
+    
+    
+    if ( model_get_status_stopped(p) || model_get_status_pause(p) || p->status.f_all_sovratemperatura==1 )
     {
         if (p->status.f_in_test == 0)
         {
             clear_digout(RISCALDAMENTO);
+            return;
         }
     }
-
-
-
+    
+    
+    
+    
+    
     if (model_get_status_work(p))
     {
         static unsigned char f_in_temp = 0;
@@ -70,6 +93,51 @@ void gt_riscaldamento(model_t *p, unsigned long timestamp)
                     set_digout(RISCALDAMENTO);
                     f_in_temp = 0;
                 }
+            }
+        }
+    }
+}
+
+
+
+
+
+void gt_umidita(model_t *p,  unsigned long timestamp)
+{
+    // NO DRY in: pmac.tipo_pausa_asciugatura==0, pmac.sonda_temperatura_in_out==0, STOP, PAUSA, tipo_asciugatura_m_a=0, status.stato_step!=STATO_STEP_ASC
+    //
+    if (p->pmac.tipo_pausa_asciugatura==0 || p->pmac.sonda_temperatura_in_out==0 || model_get_status_not_work(p) || ( model_ciclo_corrente(p)->tipo_asciugatura_m_a==0) || ( p->status.stato_step != STATO_STEP_ASC) ) 
+    {
+        p->status.f_all_dry_contol = 0;
+        return;
+    }
+    
+    
+    
+    if ( p->sht_umidity > model_umidita_aria_ciclo(p))
+    {
+        if (p->status.f_all_dry_contol==0 || p->status.f_all_dry_contol==1)
+        {
+            p->status.f_all_dry_contol = 1;
+            model_metti_tempo_lavoro_in_pausa(p, get_millis());
+        }
+    }
+    else
+    {
+        if (p->status.f_all_dry_contol==1 )
+        {
+            stopwatch_setngo(&p->status.tempo_umidita, (180 * 1000UL), get_millis());   //// STR AAAA PPPP POI PAR MAC *!!!! ToDO
+//            stopwatch_setngo(&p->status.tempo_umidita, (10 * 1000UL), get_millis());    //// STR AAAA PPPP
+            p->status.f_all_dry_contol = 2;
+        }
+        
+        if (p->status.f_all_dry_contol==2 )
+        {
+            if (stopwatch_is_timer_reached(&p->status.tempo_umidita, timestamp))
+            {
+                stopwatch_init(&p->status.tempo_umidita);
+                stopwatch_start(&p->status.tempo_asciugatura, get_millis());
+                p->status.f_all_dry_contol = 0;
             }
         }
     }

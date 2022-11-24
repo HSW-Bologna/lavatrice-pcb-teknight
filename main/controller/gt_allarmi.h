@@ -11,7 +11,7 @@
 /*                                                                            */
 /*  Data  : 19/07/2021      REV  : 00.0                                       */
 /*                                                                            */
-/*  U.mod.: 14/07/2022      REV  : 01.7                                       */
+/*  U.mod.: 20/07/2022      REV  : 01.8                                       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -47,9 +47,9 @@ typedef enum _ALLARMI
     AVV_APRIRE_OBLO,        
     AVV_DRY_CONTROL,        // 14
             
-    AVV_SOVRATEMPERATURA,   //  15
-    AVV_MANUTENZIONE,       //  16
-    AVV_PW_OFF,             //  17
+    AVV_SOVRATEMPERATURA,   // 15
+    AVV_MANUTENZIONE,       // 16
+    AVV_PW_OFF,             // 17
             
     ALLARMI_NUM,            
 } allarmi_t ;

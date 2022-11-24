@@ -11,7 +11,7 @@
 /*                                                                            */
 /*  Data  : 19/07/2021      REV  : 00.0                                       */
 /*                                                                            */
-/*  U.mod.: 16/02/2022      REV  : 01.0                                       */
+/*  U.mod.: 20/07/2022      REV  : 01.8                                       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -21,5 +21,7 @@
 #include "model/model.h"
 
 void gt_riscaldamento(model_t *p,  unsigned long timestamp);
+
+void gt_umidita(model_t *p,  unsigned long timestamp);
 
 #endif  /* GT_RISCALDAMENTO_H_INCLUDED */

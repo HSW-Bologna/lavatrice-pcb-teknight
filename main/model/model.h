@@ -14,7 +14,8 @@
 //#define PARS_SERIALIZED_SIZE         136
 #define PARS_SERIALIZED_SIZE         142 + 2
 #define PRIVATE_PARS_SERIALIZED_SIZE 3
-#define PWOFF_SERIALIZED_SIZE        42
+//#define PWOFF_SERIALIZED_SIZE        42
+#define PWOFF_SERIALIZED_SIZE        44                            //// STR AAAA          
 #define MAX_PARAMETER_CHUNK          17
 
 #define GETTONIERA_DISABILITATA 0
@@ -195,6 +196,7 @@ typedef struct {
     uint16_t gettoni;
 
     uint16_t delta_temperatura;
+    uint16_t delta_umidita;                                        //// STR AAAA
     uint16_t delta_velocita;
 } pwoff_data_t;
 
@@ -247,8 +249,10 @@ typedef struct {
         uint8_t      f_all_flusso_aria;
         uint8_t      f_all_anomalia_aria;
         uint8_t      f_all_sovratemperatura;
+        uint8_t      f_all_dry_contol;
         uint8_t      f_all_blocco_bruciatore;
         stopwatch_t  tempo_asciugatura;
+        stopwatch_t  tempo_umidita;
     } status;
 
     struct {

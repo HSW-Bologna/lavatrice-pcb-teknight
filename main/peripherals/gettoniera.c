@@ -24,9 +24,9 @@ void gettoniera_reset_count(void) {
 }
 
 int gettoniera_take_insert(void) {
-    unsigned int input = (GETT_PORT | (!IN3_PORT << 1)); // SAREBBE " GETTONE1 "
+    unsigned int input = (GETT_PORT | (!IN3_PORT << 1)); // GETTONIERA A 1CH + IN 3 PAGAMENTO
     
-    return pulse_filter(&filter, input, 10);
+    return pulse_filter(&filter, input, 5);
 }
 
 unsigned int gettoniera_get_count(void) {
