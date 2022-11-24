@@ -1192,32 +1192,35 @@ void model_aggiungi_gettoni(model_t *pmodel, unsigned int gettoniera, unsigned i
 
         case GETTONIERA_NC:
         case GETTONIERA_NA:
-            pmodel->pwoff.credito += ingresso;
-            if (!model_get_status_stopped(pmodel) && pmodel->status.stato_step == STATO_STEP_ASC) {
-                uint32_t rimanente = stopwatch_get_remaining(&pmodel->status.tempo_asciugatura, get_millis());
-                rimanente += tempo_da_credito(pmodel, ingresso) * 1000UL;
-                
-                if (rimanente > (99 * 60 + 59) * 1000UL) {
-                    rimanente = (99 * 60 + 59) * 1000UL;
-                }
-                
-                stopwatch_setngo(&pmodel->status.tempo_asciugatura, rimanente, get_millis());
+        case GETTONIERA_INGRESSO: {
+            uint32_t credito = 0;
+            if (pmodel->pmac.abilita_gettoniera == GETTONIERA_INGRESSO) {
+                credito = gettoniera;
+            } else {
+                credito = ingresso;
             }
-            break;
+            pmodel->pwoff.credito += credito;
+            
+            if (!model_get_status_stopped(pmodel)) {
+                if (pmodel->status.stato_step == STATO_STEP_ASC) {
+                    uint32_t rimanente = stopwatch_get_remaining(&pmodel->status.tempo_asciugatura, get_millis());
+                    //rimanente += tempo_da_credito(pmodel, ingresso) * 1000UL;
+                    rimanente += tempo_da_credito(pmodel, credito) * 1000UL;
 
-        case GETTONIERA_INGRESSO:
-            pmodel->pwoff.credito += gettoniera;
-            if (!model_get_status_stopped(pmodel) && pmodel->status.stato_step == STATO_STEP_ASC) {
-                uint32_t rimanente = stopwatch_get_remaining(&pmodel->status.tempo_asciugatura, get_millis());
-                rimanente += tempo_da_credito(pmodel, ingresso) * 1000UL;
-                
-                if (rimanente > (99 * 60 + 59) * 1000UL) {
-                    rimanente = (99 * 60 + 59) * 1000UL;
-                }
-                
-                stopwatch_setngo(&pmodel->status.tempo_asciugatura, rimanente, get_millis());
+                    if (rimanente > (99 * 60 + 59) * 1000UL) {
+                        rimanente = (99 * 60 + 59) * 1000UL;
+                    }
+
+                    stopwatch_setngo(&pmodel->status.tempo_asciugatura, rimanente, get_millis());
+                } else if (pmodel->status.stato_step == STATO_STEP_RAF) {
+                    stopwatch_init(&pmodel->status.tempo_asciugatura);
+                    stopwatch_setngo(&pmodel->status.tempo_asciugatura,  tempo_da_credito(pmodel, credito) * 1000UL, get_millis());
+                    model_set_status_step_asc(pmodel);
+                    pmodel->status.stato = STATO_WORK;
+                } 
             }
             break;
+        }
 
         default:
             break;

@@ -157,6 +157,7 @@ void ventilazione_apertura_oblo(model_t *p, unsigned long timestamp)
     if (p->status.f_ventilazione_oblo==0 && digin_get(OBLO_APERTO)==1)
     {
             ventilazione_stop(p);
+            stopwatch_stop(&ct_ventilazione_oblo); // -ToDO 26/10/22
             return;
     }
     
