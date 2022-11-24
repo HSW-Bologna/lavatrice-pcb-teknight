@@ -55,6 +55,7 @@ void gt_allarmi (model_t *p)
     
     if (p->status.n_allarme != n_old_allarme)
     {
+        model_event(p, EVENT_ALARM_MASK | p->status.n_allarme);
         
         // digout_buzzer_bip(1, 200, 200);
         

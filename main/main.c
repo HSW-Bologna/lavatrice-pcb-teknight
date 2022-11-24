@@ -219,8 +219,8 @@ int main(void) {
     pwoff_init();
     pwm_init();
     gettoniera_init();
-//    uart_init();
-//    modbus_server_init();
+    uart_init();
+    modbus_server_init();
 
     model_init(&model);
     view_init(&model, nt7534_flush, nt7534_rounder, nt7534_set_px, keyboard_reset);
@@ -246,7 +246,7 @@ int main(void) {
     // MAIN LOOP ============================================================ //
     for (;;) {
         controller_manage_gui(&model);
-//////        modbus_server_manage();
+        modbus_server_manage(&model);
         
         
         // gestione macchina ------------------ //
@@ -282,6 +282,7 @@ int main(void) {
                     view_event((view_event_t){.code = VIEW_EVENT_COIN, .coins = gettoniera_get_count()});
                 } else {
                     view_event((view_event_t){.code = VIEW_EVENT_COIN});
+                    model_event(&model, EVENT_COIN);
                     model_aggiungi_gettoni(&model, gettoniera_get_count(), gettoniera_get_count_ingresso());
                     controller_update_pwoff(&model);
                 }

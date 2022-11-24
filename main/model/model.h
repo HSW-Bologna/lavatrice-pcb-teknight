@@ -12,7 +12,7 @@
 
 
 //#define PARS_SERIALIZED_SIZE         136
-#define PARS_SERIALIZED_SIZE         142+2
+#define PARS_SERIALIZED_SIZE         142 + 2
 #define PRIVATE_PARS_SERIALIZED_SIZE 3
 #define PWOFF_SERIALIZED_SIZE        42
 #define MAX_PARAMETER_CHUNK          17
@@ -22,20 +22,26 @@
 #define GETTONIERA_NC           2
 #define GETTONIERA_INGRESSO     3
 
+#define EVENTS_NUM 16
 
 #define VISUALIZZAZIONE_GETTONE 0
 #define VISUALIZZAZIONE_MONETA  1
 #define VISUALIZZAZIONE_CASSA   2
 
+#define EVENT_START      1
+#define EVENT_STOP       2
+#define EVENT_PAUSE      3
+#define EVENT_COIN       4
+#define EVENT_ALARM_MASK 0x80
 
 typedef enum {
-    MODELLO_MACCHINA_TEST = 0,          // 00
+    MODELLO_MACCHINA_TEST = 0,     // 00
 
-    MODELLO_MACCHINA_EDS_RE_SELF_CA,    // 01
+    MODELLO_MACCHINA_EDS_RE_SELF_CA,     // 01
     MODELLO_MACCHINA_EDS_RE_LAB_CA,
     MODELLO_MACCHINA_EDS_RG_SELF_CA,
     MODELLO_MACCHINA_EDS_RG_LAB_CA,
-    MODELLO_MACCHINA_EDS_RV_SELF_CA,    // 05
+    MODELLO_MACCHINA_EDS_RV_SELF_CA,     // 05
 
     MODELLO_MACCHINA_EDS_RV_LAB_CA,     // 06
     MODELLO_MACCHINA_EDS_RE_SELF_CC,
@@ -43,16 +49,16 @@ typedef enum {
     MODELLO_MACCHINA_EDS_RE_LAB_CC,
     MODELLO_MACCHINA_EDS_RV_LAB_CC,     // 10
 
-    MODELLO_MACCHINA_EDS_RP_SELF_CA,    // 11
+    MODELLO_MACCHINA_EDS_RP_SELF_CA,     // 11
     MODELLO_MACCHINA_EDS_RP_LAB_CA,
     MODELLO_MACCHINA_EDS_RP_SELF_CC,
     MODELLO_MACCHINA_EDS_RP_LAB_CC,     // 14
 
-    MODELLO_MACCHINA_EDS_RE_LAB_TH_CA,  // 15
+    MODELLO_MACCHINA_EDS_RE_LAB_TH_CA,     // 15
     MODELLO_MACCHINA_EDS_RG_LAB_TH_CA,
     MODELLO_MACCHINA_EDS_RV_LAB_TH_CA,
     MODELLO_MACCHINA_EDS_RE_LAB_TH_CC,
-    MODELLO_MACCHINA_EDS_RV_LAB_TH_CC,  // 19
+    MODELLO_MACCHINA_EDS_RV_LAB_TH_CC,     // 19
 } modello_macchina_t;
 
 
@@ -67,95 +73,95 @@ typedef enum {
 } tipo_ciclo_t;
 
 typedef struct {
-    uint8_t lingua; // 01 *
-    uint8_t lingua_max; // *
-    uint8_t logo_ditta; // *
-    uint8_t abilita_visualizzazione_temperatura; // TM *
-    uint8_t abilita_tasto_menu; // TM *
-    uint8_t abilita_visualizzazione_cicli_totali; // NU ----
-    uint8_t abilita_parametri_ridotti; // 07 *
-    uint8_t modello_macchina; // 08 TM *
-    uint8_t abilita_autoavvio; // *
-    uint8_t tipo_pausa_asciugatura; // 10 *
-    uint8_t abilita_gas; // TM *
-    uint8_t numero_tentativi_reset_gas; // *
-    uint8_t abilita_reset_gas_esteso; // NU ----
-    uint8_t abilita_blocco_no_aria; // 14 NU ----
-    uint8_t allarme_inverter_na_nc; // 15 *
-    uint8_t allarme_filtro_na_nc;  // *
-    uint8_t emergenza_na_nc; // 17 *
-    
-    uint8_t macchina_libera_off_on; // 18 *
-    uint8_t tipo_out_macchina_occupata; // 19 *
-    uint8_t tempo_uscita_pagine; // 20 NU ---- ????
-    uint8_t tempo_reset_lingua; // TM NU ---- ????
-    uint8_t tempo_azzeramento_ciclo_pausa; // TM *
-    uint8_t tempo_azzeramento_ciclo_stop; // TM *
-    uint8_t abilita_stop_tempo_ciclo; // TM *
-    uint8_t tempo_attesa_azzeramento_ciclo; // TM 25 *
-    uint8_t sonda_temperatura_in_out; // 26 *
-    uint8_t temperatura_max_1_in; // *
-    uint8_t temperatura_sicurezza_1; // * NU ----
-    uint8_t temperatura_max_1_out; // *
-    uint8_t temperatura_sicurezza_1_out; // 30 NU ----
-    uint8_t tempo_allarme_temperatura_1; // TM NU ----
-    uint8_t tempo_allarme_no_umidita;       // 32 NS NU ND
-    uint8_t tempo_antigelo; // NU ----
-    uint8_t tempo_attesa_partenza_ciclo; // 34 NU ----
-    
-    uint8_t percentuale_anticipo_temperatura_ventola; // 35 NU ----
-    uint8_t percentuale_velocita_min_ventola; // 36 NU ----
-    uint8_t tempo_allarme_flusso_aria; // 37 *
-    uint8_t tempo_flusso_aria_blocco_gas; // new TODO // 38 NU ----
-    uint8_t velocita_min_lavoro; // 39 *
-    uint8_t velocita_max_lavoro; // 40 *
-    uint8_t abilita_gettoniera; // 41 *
-    uint8_t numero_gettoni_consenso; // *
-    uint8_t tempo_gettone_1; // TM *
-    uint8_t tempo_gettone_min_sec; // *
-    uint8_t tipo_visualizzazione_get_mon_cas; // 45 *
-    uint8_t numero_cicli_manutenzione; // 46 NU ----
-    uint8_t tempo_cadenza_avviso_manutenzione; // NU ----
-    uint8_t tempo_durata_avviso_manutenzione; // 48 NU ---
-    uint8_t tempo_ritardo_antipiega; // TM 49 *
-    uint8_t tempo_max_antipiega; // *
-    uint8_t tempo_cadenza_antipiega; // 51 *
-    
-    uint8_t numero_cicli_max_antipiega; // TM 52 *
-    uint8_t tempo_giro_antipiega; // TM *
-    uint8_t tempo_pausa_antipiega; // TM *
-    uint8_t velocita_antipiega; // TM 55 *
-    uint8_t temperatura_raffreddo_allarme; // 56
-    uint8_t tempo_ventilazione_oblo_aperto; // 57
-    
-    
-    
-///////////////    uint8_t temperatura_stop_tempo_ciclo; // XX NU
-    
-    
+    uint8_t machine_id;
+
+    uint8_t lingua;                                   // 01 *
+    uint8_t lingua_max;                               // *
+    uint8_t logo_ditta;                               // *
+    uint8_t abilita_visualizzazione_temperatura;      // TM *
+    uint8_t abilita_tasto_menu;                       // TM *
+    uint8_t abilita_visualizzazione_cicli_totali;     // NU ----
+    uint8_t abilita_parametri_ridotti;                // 07 *
+    uint8_t modello_macchina;                         // 08 TM *
+    uint8_t abilita_autoavvio;                        // *
+    uint8_t tipo_pausa_asciugatura;                   // 10 *
+    uint8_t abilita_gas;                              // TM *
+    uint8_t numero_tentativi_reset_gas;               // *
+    uint8_t abilita_reset_gas_esteso;                 // NU ----
+    uint8_t abilita_blocco_no_aria;                   // 14 NU ----
+    uint8_t allarme_inverter_na_nc;                   // 15 *
+    uint8_t allarme_filtro_na_nc;                     // *
+    uint8_t emergenza_na_nc;                          // 17 *
+
+    uint8_t macchina_libera_off_on;             // 18 *
+    uint8_t tipo_out_macchina_occupata;         // 19 *
+    uint8_t tempo_uscita_pagine;                // 20 NU ---- ????
+    uint8_t tempo_reset_lingua;                 // TM NU ---- ????
+    uint8_t tempo_azzeramento_ciclo_pausa;      // TM *
+    uint8_t tempo_azzeramento_ciclo_stop;       // TM *
+    uint8_t abilita_stop_tempo_ciclo;           // TM *
+    uint8_t tempo_attesa_azzeramento_ciclo;     // TM 25 *
+    uint8_t sonda_temperatura_in_out;           // 26 *
+    uint8_t temperatura_max_1_in;               // *
+    uint8_t temperatura_sicurezza_1;            // * NU ----
+    uint8_t temperatura_max_1_out;              // *
+    uint8_t temperatura_sicurezza_1_out;        // 30 NU ----
+    uint8_t tempo_allarme_temperatura_1;        // TM NU ----
+    uint8_t tempo_allarme_no_umidita;           // 32 NS NU ND
+    uint8_t tempo_antigelo;                     // NU ----
+    uint8_t tempo_attesa_partenza_ciclo;        // 34 NU ----
+
+    uint8_t percentuale_anticipo_temperatura_ventola;     // 35 NU ----
+    uint8_t percentuale_velocita_min_ventola;             // 36 NU ----
+    uint8_t tempo_allarme_flusso_aria;                    // 37 *
+    uint8_t tempo_flusso_aria_blocco_gas;                 // new TODO // 38 NU ----
+    uint8_t velocita_min_lavoro;                          // 39 *
+    uint8_t velocita_max_lavoro;                          // 40 *
+    uint8_t abilita_gettoniera;                           // 41 *
+    uint8_t numero_gettoni_consenso;                      // *
+    uint8_t tempo_gettone_1;                              // TM *
+    uint8_t tempo_gettone_min_sec;                        // *
+    uint8_t tipo_visualizzazione_get_mon_cas;             // 45 *
+    uint8_t numero_cicli_manutenzione;                    // 46 NU ----
+    uint8_t tempo_cadenza_avviso_manutenzione;            // NU ----
+    uint8_t tempo_durata_avviso_manutenzione;             // 48 NU ---
+    uint8_t tempo_ritardo_antipiega;                      // TM 49 *
+    uint8_t tempo_max_antipiega;                          // *
+    uint8_t tempo_cadenza_antipiega;                      // 51 *
+
+    uint8_t numero_cicli_max_antipiega;         // TM 52 *
+    uint8_t tempo_giro_antipiega;               // TM *
+    uint8_t tempo_pausa_antipiega;              // TM *
+    uint8_t velocita_antipiega;                 // TM 55 *
+    uint8_t temperatura_raffreddo_allarme;      // 56
+    uint8_t tempo_ventilazione_oblo_aperto;     // 57
+
+    ///////////////    uint8_t temperatura_stop_tempo_ciclo; // XX NU
+
+
 } parmac_t;
 
 typedef struct {
-    uint8_t tipo_asciugatura_m_a; // 01
+    uint8_t tipo_asciugatura_m_a;     // 01
     uint8_t tempo_durata_asciugatura;
     uint8_t abilita_attesa_temperatura;
     uint8_t abilita_inversione_asciugatura;
     uint8_t tempo_giro_asciugatura;
     uint8_t tempo_pausa_asciugatura;
     uint8_t velocita_asciugatura;
-    uint8_t temperatura_aria_1; 
-    
+    uint8_t temperatura_aria_1;
+
     uint8_t offset_temperatura_aria_alto;
     uint8_t offset_temperatura_aria_basso;
     uint8_t umidita_residua_dry_auto;
-    
+
     uint8_t abilita_raffreddamento;
     uint8_t tempo_durata_raffreddamento;
     uint8_t abilita_inversione_raffreddamento;
     uint8_t tempo_giro_raffreddamento;
     uint8_t tempo_pausa_raffreddamento;
-    
-    uint8_t abilita_antipiega; // 17
+
+    uint8_t abilita_antipiega;     // 17
 } parciclo_t;
 
 typedef struct {
@@ -182,12 +188,12 @@ typedef struct {
     uint32_t tempo_moto;
     uint32_t tempo_ventilazione;
     uint32_t tempo_riscaldamento;
-    
+
     uint16_t credito;
     uint16_t cicli_parziali;
     uint16_t cicli_totali;
     uint16_t gettoni;
-    
+
     uint16_t delta_temperatura;
     uint16_t delta_velocita;
 } pwoff_data_t;
@@ -251,6 +257,9 @@ typedef struct {
         uint32_t low_watermark;
     } lvgl_mem;
 
+    uint16_t events_num;
+    uint8_t  events[EVENTS_NUM];
+
     pwoff_data_t pwoff;
 } model_t;
 
@@ -290,29 +299,33 @@ void               model_init_parametri_ciclo(model_t *pmodel);
 int                model_is_in_test(model_t *pmodel);
 int                model_not_in_test(model_t *pmodel);
 size_t             model_private_parameters_deserialize(model_t *pmodel, uint8_t *buff);
-size_t       model_private_parameters_serialize(model_t *pmodel, uint8_t buff[static PRIVATE_PARS_SERIALIZED_SIZE]);
-void         model_add_second(model_t *pmodel);
-int          model_get_riscaldamento_attivo(model_t *pmodel);
-unsigned int model_secondi_durata_asciugatura(model_t *pmodel);
-void         model_aggiungi_gettoni(model_t *pmodel, unsigned int gettoniera, unsigned int ingresso);
-int          model_consenso_raggiunto(model_t *pmodel);
-int          model_tempo_lavoro_scaduto(model_t *pmodel, unsigned long ts);
-void         model_metti_tempo_lavoro_in_pausa(model_t *pmodel, unsigned long ts);
-void         model_comincia_antipiega(model_t *pmodel);
-void         model_comincia_raffreddamento(model_t *pmodel);
-void         model_azzera_credito(model_t *pmodel);
-void         model_fine_ciclo(model_t *pmodel);
-int          model_in_antipiega(model_t *pmodel);
-void         model_seleziona_ciclo(model_t *pmodel, tipo_ciclo_t ciclo);
-uint16_t     model_velocita_ciclo(model_t *pmodel);
-int          model_temperatura_aria_ciclo(model_t *pmodel);
-int          model_get_temperatura_corrente(model_t *pmodel);
-int          model_ciclo_selezionato(model_t *pmodel);
-void         model_modifica_durata_asciugatura(model_t *pmodel, int minuti);
-void         model_modifica_temperatura_aria(model_t *pmodel, int gradi);
-void         model_modifica_velocita(model_t *pmodel, int giri);
-int          model_modifica_abilitata(model_t *pmodel);
-int model_allarme_emergenza(model_t *pmodel, int emergenza);
-unsigned int model_secondi_durata_asciugatura_da_mostrare(model_t *pmodel);
+size_t        model_private_parameters_serialize(model_t *pmodel, uint8_t buff[static PRIVATE_PARS_SERIALIZED_SIZE]);
+void          model_add_second(model_t *pmodel);
+int           model_get_riscaldamento_attivo(model_t *pmodel);
+unsigned int  model_secondi_durata_asciugatura(model_t *pmodel);
+void          model_aggiungi_gettoni(model_t *pmodel, unsigned int gettoniera, unsigned int ingresso);
+int           model_consenso_raggiunto(model_t *pmodel);
+int           model_tempo_lavoro_scaduto(model_t *pmodel, unsigned long ts);
+void          model_metti_tempo_lavoro_in_pausa(model_t *pmodel, unsigned long ts);
+void          model_comincia_antipiega(model_t *pmodel);
+void          model_comincia_raffreddamento(model_t *pmodel);
+void          model_azzera_credito(model_t *pmodel);
+void          model_fine_ciclo(model_t *pmodel);
+int           model_in_antipiega(model_t *pmodel);
+void          model_seleziona_ciclo(model_t *pmodel, tipo_ciclo_t ciclo);
+uint16_t      model_velocita_ciclo(model_t *pmodel);
+int           model_temperatura_aria_ciclo(model_t *pmodel);
+int           model_get_temperatura_corrente(model_t *pmodel);
+int           model_ciclo_selezionato(model_t *pmodel);
+void          model_modifica_durata_asciugatura(model_t *pmodel, int minuti);
+void          model_modifica_temperatura_aria(model_t *pmodel, int gradi);
+void          model_modifica_velocita(model_t *pmodel, int giri);
+int           model_modifica_abilitata(model_t *pmodel);
+int           model_allarme_emergenza(model_t *pmodel, int emergenza);
+unsigned int  model_secondi_durata_asciugatura_da_mostrare(model_t *pmodel);
+unsigned long model_get_tempo_passato(model_t *pmodel);
+void          model_event(model_t *pmodel, uint8_t event);
+uint8_t       model_get_nth_event(model_t *pmodel, size_t n);
+
 
 #endif

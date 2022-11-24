@@ -56,6 +56,10 @@ void model_init(model_t *pmodel) {
     pmodel->lvgl_mem.frag_percentage = 0;
     pmodel->lvgl_mem.used_percentage = 0;
     pmodel->lvgl_mem.low_watermark   = LV_MEM_SIZE;
+
+    pmodel->events_num = 0;
+
+    pmodel->pmac.machine_id = 0;
 }
 
 
@@ -440,6 +444,13 @@ unsigned long model_get_stato_timer(model_t *pmodel) {
 }
 
 
+unsigned long model_get_tempo_passato(model_t *pmodel) {
+    assert(pmodel != NULL);
+
+    return stopwatch_get_elapsed(&pmodel->status.tempo_asciugatura, get_millis()) / 1000UL;
+}
+
+
 int model_ciclo_selezionato(model_t *pmodel) {
     return pmodel->status.ciclo < NUM_CICLI;
 }
@@ -759,6 +770,7 @@ static void init_comune_parametri_2(model_t *pmodel) {  // OPL/LAB
 void model_set_status_stopped(model_t *p) {
     assert(p != NULL);
     model_azzera_credito(p);
+    model_event(p, EVENT_STOP);
     p->status.stato = STATO_STOPPED;
 }
 
@@ -842,6 +854,7 @@ void model_seleziona_ciclo(model_t *pmodel, tipo_ciclo_t ciclo)
         else
         {
             pmodel->status.f_pwoff = 0;
+            model_event(pmodel, EVENT_PAUSE);
             pmodel->status.stato = STATO_PAUSE;
             //assert(pmodel != NULL);
             //pmodel->pwoff.delta_temperatura = 0;
@@ -859,6 +872,8 @@ void model_set_status_work(model_t *p)
 {
     assert(p != NULL);
     
+    model_event(p, EVENT_START);
+
     if (model_get_status_pause(p))
     {
         stopwatch_start(&p->status.tempo_asciugatura, get_millis());
@@ -896,6 +911,7 @@ int model_get_status_not_work(model_t *p) {
 
 void model_set_status_pause(model_t *p) {
     assert(p != NULL);
+    model_event(p, EVENT_PAUSE);
     p->status.stato = STATO_PAUSE;
     
     if (p->pmac.abilita_stop_tempo_ciclo==1)
@@ -940,6 +956,7 @@ int model_get_status_step(model_t *p) {
 
 void model_fine_ciclo(model_t *pmodel) {
     assert(pmodel != NULL);
+    model_event(pmodel, EVENT_STOP);
     pmodel->status.stato = STATO_STOPPED;
     pmodel->status.nf_anti_piega = ANTIPIEGA_START;
     model_azzera_credito(pmodel);
@@ -1224,5 +1241,28 @@ static unsigned long tempo_da_credito(model_t *pmodel, uint16_t credito) {
     else
     {
         return secondi;
+    }
+}
+
+
+void model_event(model_t *pmodel, uint8_t event) {
+    uint16_t event_index = pmodel->events_num % EVENTS_NUM;
+    pmodel->events[event_index] = event;
+    pmodel->events_num++;
+}
+
+
+uint8_t model_get_nth_event(model_t *pmodel, size_t n) {
+    uint16_t event_index = pmodel->events_num % EVENTS_NUM;
+
+    if (event_index < n+1) {
+        n -= event_index;
+        if (n > EVENTS_NUM - 1) {
+            return 0;
+        } else {
+            return pmodel->events[EVENTS_NUM - 1 - n];
+        }
+    } else {
+        return pmodel->events[event_index-(n+1)];
     }
 }
