@@ -17,7 +17,7 @@
 /*                                                                            */
 /*  ver. 00.0:  05/05/2021  dalla da MiniEco V:17.4   D:11/04/2021            */
 /*                                                                            */
-/*  ver. att.:  24/11/2022  02.3                                              */
+/*  ver. att.:  03/01/2023  02.4                                              */
 /*                                                                            */
 /*  BY:         Maldus (Mattia MALDINI) & Virginia NEGRI & Massimo ZANNA      */
 /*                                                                            */
@@ -32,7 +32,7 @@
 /* ************************************************************************** */
 
 //                                    12345678901234567890
-const unsigned char versione_prg[] = "V:02.3  D:24/11/2022";
+const unsigned char versione_prg[] = "V:02.4  D:03/01/2023";
 
 
 
@@ -202,6 +202,25 @@ const unsigned char versione_prg[] = "V:02.3  D:24/11/2022";
 /*                                                                            */
 /*      - Server modbus                                                       */
 /*                                                                            */
+/*----------------------------------------------------------------------------*/
+/*                                                                            */
+/*  rev.:       03/01/2023 (02.4)                                             */
+/*                                                                            */
+/*      - BLOCCATO ACCESSO CON PW CON MACCHINA NON FERMA (da MIGLIORARE)      */
+/*                                                                            */
+/*      - corretto errore in riavvio da raffreddamento con pay e ERRORE IN CO-*/
+/*        RSO: partiva asciugatura anche con OBLO' APERTO (o altro ERR)       */
+/*                                                                            */
+/*      - introdotto "f_avv_aprire_oblo" per AVVISO A FINE CICLO              */
+/*                                                                            */
+/*      - aggiunto anche AVVISO SONORO FINE CICLO                             */
+/*                                                                            */
+/*      - introdotto "pmac.abilita_inversione_velocita"     # 58              */
+/*                                                                            */
+/*      - introdotto "pmac.abilita_disabilito_allarmi"      # 59              */
+/*                                                                            */
+/*      - introdotto "pmac.tipo_out_macchina_occupata" a 3                    */
+/*                                                                            */
 /******************************************************************************/
 
 
@@ -249,7 +268,8 @@ model_t model;
 
 
 
-int main(void) {
+int main(void)
+{
     unsigned long tskp = 0, ts_input = 0, ts_temperature = 0, ts_spi = 0, ts_allarmi = 0;
 
     // inizializzazioni ----------------------- //
@@ -284,13 +304,18 @@ int main(void) {
     
 #warning "  ####  DA Rimuovere !!!! FATTA PER DANILO !!!!  #### " // -TODO !!!!
     
-//    model.status.f_no_gt_all = 1; // ###########################################
+//    model.status.f_no_gt_all = 1; // #########################################
+    
+//    model.status.f_no_gt_all = 0;
+//    
+//    if (model.pmac.abilita_disabilito_allarmi == 1)
+//    {
+//        model.status.f_no_gt_all = 1;
+//    }
     
     
     
-    
-    
-    digout_buzzer_bip(2, 100, 100);
+    digout_buzzer_bip(4, 200, 200);
 
     // MAIN LOOP ============================================================ //
     for (;;) {
@@ -299,8 +324,14 @@ int main(void) {
         
         
         // gestione macchina ------------------ //
-        if (is_expired(ts_allarmi, get_millis(), 2000))
+        if (is_expired(ts_allarmi, get_millis(), 200))
         {
+            model.status.f_no_gt_all = 0;
+            
+            if (model.pmac.abilita_disabilito_allarmi == 1)
+            {
+                model.status.f_no_gt_all = 1;
+            }
             gt_allarmi(&model);
         }
 
@@ -316,6 +347,7 @@ int main(void) {
         gt_cesto(&model, get_millis());
         gt_macchina_occupata(&model);
         gt_reset_bruciatore(&model, get_millis());
+        gt_reset_bruciatore_extended(&model, get_millis());
         model.outputs = rele_get_status();
 
         ClrWdt();
@@ -341,8 +373,8 @@ int main(void) {
                 view_event((view_event_t){.code = VIEW_EVENT_KEYPAD, .key_event = update});
             }
             if (model_is_in_test(&model)) {
-                pwm_set_test(model.pwm1, 1);
-                pwm_set_test(model.pwm2, 2);
+                pwm_set_test((&model) , model.pwm1, 1);
+                pwm_set_test((&model) ,model.pwm2, 2);
             }
             tskp = get_millis();
         }
@@ -395,17 +427,17 @@ int main(void) {
             }
             ts_spi = get_millis();
         }
-
-
-
+        
+        
+        
         if (timer_second_passed()) {
             model_add_second(&model);
             controller_update_pwoff(&model);
         }
-
+        
         // controllo buzzer
         digout_buzzer_check();
-
+        
         __delay_us(10);
     }
     return 0;

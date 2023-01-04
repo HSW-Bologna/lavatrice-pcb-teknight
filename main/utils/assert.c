@@ -3,11 +3,9 @@
 
 void assert(int expr) {
     if (!expr) {
+        volatile int loop = 1;
         __builtin_software_breakpoint();
-        for (;;) {
-            if (expr) {
-                break;
-            }
+        while(loop) {
             Nop();
         }
     }

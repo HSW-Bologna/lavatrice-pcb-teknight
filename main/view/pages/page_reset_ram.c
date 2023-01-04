@@ -65,8 +65,14 @@ static view_message_t process_page_event(model_t *pmodel, void *arg, pman_event_
 
                     case BUTTON_TIEPIDO:
                         data.count2++;
-                        if (data.count2 >= 3) {
-                            pmodel->pmac.abilita_parametri_ridotti = 0;
+                        
+                        if (data.count2 >= 3)
+                        {
+                            if (pmodel->pmac.abilita_parametri_ridotti==1)
+                            {
+                                pmodel->status.f_sblocco_ridotti = 1;
+                                pmodel->pmac.abilita_parametri_ridotti = 0;
+                            }
                             msg.vmsg.code = VIEW_PAGE_COMMAND_CODE_REBASE;
                             msg.vmsg.page = &page_splash;
                         }

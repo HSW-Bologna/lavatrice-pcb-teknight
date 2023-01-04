@@ -11,7 +11,7 @@
 /*                                                                            */
 /*  Data  : 19/07/2021      REV  : 00.0                                       */
 /*                                                                            */
-/*  U.mod.: 03/04/2022      REV  : 01.3                                       */
+/*  U.mod.: 03/01/2023      REV  : 02.4                                       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -21,6 +21,7 @@
 #include "view/view_types.h"
 #include "view/view.h"
 #include "peripherals/timer.h"
+#include "peripherals/digout.h"
 
 extern stopwatch_t ct_moto_cesto;
 extern stopwatch_t ct_oblo_open_close_on;
@@ -158,6 +159,8 @@ void gt_ciclo(model_t *p, uint32_t timestamp)
                     }
                     else
                     {
+                        digout_buzzer_bip(4, 200, 200);
+                        p->status.f_avv_aprire_oblo = 1;
                         model_set_status_stopped(p);
                     }
                     view_event((view_event_t){.code = VIEW_EVENT_STEP_UPDATE});
@@ -173,6 +176,8 @@ void gt_ciclo(model_t *p, uint32_t timestamp)
                     }
                     else
                     {
+                        digout_buzzer_bip(4, 200, 200);
+                        p->status.f_avv_aprire_oblo = 1;
                         model_set_status_stopped(p);
                     }
                     view_event((view_event_t){.code = VIEW_EVENT_STEP_UPDATE});

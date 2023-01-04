@@ -189,7 +189,9 @@ size_t model_pars_serialize(model_t *pmodel, uint8_t *buff) {
     i += serialize_uint8(&buff[i], pmodel->pmac.tempo_pausa_antipiega);
     i += serialize_uint8(&buff[i], pmodel->pmac.velocita_antipiega);
     i += serialize_uint8(&buff[i], pmodel->pmac.temperatura_raffreddo_allarme);
-    i += serialize_uint8(&buff[i], pmodel->pmac.tempo_ventilazione_oblo_aperto); // 57
+    i += serialize_uint8(&buff[i], pmodel->pmac.tempo_ventilazione_oblo_aperto);
+    i += serialize_uint8(&buff[i], pmodel->pmac.abilita_inversione_velocita);
+    i += serialize_uint8(&buff[i], pmodel->pmac.abilita_disabilito_allarmi); // 59
     
     
     
@@ -287,7 +289,9 @@ size_t model_pars_deserialize(model_t *pmodel, uint8_t *buff) {
         i += deserialize_uint8(&pmodel->pmac.tempo_pausa_antipiega, &buff[i]);
         i += deserialize_uint8(&pmodel->pmac.velocita_antipiega, &buff[i]);
         i += deserialize_uint8(&pmodel->pmac.temperatura_raffreddo_allarme, &buff[i]);
-        i += deserialize_uint8(&pmodel->pmac.tempo_ventilazione_oblo_aperto, &buff[i]); // 57
+        i += deserialize_uint8(&pmodel->pmac.tempo_ventilazione_oblo_aperto, &buff[i]);
+        i += deserialize_uint8(&pmodel->pmac.abilita_inversione_velocita, &buff[i]);
+        i += deserialize_uint8(&pmodel->pmac.abilita_disabilito_allarmi, &buff[i]); // 59
         
         pmodel->lingua_temporanea = pmodel->pmac.lingua;
     }
@@ -855,6 +859,11 @@ void model_seleziona_ciclo(model_t *pmodel, tipo_ciclo_t ciclo)
         pmodel->status.ciclo = ciclo;
         pmodel->ciclo_corrente = pmodel->pciclo[ciclo];
         model_set_status_work(pmodel);
+        
+        if (pmodel->pmac.abilita_gas!=0 && pmodel->pmac.abilita_reset_gas_esteso!=0 && pmodel->status.f_all_blocco_bruciatore==0)
+        {
+            pmodel->status.f_reset_bruciatore_extended = 1;
+        }
     }
     else
     {

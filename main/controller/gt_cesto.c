@@ -847,6 +847,7 @@ void cesto_avanti(model_t *p) /* ---------------------------------- */
     p->status.f_ava_ind = 1;
     
     rele_update(ORARIO, 1);
+    
     pwm_set((p), model_velocita_ciclo(p), CH_VEL_CESTO); // % speed , CH ANALOG
 }
 
@@ -855,5 +856,13 @@ void cesto_indietro(model_t *p) /* -------------------------------- */
     p->status.f_ava_ind = 2;
     
     set_digout(ANTIORARIO);
-    pwm_set((p), model_velocita_ciclo(p), CH_VEL_CESTO); // % speed , CH ANALOG
+    
+    if (p->pmac.abilita_inversione_velocita==0)
+    {
+        pwm_set((p), model_velocita_ciclo(p), CH_VEL_CESTO); // % speed , CH ANALOG
+    }
+    else
+    {
+        pwm_set((p), model_velocita_ciclo(p), CH_VEL_VENTILAZIONE); // % speed , CH ANALOG
+    }
 }

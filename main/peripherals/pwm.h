@@ -13,7 +13,7 @@ typedef enum {
 
 void pwm_init(void);
 
-void pwm_set_test(uint8_t perc, uint8_t ch);
+void pwm_set_test(model_t *p, uint8_t perc, uint8_t ch);
 void pwm_set(model_t *p, uint8_t vel, uint8_t ch);
 
 #endif

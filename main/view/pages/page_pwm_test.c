@@ -37,37 +37,55 @@ static void open_page(model_t *model, void *data) {
 static view_message_t process_page_event(model_t *model, void *arg, pman_event_t event) {
     view_message_t msg = VIEW_EMPTY_MSG;
 
-    switch (event.code) {
-        case VIEW_EVENT_KEYPAD: {
-            if (event.key_event.event == KEY_CLICK) {
-                switch (event.key_event.code) {
+    switch (event.code)
+    {
+        case VIEW_EVENT_KEYPAD:
+        {
+            if (event.key_event.event == KEY_CLICK)
+            {
+                switch (event.key_event.code)
+                {
                     case BUTTON_CALDO: {
                         page_data.speed = 0;
                         page_data.step  = 0;
-                        if (page_data.pwm == 1) {
+                        
+                        if (page_data.pwm == 1)
+                        {
+                            msg.cmsg.code = VIEW_CONTROLLER_COMMAND_CODE_DIGOUT_TURNOFF;
                             msg.vmsg.code  = VIEW_PAGE_COMMAND_CODE_SWAP_PAGE_EXTRA;
                             msg.vmsg.page  = &page_pwm_test;
                             msg.vmsg.extra = (void *)(uintptr_t)2;
-                        } else {
+                        }
+                        else
+                        {
+                            msg.cmsg.code = VIEW_CONTROLLER_COMMAND_CODE_DIGOUT_TURNOFF;
                             msg.vmsg.code = VIEW_PAGE_COMMAND_CODE_SWAP_PAGE;
                             msg.vmsg.page = &page_led_test;
                         }
                         break;
                     }
-                    case BUTTON_MEDIO: {
+                    case BUTTON_MEDIO:
+                    {
                         page_data.speed = 0;
                         page_data.step  = 0;
-                        if (page_data.pwm == 1) {
+                        
+                        if (page_data.pwm == 1)
+                        {
+                            msg.cmsg.code = VIEW_CONTROLLER_COMMAND_CODE_DIGOUT_TURNOFF;
                             msg.vmsg.code = VIEW_PAGE_COMMAND_CODE_SWAP_PAGE;
                             msg.vmsg.page = &page_temperature_test;
-                        } else {
+                        }
+                        else
+                        {
+                            msg.cmsg.code = VIEW_CONTROLLER_COMMAND_CODE_DIGOUT_TURNOFF;
                             msg.vmsg.code  = VIEW_PAGE_COMMAND_CODE_SWAP_PAGE_EXTRA;
                             msg.vmsg.page  = &page_pwm_test;
                             msg.vmsg.extra = (void *)(uintptr_t)1;
                         }
                         break;
                     }
-                    case BUTTON_PLUS: {
+                    case BUTTON_PLUS:
+                    {
                         if (page_data.speed == 100)
                             page_data.speed = 0;
                         else
@@ -75,7 +93,8 @@ static view_message_t process_page_event(model_t *model, void *arg, pman_event_t
                         msg.vmsg.code = VIEW_PAGE_COMMAND_CODE_UPDATE;
                         break;
                     }
-                    case BUTTON_MINUS: {
+                    case BUTTON_MINUS:
+                    {
                         if (page_data.speed == 0)
                             page_data.speed = 100;
                         else
@@ -83,12 +102,17 @@ static view_message_t process_page_event(model_t *model, void *arg, pman_event_t
                         msg.vmsg.code = VIEW_PAGE_COMMAND_CODE_UPDATE;
                         break;
                     }
-                    case BUTTON_LINGUA: {
-                        if (page_data.step == 4) {
+                    case BUTTON_LINGUA:
+                    {
+                        if (page_data.step == 4)
+                        {
                             page_data.step  = 0;
                             page_data.speed = 0;
-                        } else {
+                        }
+                        else
+                        {
                             page_data.step++;
+                            
                             if (page_data.step == 1)
                                 page_data.speed = 25;
                             if (page_data.step == 2)
@@ -101,7 +125,30 @@ static view_message_t process_page_event(model_t *model, void *arg, pman_event_t
                         msg.vmsg.code = VIEW_PAGE_COMMAND_CODE_UPDATE;
                         break;
                     }
-                    case BUTTON_STOP: {
+                    case BUTTON_MENU:
+                    {
+                        if (msg.cmsg.value  == 0)
+                        {
+                            msg.cmsg.code   = VIEW_CONTROLLER_COMMAND_CODE_UPDATE_DIGOUT;
+                            msg.cmsg.output = 1;
+                            msg.cmsg.value  = 1;
+                            break;
+                        }
+                        else
+                        {
+                            msg.cmsg.code   = VIEW_CONTROLLER_COMMAND_CODE_UPDATE_DIGOUT;
+                            msg.cmsg.output = 1;
+                            msg.cmsg.value  = 0;
+                            break;
+                        }
+                    }
+                    case BUTTON_STOP:
+                    {
+                        //msg.cmsg.code   = VIEW_CONTROLLER_COMMAND_CODE_UPDATE_DIGOUT;
+                        //msg.cmsg.output = 1;
+                        //msg.cmsg.value  = 0;
+                        msg.cmsg.code = VIEW_CONTROLLER_COMMAND_CODE_DIGOUT_TURNOFF;
+                         
                         page_data.step  = 0;
                         page_data.speed = 0;
                         msg.vmsg.code   = VIEW_PAGE_COMMAND_CODE_UPDATE;

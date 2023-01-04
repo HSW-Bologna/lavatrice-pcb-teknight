@@ -11,7 +11,7 @@
 /*                                                                            */
 /*  Data  : 19/07/2021      REV  : 00.0                                       */
 /*                                                                            */
-/*  U.mod.: 02/08/2021      REV  : 01.0                                       */
+/*  U.mod.: 03/12/2022      REV  : 02.4                                       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -23,9 +23,9 @@
 #include "parmac.h"
 #include "descriptions/AUTOGEN_FILE_parmac.h"
 
-#define NUM_PARAMETERS           56
+#define NUM_PARAMETERS           59
 #define NUM_CHUNKS               ((NUM_PARAMETERS / MAX_PARAMETER_CHUNK) + ((NUM_PARAMETERS % MAX_PARAMETER_CHUNK) > 0))
-#define PARAMETERS_IN_LAST_CHUNK 6
+#define PARAMETERS_IN_LAST_CHUNK 8
 
 #define AL_USER 0x01
 #define AL_TECH 0x02
@@ -84,7 +84,7 @@ void parmac_setup_full(model_t *p, size_t chunk, int reset) {
             parameters[i++] = PARAMETER_C99(PARAMETER_TYPE_UINT8, &p->pmac.abilita_visualizzazione_temperatura, NULL,   NULL,   0,      1,      0,      1,      AL_USER,     FINT(PARMAC_DESCRIPTIONS_ABILITA_VISUALIZZAZIONE_TEMPERATURA),     NULL,       NULL);
             parameters[i++] = PARAMETER_C99(PARAMETER_TYPE_UINT8, &p->pmac.abilita_tasto_menu,                  NULL,   NULL,   0,      1,      0,      1,      AL_TECH,     FINT(PARMAC_DESCRIPTIONS_ABILITA_TASTO_MENU),                      NULL,       NULL);
             parameters[i++] = PARAMETER_C99(PARAMETER_TYPE_UINT8, &p->pmac.abilita_visualizzazione_cicli_totali,NULL,   NULL,   0,      3,      3,      1,      AL_TECH,     FINT(PARMAC_DESCRIPTIONS_ABILITA_VISUALIZZAZIONE_CICLI_TOTALI),               NULL,       NULL);
-            parameters[i++] = PARAMETER_C99(PARAMETER_TYPE_UINT8, &p->pmac.abilita_parametri_ridotti,           NULL,   NULL,   0,      1,      0,      1,      AL_TECH,     FINT(PARMAC_DESCRIPTIONS_ABILITA_PARAMETRI_RIDOTTI),      NULL,       NULL);
+            parameters[i++] = PARAMETER_C99(PARAMETER_TYPE_UINT8, &p->pmac.abilita_parametri_ridotti,           NULL,   NULL,   0,      1,      1,      1,      AL_TECH,     FINT(PARMAC_DESCRIPTIONS_ABILITA_PARAMETRI_RIDOTTI),      NULL,       NULL);
             parameters[i++] = PARAMETER_C99(PARAMETER_TYPE_UINT8, &p->pmac.modello_macchina,                    NULL,   NULL,   1,      19,     0,      1,      AL_TECH,     FINT(PARMAC_DESCRIPTIONS_MODELLO_MACCHINA),      NULL,       NULL);
             parameters[i++] = PARAMETER_C99(PARAMETER_TYPE_UINT8, &p->pmac.abilita_autoavvio,                   NULL,   NULL,   0,      1,      0,      1,      AL_TECH,     FINT(PARMAC_DESCRIPTIONS_ABILITA_AUTOAVVIO),               NULL,       NULL);
             parameters[i++] = PARAMETER_C99(PARAMETER_TYPE_UINT8, &p->pmac.tipo_pausa_asciugatura,              NULL,   NULL,   0,      1,      0,      1,      AL_TECH,     FINT(PARMAC_DESCRIPTIONS_TIPO_PAUSA),                              NULL,       NULL);
@@ -99,7 +99,7 @@ void parmac_setup_full(model_t *p, size_t chunk, int reset) {
 
         case 1: // 18
             parameters[i++] = PARAMETER_C99(PARAMETER_TYPE_UINT8, &p->pmac.macchina_libera_off_on,              NULL,   NULL,   0,      1,      0,      1,      AL_TECH,     FINT(PARMAC_DESCRIPTIONS_MACCHINA_LIBERA_OFF_ON),              NULL,       NULL);
-            parameters[i++] = PARAMETER_C99(PARAMETER_TYPE_UINT8, &p->pmac.tipo_out_macchina_occupata,          NULL,   NULL,   0,      2,      0,      1,      AL_TECH,     FINT(PARMAC_DESCRIPTIONS_TIPO_OUT_MACCHINA_OCCUPATA),               NULL,       NULL);
+            parameters[i++] = PARAMETER_C99(PARAMETER_TYPE_UINT8, &p->pmac.tipo_out_macchina_occupata,          NULL,   NULL,   0,      3,      0,      1,      AL_TECH,     FINT(PARMAC_DESCRIPTIONS_TIPO_OUT_MACCHINA_OCCUPATA),               NULL,       NULL);
             parameters[i++] = PARAMETER_C99(PARAMETER_TYPE_UINT8, &p->pmac.tempo_uscita_pagine,                 NULL,   NULL,   1,      60,     30,     1,      AL_TECH,     FINT(PARMAC_DESCRIPTIONS_TEMPO_USCITA_PAGINE),                     NULL,       NULL);
             parameters[i++] = PARAMETER_C99(PARAMETER_TYPE_UINT8, &p->pmac.tempo_reset_lingua,                  NULL,   NULL,   1,      250,    1,      1,      AL_TECH,     FINT(PARMAC_DESCRIPTIONS_TEMPO_RESET_LINGUA),              NULL,       NULL);
             parameters[i++] = PARAMETER_C99(PARAMETER_TYPE_UINT8, &p->pmac.tempo_azzeramento_ciclo_pausa,       NULL,   NULL,   0,      60,     0,      1,      AL_USER,     FINT(PARMAC_DESCRIPTIONS_TEMPO_AZZERAMENTO_CICLO_PAUSA),                 NULL,       NULL);
@@ -146,7 +146,9 @@ void parmac_setup_full(model_t *p, size_t chunk, int reset) {
                                                                                                                                 0,      0,      15,     1,      AL_TECH,     FINT(PARMAC_DESCRIPTIONS_VELOCITA_ANTIPIEGA),              NULL,       NULL);
             parameters[i++] = PARAMETER_C99(PARAMETER_TYPE_UINT8, &p->pmac.temperatura_raffreddo_allarme,       NULL,   NULL,   0,      240,    60,     1,      AL_TECH,     FINT(PARMAC_DESCRIPTIONS_TEMPERATURA_RAFFREDDO_ALLARME),      NULL,       NULL);
             parameters[i++] = PARAMETER_C99(PARAMETER_TYPE_UINT8, &p->pmac.tempo_ventilazione_oblo_aperto,      NULL,   NULL,   0,      240,    10,     1,      AL_TECH,     FINT(PARMAC_DESCRIPTIONS_TEMPO_VENTILAZIONE_OBLO_APERTO),      NULL,       NULL);
-            
+            parameters[i++] = PARAMETER_C99(PARAMETER_TYPE_UINT8, &p->pmac.abilita_inversione_velocita,         NULL,   NULL,   0,      1,      1,      1,      AL_TECH,     FINT(PARMAC_DESCRIPTIONS_ABILITA_INVERSIONE_VELOCITA),      NULL,       NULL);
+            parameters[i++] = PARAMETER_C99(PARAMETER_TYPE_UINT8, &p->pmac.abilita_disabilito_allarmi,          NULL,   NULL,   0,      1,      0,      1,      AL_TECH,     FINT(PARMAC_DESCRIPTIONS_ABILITA_DISABILITO_ALLARMI),      NULL,       NULL);
+            // 59
             assert(i == PARAMETERS_IN_LAST_CHUNK);
             
             

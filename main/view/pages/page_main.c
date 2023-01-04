@@ -143,35 +143,78 @@ static view_message_t process_page_event(model_t *model, void *arg, pman_event_t
 
 
         case VIEW_EVENT_KEYPAD: {
-            if (event.key_event.event == KEY_CLICK) {
+            if (event.key_event.event == KEY_CLICK)
+            {
                 view_common_password_add_key(&page_data.password, event.key_event.code, get_millis());
-                if (view_common_check_password(&page_data.password, VIEW_PASSWORD_MINUS, VIEW_SHORT_PASSWORD_LEN,
-                                               get_millis())) {
-                    msg.vmsg.code           = VIEW_PAGE_COMMAND_CODE_CHANGE_PAGE;
-                    msg.vmsg.page           = &page_digin_test;
-                    model->status.f_in_test = 1;
-                    break;
-                } else if (view_common_check_password(&page_data.password, VIEW_PASSWORD_RIGHT, VIEW_SHORT_PASSWORD_LEN,
-                                                      get_millis())) {
-                    msg.vmsg.code = VIEW_PAGE_COMMAND_CODE_CHANGE_PAGE;
-                    msg.vmsg.page = &page_parmac;
-                    break;
-                } else if (view_common_check_password(&page_data.password, VIEW_PASSWORD_LEFT, VIEW_SHORT_PASSWORD_LEN,
-                                                      get_millis())) {
-                    msg.vmsg.code = VIEW_PAGE_COMMAND_CODE_CHANGE_PAGE;
-                    msg.vmsg.page = &page_scelta_programma;
-                    break;
-                } else if (view_common_check_password(&page_data.password, VIEW_PASSWORD_RESET, VIEW_LONG_PASSWORD_LEN,
-                                                      get_millis())) {
-                    msg.vmsg.code = VIEW_PAGE_COMMAND_CODE_CHANGE_PAGE;
-                    msg.vmsg.page = &page_reset_ram;
-                    break;
-                } else if (view_common_check_password(&page_data.password, VIEW_PASSWORD_TIEPIDO,
-                                                      VIEW_SHORT_PASSWORD_LEN, get_millis())) {
-                    msg.vmsg.code = VIEW_PAGE_COMMAND_CODE_CHANGE_PAGE;
-                    msg.vmsg.page = &page_stats;
-                    break;
-                } else if (view_common_check_password_started(&page_data.password)) {
+                
+                if (view_common_check_password(&page_data.password, VIEW_PASSWORD_MINUS, VIEW_SHORT_PASSWORD_LEN, get_millis()))
+                {
+                    if (model_get_status_stopped(model))
+                    {
+                        msg.vmsg.code           = VIEW_PAGE_COMMAND_CODE_CHANGE_PAGE;
+                        msg.vmsg.page           = &page_digin_test;
+                        model->status.f_in_test = 1;
+                        break;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+                else if (view_common_check_password(&page_data.password, VIEW_PASSWORD_RIGHT, VIEW_SHORT_PASSWORD_LEN, get_millis()))
+                {
+                    if (model_get_status_stopped(model))
+                    {
+                        msg.vmsg.code = VIEW_PAGE_COMMAND_CODE_CHANGE_PAGE;
+                        msg.vmsg.page = &page_parmac;
+                        break;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+                else if (view_common_check_password(&page_data.password, VIEW_PASSWORD_LEFT, VIEW_SHORT_PASSWORD_LEN, get_millis()))
+                {
+                    if (model_get_status_stopped(model))
+                    {
+                        msg.vmsg.code = VIEW_PAGE_COMMAND_CODE_CHANGE_PAGE;
+                        msg.vmsg.page = &page_scelta_programma;
+                        break;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+                else if (view_common_check_password(&page_data.password, VIEW_PASSWORD_RESET, VIEW_LONG_PASSWORD_LEN, get_millis()))
+                {
+                    if (model_get_status_stopped(model))
+                    {
+                        msg.vmsg.code = VIEW_PAGE_COMMAND_CODE_CHANGE_PAGE;
+                        msg.vmsg.page = &page_reset_ram;
+                        break;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+                else if (view_common_check_password(&page_data.password, VIEW_PASSWORD_TIEPIDO, VIEW_SHORT_PASSWORD_LEN, get_millis()))
+                {
+                    if (model_get_status_stopped(model))
+                    {
+                        msg.vmsg.code = VIEW_PAGE_COMMAND_CODE_CHANGE_PAGE;
+                        msg.vmsg.page = &page_stats;
+                        break;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+                else if (view_common_check_password_started(&page_data.password))
+                {
                     break;
                 }
                 
@@ -194,7 +237,7 @@ static view_message_t process_page_event(model_t *model, void *arg, pman_event_t
                         break;
 
                     case BUTTON_CALDO:
-                        if (model->status.n_allarme == ALL_NO)
+                        if (model->status.n_allarme==ALL_NO && model->status.f_all==ALL_NO)
                         {
                             model_seleziona_ciclo(model, CICLO_CALDO);
                             view_status_string(model);
@@ -207,7 +250,7 @@ static view_message_t process_page_event(model_t *model, void *arg, pman_event_t
                         break;
 
                     case BUTTON_MEDIO:
-                        if (model->status.n_allarme == ALL_NO) {
+                        if (model->status.n_allarme==ALL_NO && model->status.f_all==ALL_NO) {
                             model_seleziona_ciclo(model, CICLO_MEDIO);
                             view_status_string(model);
                             update_timer(model);
@@ -217,7 +260,7 @@ static view_message_t process_page_event(model_t *model, void *arg, pman_event_t
                         break;
 
                     case BUTTON_TIEPIDO:
-                        if (model->status.n_allarme == ALL_NO) {
+                        if (model->status.n_allarme==ALL_NO && model->status.f_all==ALL_NO) {
                             model_seleziona_ciclo(model, CICLO_TIEPIDO);
                             view_status_string(model);
                             update_timer(model);
@@ -227,7 +270,7 @@ static view_message_t process_page_event(model_t *model, void *arg, pman_event_t
                         break;
 
                     case BUTTON_LANA:
-                        if (model->status.n_allarme == ALL_NO) {
+                        if (model->status.n_allarme==ALL_NO && model->status.f_all==ALL_NO) {
                             model_seleziona_ciclo(model, CICLO_LANA);
                             view_status_string(model);
                             update_timer(model);
@@ -237,7 +280,7 @@ static view_message_t process_page_event(model_t *model, void *arg, pman_event_t
                         break;
 
                     case BUTTON_FREDDO:
-                        if (model->status.n_allarme == ALL_NO) {
+                        if (model->status.n_allarme==ALL_NO && model->status.f_all==ALL_NO) {
                             model_seleziona_ciclo(model, CICLO_FREDDO);
                             view_status_string(model);
                             update_timer(model);

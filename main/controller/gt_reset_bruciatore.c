@@ -1,9 +1,19 @@
-/*
- * File:   gt_reset_bruciatore.c
- * Author: Virginia
- *
- * Created on 19 luglio 2021, 9.39
- */
+/******************************************************************************/
+/*                                                                            */
+/*  HSW snc - Casalecchio di Reno (BO) ITALY                                  */
+/*  ----------------------------------------                                  */
+/*                                                                            */
+/*  modulo: gt_reset_bruciatore.c                                             */
+/*                                                                            */
+/*      gestione RESET BRUCIATORE GAS                                         */
+/*                                                                            */
+/*  Autore: Maldus (Mattia MALDINI) & Virginia NEGRI & Massimo ZANNA          */
+/*                                                                            */
+/*  Data  : 19/07/2021      REV  : 00.0                                       */
+/*                                                                            */
+/*  U.mod.: 03/01/2023      REV  : 02.4                                       */
+/*                                                                            */
+/******************************************************************************/
 
 #include <stdint.h>
 #include <stdlib.h>
@@ -22,16 +32,15 @@ stopwatch_t ct_reset_blocco = STOPWATCH_NULL;
 
 
 
-void gt_reset_bruciatore(model_t *p, uint32_t timestamp) {
-    static uint8_t nfx_all_blocco_bruciatore = 0;     // - ToDO Valutare per "gt_reset_bruciatore_extra"
-
+void gt_reset_bruciatore(model_t *p, uint32_t timestamp)
+{
     static uint8_t nf_all_blocco_bruciatore = 0;
     static uint8_t cnt_blocchi_bruciatore   = 0;
-
-
-
+    
+    
+    
     // ====================================================================== //
-    if (model_not_in_test(p) && nfx_all_blocco_bruciatore == 0)
+    if (model_not_in_test(p)  && p->status.f_reset_bruciatore_extended==0)
     {
         if (p->pmac.abilita_gas != 0 && p->pmac.numero_tentativi_reset_gas != 0)     // CP se MACCINA A GAS
         {
@@ -56,12 +65,13 @@ void gt_reset_bruciatore(model_t *p, uint32_t timestamp) {
 
 
 
-                if (nf_all_blocco_bruciatore == 0 && p->status.f_all_blocco_bruciatore == 0 &&
-                    model_get_status_work(p)) {
+                if (nf_all_blocco_bruciatore == 0 && p->status.f_all_blocco_bruciatore == 0 &&  model_get_status_work(p))
+                {
                     nf_all_blocco_bruciatore = 1;
                     cnt_blocchi_bruciatore++;
 
-                    if (cnt_blocchi_bruciatore >= p->pmac.numero_tentativi_reset_gas) {
+                    if (cnt_blocchi_bruciatore >= p->pmac.numero_tentativi_reset_gas)
+                    {
                         p->status.f_all_blocco_bruciatore = 1;
 
                         nf_all_blocco_bruciatore = 0;
@@ -77,8 +87,7 @@ void gt_reset_bruciatore(model_t *p, uint32_t timestamp) {
                 nf_all_blocco_bruciatore = 2;
             }
 
-            if (nf_all_blocco_bruciatore == 2 &&
-                stopwatch_is_timer_reached(&ct_reset_blocco, timestamp))     // -------- //
+            if (nf_all_blocco_bruciatore == 2 &&  stopwatch_is_timer_reached(&ct_reset_blocco, timestamp))     // -------- //
             {
                 stopwatch_init(&ct_reset_blocco);
                 stopwatch_set(&ct_reset_blocco, 3 * 1000UL);
@@ -87,8 +96,7 @@ void gt_reset_bruciatore(model_t *p, uint32_t timestamp) {
                 nf_all_blocco_bruciatore = 3;
             }
 
-            if (nf_all_blocco_bruciatore == 3 &&
-                stopwatch_is_timer_reached(&ct_reset_blocco, timestamp))     // -------- //
+            if (nf_all_blocco_bruciatore == 3 && stopwatch_is_timer_reached(&ct_reset_blocco, timestamp))     // -------- //
             {
                 stopwatch_init(&ct_reset_blocco);
                 stopwatch_set(&ct_reset_blocco, 5 * 1000UL);
@@ -96,16 +104,78 @@ void gt_reset_bruciatore(model_t *p, uint32_t timestamp) {
                 clear_digout(RESET_BRUCIATORE);
                 nf_all_blocco_bruciatore = 4;
             }
-
-            if (nf_all_blocco_bruciatore == 4 &&
-                stopwatch_is_timer_reached(&ct_reset_blocco, timestamp))     // -------- //
+            
+            if (nf_all_blocco_bruciatore == 4 && stopwatch_is_timer_reached(&ct_reset_blocco, timestamp))     // -------- //
             {
                 nf_all_blocco_bruciatore = 0;
             }
-        } else {
+        }
+        else
+        {
             nf_all_blocco_bruciatore          = 0;
             cnt_blocchi_bruciatore            = 0;
             p->status.f_all_blocco_bruciatore = 0;
         }
+    }
+}
+
+
+
+
+
+
+
+
+
+
+void gt_reset_bruciatore_extended(model_t *p, uint32_t timestamp)
+{
+    static uint8_t nfx_all_blocco_bruciatore = 0;     // - ToDO Valutare per "gt_reset_bruciatore_extra"
+    
+    
+    
+    // ====================================================================== //
+    if (model_not_in_test(p) && p->pmac.abilita_gas!=0 && p->pmac.abilita_reset_gas_esteso!=0 && p->status.f_all_blocco_bruciatore==0 && p->status.f_reset_bruciatore_extended==1)
+    {
+        if (nfx_all_blocco_bruciatore==0)
+        {
+            nfx_all_blocco_bruciatore = 1;
+        }
+        
+        if (nfx_all_blocco_bruciatore == 1)     // ------------------------------ //
+        {
+            stopwatch_set(&ct_reset_blocco, 2 * 1000UL);
+            stopwatch_start(&ct_reset_blocco, timestamp);
+            nfx_all_blocco_bruciatore = 2;
+        }
+        
+        if (nfx_all_blocco_bruciatore == 2 &&  stopwatch_is_timer_reached(&ct_reset_blocco, timestamp))     // -------- //
+        {
+            stopwatch_init(&ct_reset_blocco);
+            stopwatch_set(&ct_reset_blocco, 3 * 1000UL);
+            stopwatch_start(&ct_reset_blocco, timestamp);
+            set_digout(RESET_BRUCIATORE);
+            nfx_all_blocco_bruciatore = 3;
+        }
+        
+        if (nfx_all_blocco_bruciatore == 3 && stopwatch_is_timer_reached(&ct_reset_blocco, timestamp))     // -------- //
+        {
+            stopwatch_init(&ct_reset_blocco);
+            stopwatch_set(&ct_reset_blocco, 5 * 1000UL);
+            stopwatch_start(&ct_reset_blocco, timestamp);
+            clear_digout(RESET_BRUCIATORE);
+            nfx_all_blocco_bruciatore = 4;
+        }
+            
+        if (nfx_all_blocco_bruciatore == 4 && stopwatch_is_timer_reached(&ct_reset_blocco, timestamp))     // -------- //
+        {
+            nfx_all_blocco_bruciatore = 0;
+            p->status.f_reset_bruciatore_extended = 0;
+        }
+    }
+    else
+    {   
+        nfx_all_blocco_bruciatore = 0;
+        p->status.f_reset_bruciatore_extended = 0;
     }
 }

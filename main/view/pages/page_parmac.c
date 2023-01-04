@@ -24,7 +24,22 @@ static struct {
 static void *create_page(model_t *model, void *extra) {
     parmac_setup_full(model, 0, 0);
     page_data.par_to_save     = 0;
-    page_data.livello_accesso = model->pmac.abilita_parametri_ridotti;
+    
+    if (model->pmac.abilita_parametri_ridotti==1)
+    {
+        if(model->status.f_sblocco_ridotti==1)
+        {
+            page_data.livello_accesso = 0;
+        }
+        else
+        {
+            page_data.livello_accesso = model->pmac.abilita_parametri_ridotti;
+        }
+    }
+    else
+    {
+        page_data.livello_accesso = model->pmac.abilita_parametri_ridotti;
+    }
     return NULL;
 }
 
@@ -86,8 +101,11 @@ static view_message_t process_page_event(model_t *model, void *arg, pman_event_t
                     case BUTTON_STOP:
                         msg.vmsg.code = VIEW_PAGE_COMMAND_CODE_BACK;
 #warning "Rimuovere i parametri estesi in uscita dalla pagina!" // -TODO !!!!
-                        model->pmac.abilita_parametri_ridotti = 1;
-                        if (page_data.par_to_save) {
+                        //model->pmac.abilita_parametri_ridotti = 1;
+                        model->status.f_sblocco_ridotti = 0;
+                        
+                        if (page_data.par_to_save)
+                        {
                             msg.vmsg.code = VIEW_PAGE_COMMAND_CODE_CHANGE_PAGE;
                             msg.vmsg.page = &page_wait;
                         } else {

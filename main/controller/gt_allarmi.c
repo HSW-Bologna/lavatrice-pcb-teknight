@@ -11,7 +11,7 @@
 /*                                                                            */
 /*  Data  : 19/07/2021      REV  : 00.0                                       */
 /*                                                                            */
-/*  U.mod.: 20/07/2022      REV  : 01.8                                       */
+/*  U.mod.: 03/01/2023      REV  : 02.4                                       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -64,7 +64,6 @@ void gt_allarmi (model_t *p)
             n_old_allarme = p->status.n_allarme;
         }
         
-//      if (n_old_allarme>0 && n_old_allarme<AVV_ANTIPIEGA)
         if (n_old_allarme>0 && n_old_allarme<ALL_TEMPERATURA_1)
         {
             if (model_get_status_work(p))
@@ -78,7 +77,21 @@ void gt_allarmi (model_t *p)
     
     
     
-    if (p->status.f_errore_ram_ko==1)         // ALL RAM KO -----------------------------*
+    // ====================================================================== //
+
+        if (n_old_allarme>0 && n_old_allarme<ALL_TEMPERATURA_1)
+        {
+            if (model_get_status_work(p))
+            {
+                model_set_status_pause(p);
+            }
+        }
+    
+    // ====================================================================== //
+    
+    
+    
+    if (p->status.f_errore_ram_ko==1)         // ALL RAM KO -------------------*
     {
         // n_allarme = 9;
         
@@ -127,7 +140,7 @@ void gt_allarmi (model_t *p)
         }
     }
     
-//////    else if (f_all_blocco_bruciatore==1)    // ALL BRUCIATORE -----------------*
+//////    else if (f_all_blocco_bruciatore==1)    // ALL BRUCIATORE --------------*
 //////    {
 //////        n_allarme = 14;
 //////        f_all = 1;
@@ -229,7 +242,10 @@ void gt_allarmi (model_t *p)
         
 //        f_all_flusso_aria = 0; // -!!!! ToDO
 ////        f_all_anomalia_aria = 0; // -!!!! ToDO
-
+        if (p->status.n_allarme == AVV_APRIRE_OBLO)
+        {
+            p->status.f_avv_aprire_oblo = 0;
+        }
         p->status.n_allarme = ALL_OBLO_APERTO;
         
 //        if (f_apri_oblo==1)
@@ -368,12 +384,17 @@ void gt_allarmi (model_t *p)
         p->status.n_allarme = ALL_FLUSSO_ARIA;
         //p->status.f_all = 1;
     }
-    else if (p->status.f_anti_piega != 0) // AVV ANTIPIEGA ----------------------*
+    else if (p->status.f_anti_piega != 0) // AVV ANTIPIEGA --------------------*
     {
         p->status.n_allarme = AVV_ANTIPIEGA;
         //p->status.f_all = 1;
     }
-    else if (p->status.f_all_dry_contol != 0) // AVV flusso aria ---------------*
+    else if (p->status.f_avv_aprire_oblo != 0) // AVV APRIRE OBLO' ------------*
+    {
+        p->status.n_allarme = AVV_APRIRE_OBLO;
+        //p->status.f_all = 1;
+    }
+    else if (p->status.f_all_dry_contol != 0) // AVV flusso aria --------------*
     {
         p->status.n_allarme = AVV_DRY_CONTROL;
         //p->status.f_all = 1;
@@ -455,6 +476,7 @@ void gt_allarmi_azzera(model_t *pmodel)
     pmodel->status.f_all_sovratemperatura = ALL_NO;
     pmodel->status.f_all_flusso_aria = ALL_NO;
     pmodel->status.f_all_inverter = ALL_NO;
+    pmodel->status.f_avv_aprire_oblo = ALL_NO;
     pmodel->status.f_anti_piega = ALL_NO;
     
     pmodel->status.f_all_dry_contol = ALL_NO;

@@ -12,7 +12,7 @@
 
 
 //#define PARS_SERIALIZED_SIZE         136
-#define PARS_SERIALIZED_SIZE         142 + 2
+#define PARS_SERIALIZED_SIZE         144 + 2
 #define PRIVATE_PARS_SERIALIZED_SIZE 3
 //#define PWOFF_SERIALIZED_SIZE        42
 #define PWOFF_SERIALIZED_SIZE        44                            //// STR AAAA          
@@ -136,6 +136,8 @@ typedef struct {
     uint8_t velocita_antipiega;                 // TM 55 *
     uint8_t temperatura_raffreddo_allarme;      // 56
     uint8_t tempo_ventilazione_oblo_aperto;     // 57
+    uint8_t abilita_inversione_velocita;        // 58
+    uint8_t abilita_disabilito_allarmi;         // 59
 
     ///////////////    uint8_t temperatura_stop_tempo_ciclo; // XX NU
 
@@ -226,6 +228,7 @@ typedef struct {
         uint16_t     temperatura_rilevata;
         stato_step_t stato_step;
         uint8_t      f_in_test;
+        uint8_t      f_sblocco_ridotti;
         uint8_t      f_no_gt_all;
         uint8_t      f_start_ok;
         uint8_t      f_ok_gettone;
@@ -251,6 +254,8 @@ typedef struct {
         uint8_t      f_all_sovratemperatura;
         uint8_t      f_all_dry_contol;
         uint8_t      f_all_blocco_bruciatore;
+        uint8_t      f_avv_aprire_oblo;
+        uint8_t      f_reset_bruciatore_extended;
         stopwatch_t  tempo_asciugatura;
         stopwatch_t  tempo_umidita;
     } status;

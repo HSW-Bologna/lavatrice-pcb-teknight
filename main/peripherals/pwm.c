@@ -69,8 +69,11 @@ void pwm_init(void) {
 }
 
 
-void pwm_set_test(uint8_t perc, uint8_t ch) {
+
+void pwm_set_test(model_t *p, uint8_t perc, uint8_t ch)
+{
     uint16_t res = (uint16_t)((unsigned long)PERIOD/100)*perc;
+    
     if (res==0) {
         res = 1;
     }
@@ -78,15 +81,36 @@ void pwm_set_test(uint8_t perc, uint8_t ch) {
     if (perc >= 100)
         res = PERIOD;
     
+    
+    
+    if (p->pmac.abilita_inversione_velocita==0)
+    {
+    
     if (ch==1)
         CCP1RA = res;
     
     if (ch==2)
         CCP2RA = res;
+    }
+    
+    if (p->pmac.abilita_inversione_velocita==1)
+    {
+    
+    if (ch==1)
+        CCP2RA = res;
+    
+    if (ch==2)
+        CCP1RA = res;
+    }
+    
+    
+    
+    
 }
 
 
-void pwm_set(model_t *p, uint8_t giri, uint8_t ch) {
+void pwm_set(model_t *p, uint8_t giri, uint8_t ch)
+{
     Nop();
     Nop();
     Nop();
@@ -103,11 +127,29 @@ void pwm_set(model_t *p, uint8_t giri, uint8_t ch) {
     Nop();
     Nop();
     
+    
+    
+    if (p->pmac.abilita_inversione_velocita==0)
+    {
+    
     if (ch==1)
         CCP1RA = res;
     
     if (ch==2)
         CCP2RA = res;
+    }
+    
+    if (p->pmac.abilita_inversione_velocita==1)
+    {
+
+    if (ch==1)
+        CCP2RA = res;
+    
+    if (ch==2)
+        CCP1RA = res;
+    }
+    
+    
     
     Nop();
     Nop();
