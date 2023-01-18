@@ -6,6 +6,7 @@
  */
 
 #include "system.h"
+#include "gettoniera.h"
 #include "hardwareprofile.h"
 #include "timer.h"
 #include <stddef.h>

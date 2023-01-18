@@ -213,6 +213,19 @@ static view_message_t process_page_event(model_t *model, void *arg, pman_event_t
                         break;
                     }
                 }
+                else if (view_common_check_password(&page_data.password, VIEW_PASSWORD_MODMAC, VIEW_MIDIUM_PASSWORD_LEN, get_millis()))
+                {
+                    if (model_get_status_stopped(model))
+                    {
+                        msg.vmsg.code = VIEW_PAGE_COMMAND_CODE_CHANGE_PAGE;
+                        msg.vmsg.page = &page_commissioning;
+                        break;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
                 else if (view_common_check_password_started(&page_data.password))
                 {
                     break;

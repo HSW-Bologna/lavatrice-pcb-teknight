@@ -63,9 +63,13 @@ static view_message_t process_page_event(model_t *pmodel, void *arg, pman_event_
     switch (event.code) {
         case VIEW_EVENT_CODE_TIMER:
             msg.vmsg.code = VIEW_PAGE_COMMAND_CODE_REBASE;
-            if (model_is_machine_selected(pmodel)) {
+            if (model_is_machine_selected(pmodel))
+            {
                 msg.vmsg.page = &page_main;
-            } else {
+                pmodel->status.f_start_ok = 0;
+            }
+            else
+            {
                 msg.vmsg.page = &page_commissioning;
             }
             break;

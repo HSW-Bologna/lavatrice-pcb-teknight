@@ -29,9 +29,9 @@ void gt_allarmi (model_t *p);
 typedef enum _ALLARMI
 {
     ALL_NO = 0,             // 00
-            
+     
     ALL_ERRORE_RAM,         // 01
-            
+     
     ALL_OBLO_APERTO,        // 02
     ALL_OBLO_SBLOCCATO,
     ALL_EMERGENZA,
@@ -42,15 +42,15 @@ typedef enum _ALLARMI
     ALL_TEMPERATURA_1,      // 09
     ALL_FLUSSO_ARIA,
     ALL_ANOMALIA_ARIA,      // 11
-            
+     
     AVV_ANTIPIEGA,          // 12
     AVV_APRIRE_OBLO,        
     AVV_DRY_CONTROL,        // 14
-            
+    
     AVV_SOVRATEMPERATURA,   // 15
     AVV_MANUTENZIONE,       // 16
     AVV_PW_OFF,             // 17
-            
+    
     ALLARMI_NUM,            
 } allarmi_t ;
 

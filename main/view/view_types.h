@@ -53,6 +53,7 @@ typedef struct {
         struct {
             int output;
             int value;
+            int pwm_channel;
         };
         led_color_t led;
     };

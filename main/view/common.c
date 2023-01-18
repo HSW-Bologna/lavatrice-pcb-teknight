@@ -1,6 +1,7 @@
 #include "utils/assert.h"
 #include "common.h"
 #include "gel/timer/timecheck.h"
+#include <xc.h>
 
 
 static void timer_task(lv_task_t *task);
@@ -57,7 +58,7 @@ void view_common_password_add_key(view_common_password_t *inserted, button_t new
     inserted->password[inserted->index] = new;
     inserted->index                     = (inserted->index + 1) % VIEW_PASSWORD_MAX_SIZE;
     inserted->last_timestamp            = timestamp;
-}
+            }
 
 
 void view_common_password_reset(view_common_password_t *inserted, unsigned long timestamp) {

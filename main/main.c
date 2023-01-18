@@ -17,7 +17,7 @@
 /*                                                                            */
 /*  ver. 00.0:  05/05/2021  dalla da MiniEco V:17.4   D:11/04/2021            */
 /*                                                                            */
-/*  ver. att.:  03/01/2023  02.4                                              */
+/*  ver. att.:  18/01/2023  02.5                                              */
 /*                                                                            */
 /*  BY:         Maldus (Mattia MALDINI) & Virginia NEGRI & Massimo ZANNA      */
 /*                                                                            */
@@ -32,7 +32,7 @@
 /* ************************************************************************** */
 
 //                                    12345678901234567890
-const unsigned char versione_prg[] = "V:02.4  D:03/01/2023";
+const unsigned char versione_prg[] = "V:02.5  D:18/01/2023";
 
 
 
@@ -208,6 +208,12 @@ const unsigned char versione_prg[] = "V:02.4  D:03/01/2023";
 /*                                                                            */
 /*      - BLOCCATO ACCESSO CON PW CON MACCHINA NON FERMA (da MIGLIORARE)      */
 /*                                                                            */
+/*      - AGGIUNTI nei PAR MAC RIDOTTI prog "MAC OCC NA/NC & TIPO OUT MAC OCC"*/
+/*                                                                            */
+/*      - introdotto "pmac.tipo_out_macchina_occupata" a 3 (da MIGLIORARE)    */
+/*                                                                            */
+/*      - corretta gestione "abilita_reset_gas_esteso"                        */
+/*                                                                            */
 /*      - corretto errore in riavvio da raffreddamento con pay e ERRORE IN CO-*/
 /*        RSO: partiva asciugatura anche con OBLO' APERTO (o altro ERR)       */
 /*                                                                            */
@@ -216,10 +222,21 @@ const unsigned char versione_prg[] = "V:02.4  D:03/01/2023";
 /*      - aggiunto anche AVVISO SONORO FINE CICLO                             */
 /*                                                                            */
 /*      - introdotto "pmac.abilita_inversione_velocita"     # 58              */
+/*         => variati 2 out sia in CICLO che TEST                             */
 /*                                                                            */
 /*      - introdotto "pmac.abilita_disabilito_allarmi"      # 59              */
 /*                                                                            */
-/*      - introdotto "pmac.tipo_out_macchina_occupata" a 3                    */
+/*----------------------------------------------------------------------------*/
+/*                                                                            */
+/*  rev.:       18/01/2023 (02.5)                                             */
+/*                                                                            */
+/*      - GT PW DA FERMO STOP+STOP+STOP+TIE+FRED+LINGUA -> MOD MAC/LOGO/LINGUA*/
+/*                                                                            */
+/*      - BLOCCATO ACCESSO CON PW CON MACCHINA NON FERMA # MIGLIORATA         */
+/*                                                                            */
+/*      - introdotto "pmac.tipo_out_macchina_occupata" a 3 # MIGLIORATA       */
+/*                                                                            */
+/*      - CORRETTO ERRORE "AUTOAVVIO"                                         */
 /*                                                                            */
 /******************************************************************************/
 
@@ -313,7 +330,7 @@ int main(void)
 //        model.status.f_no_gt_all = 1;
 //    }
     
-    
+    model.status.f_start_ok = 1;
     
     digout_buzzer_bip(4, 200, 200);
 
@@ -321,7 +338,6 @@ int main(void)
     for (;;) {
         controller_manage_gui(&model);
         modbus_server_manage(&model);
-        
         
         // gestione macchina ------------------ //
         if (is_expired(ts_allarmi, get_millis(), 200))

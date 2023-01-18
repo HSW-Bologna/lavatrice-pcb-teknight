@@ -55,10 +55,28 @@ static int controller_start_check(void);
 void controller_process_msg(view_controller_command_t *msg, model_t *pmodel) {
     switch (msg->code) {
         case VIEW_CONTROLLER_COMMAND_CODE_UPDATE_PWM: {
-            if (msg->output == 1)
+            if (msg->pwm_channel == 1) {
                 pmodel->pwm1 = msg->value;
-            if (msg->output == 2)
+            } else if (msg->pwm_channel == 2) {
                 pmodel->pwm2 = msg->value;
+            }
+            if (msg->value == 0) {
+                int i = 0;
+                for (i = 0; i < 6; i++) {
+                    rele_update(i, 0);
+                    pmodel->outputs = rele_get_status();
+                }
+            } else {
+                int i = 0;
+                for (i = 0; i < 6; i++) {
+                    if (i != (msg->output) - 1) {
+                        rele_update(i, 0);
+                    } else {
+                        rele_update(i, 1);
+                    }
+                }
+                pmodel->outputs = rele_get_status();
+            }
             break;
         }
 

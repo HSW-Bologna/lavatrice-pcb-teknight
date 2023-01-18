@@ -95,6 +95,7 @@ char *model_get_output_status(model_t *pmodel, int output) {
 }
 
 
+
 int model_get_riscaldamento_attivo(model_t *pmodel) {
     return (pmodel->outputs & 0x04) > 0;
 }
@@ -399,9 +400,9 @@ void model_get_pwoff(model_t *pmodel)
             {
                 if (pmodel->status.stato_step==STATO_STEP_ASC || pmodel->status.stato_step == STATO_STEP_RAF)
                 {
-                    pmodel->status.f_pwoff = 1;
                     model_seleziona_ciclo(pmodel,  pmodel->status.ciclo);
-                    //model_set_status_work(&model);
+                    model_set_status_work(pmodel);
+                    stopwatch_start(&pmodel->status.tempo_asciugatura, get_millis()); // -!!!! ToDO
                 }
             }
         }
@@ -907,11 +908,25 @@ void model_set_status_work(model_t *p)
         stopwatch_start(&p->status.tempo_asciugatura, get_millis());
         p->status.stato = STATO_WORK;
     }
+//    else if (model_get_status_pause(p) && pmac.abilita_autoavvio==0)
+//    {
+//        stopwatch_start(&p->status.tempo_asciugatura, get_millis());
+//        p->status.stato = STATO_WORK;
+//    }
+//    else if (model_get_status_pause(p) && pmac.abilita_autoavvio==1)
+//    {
+//        stopwatch_start(&p->status.tempo_asciugatura, get_millis());
+//        p->status.stato = STATO_WORK;
+//    }
     else if (model_get_status_stopped(p) && model_consenso_raggiunto(p))
     {
         stopwatch_init(&p->status.tempo_asciugatura);
         stopwatch_setngo(&p->status.tempo_asciugatura, model_secondi_durata_asciugatura(p) * 1000UL, get_millis());
         p->status.stato = STATO_WORK;
+    }
+    else if (model_get_status_work(p) && p->pmac.abilita_autoavvio==1)
+    {
+        stopwatch_start(&p->status.tempo_asciugatura, get_millis());
     }
 }
 

@@ -10,10 +10,12 @@
 
 static struct {
     lv_obj_t *speedlbl;
+    lv_obj_t *lbl_output;
 
     int speed;
     int step;
     int pwm;
+    uint8_t motore_on;
 } page_data;
 
 static void *create_page(model_t *model, void *extra) {
@@ -23,6 +25,8 @@ static void *create_page(model_t *model, void *extra) {
 
 
 static void open_page(model_t *model, void *data) {
+    page_data.motore_on = 0;
+    
     lv_obj_t *title = view_common_title(lv_scr_act(), "VELOCITA'");
     lv_label_set_text_fmt(title, "VELOCITA' %i", page_data.pwm);
 
@@ -30,6 +34,11 @@ static void open_page(model_t *model, void *data) {
     lv_obj_set_auto_realign(lblspeed, 1);
     lv_obj_align(lblspeed, NULL, LV_ALIGN_IN_TOP_LEFT, 0, 20);
     page_data.speedlbl = lblspeed;
+    
+    lv_obj_t *lbl = lv_label_create(lv_scr_act(), NULL);
+    lv_obj_set_auto_realign(lbl, 1);
+    lv_obj_align(lbl, NULL, LV_ALIGN_IN_TOP_LEFT, 0, 40);
+    page_data.lbl_output = lbl;
 }
 
 
@@ -37,55 +46,39 @@ static void open_page(model_t *model, void *data) {
 static view_message_t process_page_event(model_t *model, void *arg, pman_event_t event) {
     view_message_t msg = VIEW_EMPTY_MSG;
 
-    switch (event.code)
-    {
-        case VIEW_EVENT_KEYPAD:
-        {
-            if (event.key_event.event == KEY_CLICK)
-            {
-                switch (event.key_event.code)
-                {
+    switch (event.code) {
+        case VIEW_EVENT_KEYPAD: {
+            if (event.key_event.event == KEY_CLICK) {
+                switch (event.key_event.code) {
                     case BUTTON_CALDO: {
                         page_data.speed = 0;
                         page_data.step  = 0;
-                        
-                        if (page_data.pwm == 1)
-                        {
-                            msg.cmsg.code = VIEW_CONTROLLER_COMMAND_CODE_DIGOUT_TURNOFF;
+                        msg.cmsg.code = VIEW_CONTROLLER_COMMAND_CODE_DIGOUT_TURNOFF;
+                        if (page_data.pwm == 1) {
                             msg.vmsg.code  = VIEW_PAGE_COMMAND_CODE_SWAP_PAGE_EXTRA;
                             msg.vmsg.page  = &page_pwm_test;
                             msg.vmsg.extra = (void *)(uintptr_t)2;
-                        }
-                        else
-                        {
-                            msg.cmsg.code = VIEW_CONTROLLER_COMMAND_CODE_DIGOUT_TURNOFF;
+                        } else {
                             msg.vmsg.code = VIEW_PAGE_COMMAND_CODE_SWAP_PAGE;
                             msg.vmsg.page = &page_led_test;
                         }
                         break;
                     }
-                    case BUTTON_MEDIO:
-                    {
+                    case BUTTON_MEDIO: {
                         page_data.speed = 0;
                         page_data.step  = 0;
-                        
-                        if (page_data.pwm == 1)
-                        {
-                            msg.cmsg.code = VIEW_CONTROLLER_COMMAND_CODE_DIGOUT_TURNOFF;
+                        msg.cmsg.code = VIEW_CONTROLLER_COMMAND_CODE_DIGOUT_TURNOFF;
+                        if (page_data.pwm == 1) {
                             msg.vmsg.code = VIEW_PAGE_COMMAND_CODE_SWAP_PAGE;
                             msg.vmsg.page = &page_temperature_test;
-                        }
-                        else
-                        {
-                            msg.cmsg.code = VIEW_CONTROLLER_COMMAND_CODE_DIGOUT_TURNOFF;
+                        } else {
                             msg.vmsg.code  = VIEW_PAGE_COMMAND_CODE_SWAP_PAGE_EXTRA;
                             msg.vmsg.page  = &page_pwm_test;
                             msg.vmsg.extra = (void *)(uintptr_t)1;
                         }
                         break;
                     }
-                    case BUTTON_PLUS:
-                    {
+                    case BUTTON_PLUS: {
                         if (page_data.speed == 100)
                             page_data.speed = 0;
                         else
@@ -93,8 +86,7 @@ static view_message_t process_page_event(model_t *model, void *arg, pman_event_t
                         msg.vmsg.code = VIEW_PAGE_COMMAND_CODE_UPDATE;
                         break;
                     }
-                    case BUTTON_MINUS:
-                    {
+                    case BUTTON_MINUS: {
                         if (page_data.speed == 0)
                             page_data.speed = 100;
                         else
@@ -102,15 +94,11 @@ static view_message_t process_page_event(model_t *model, void *arg, pman_event_t
                         msg.vmsg.code = VIEW_PAGE_COMMAND_CODE_UPDATE;
                         break;
                     }
-                    case BUTTON_LINGUA:
-                    {
-                        if (page_data.step == 4)
-                        {
+                    case BUTTON_LINGUA: {
+                        if (page_data.step == 4) {
                             page_data.step  = 0;
                             page_data.speed = 0;
-                        }
-                        else
-                        {
+                        } else {
                             page_data.step++;
                             
                             if (page_data.step == 1)
@@ -125,30 +113,7 @@ static view_message_t process_page_event(model_t *model, void *arg, pman_event_t
                         msg.vmsg.code = VIEW_PAGE_COMMAND_CODE_UPDATE;
                         break;
                     }
-                    case BUTTON_MENU:
-                    {
-                        if (msg.cmsg.value  == 0)
-                        {
-                            msg.cmsg.code   = VIEW_CONTROLLER_COMMAND_CODE_UPDATE_DIGOUT;
-                            msg.cmsg.output = 1;
-                            msg.cmsg.value  = 1;
-                            break;
-                        }
-                        else
-                        {
-                            msg.cmsg.code   = VIEW_CONTROLLER_COMMAND_CODE_UPDATE_DIGOUT;
-                            msg.cmsg.output = 1;
-                            msg.cmsg.value  = 0;
-                            break;
-                        }
-                    }
-                    case BUTTON_STOP:
-                    {
-                        //msg.cmsg.code   = VIEW_CONTROLLER_COMMAND_CODE_UPDATE_DIGOUT;
-                        //msg.cmsg.output = 1;
-                        //msg.cmsg.value  = 0;
-                        msg.cmsg.code = VIEW_CONTROLLER_COMMAND_CODE_DIGOUT_TURNOFF;
-                         
+                    case BUTTON_STOP: {
                         page_data.step  = 0;
                         page_data.speed = 0;
                         msg.vmsg.code   = VIEW_PAGE_COMMAND_CODE_UPDATE;
@@ -175,8 +140,8 @@ static view_message_t process_page_event(model_t *model, void *arg, pman_event_t
                 msg.vmsg.code = VIEW_PAGE_COMMAND_CODE_UPDATE;
             }
 
-
-            msg.cmsg.output = page_data.pwm;
+            msg.cmsg.pwm_channel = page_data.pwm;
+            msg.cmsg.output = page_data.pwm == 1 ? 1 : 4;
             msg.cmsg.value  = page_data.speed;
             msg.cmsg.code   = VIEW_CONTROLLER_COMMAND_CODE_UPDATE_PWM;
             break;
@@ -196,7 +161,8 @@ static view_message_t process_page_event(model_t *model, void *arg, pman_event_t
 static view_t update_page(model_t *model, void *arg) {
 
     lv_label_set_text_fmt(page_data.speedlbl, "DA/V %i-[ST %i]", page_data.speed, page_data.step);
-
+    lv_label_set_text_fmt(page_data.lbl_output, "OUTPUT %i: %s", page_data.pwm == 1 ? 1 : 4, page_data.speed == 0 ? "OFF" : "ON");
+    
     return 0;
 }
 

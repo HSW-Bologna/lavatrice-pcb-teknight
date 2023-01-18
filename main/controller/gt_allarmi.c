@@ -11,12 +11,13 @@
 /*                                                                            */
 /*  Data  : 19/07/2021      REV  : 00.0                                       */
 /*                                                                            */
-/*  U.mod.: 03/01/2023      REV  : 02.4                                       */
+/*  U.mod.: 13/01/2023      REV  : 02.4                                       */
 /*                                                                            */
 /******************************************************************************/
 
 #include <stdint.h>
 #include <stdlib.h>
+#include <xc.h>
 
 #include "gt_allarmi.h"
 #include "peripherals/digin.h"
@@ -39,7 +40,7 @@ void gt_allarmi (model_t *p)
 {
     static uint8_t  n_old_allarme = 0;
     
-    p->status.f_start_ok = 0; 
+    // p->status.f_start_ok = 0; 
     
     
     
@@ -457,6 +458,14 @@ void gt_allarmi (model_t *p)
     else /*(p->status.n_allarme != 0)*/
     {
         p->status.n_allarme = 0;
+    }
+    
+    if (p->status.f_all == 1)
+    {
+        Nop();
+        Nop();
+        Nop();
+        Nop();
     }
 }
 
