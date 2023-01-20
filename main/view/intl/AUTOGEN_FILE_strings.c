@@ -1,5 +1,5 @@
 const char *strings[49][4] = {
-    {"Inserire moneta", "Insert coin", "inserer une piece", "MÃ¼nze einwerfen", },
+    {"Inserire moneta", "Insert coin", "inserer une piece", "Münze einwerfen", },
     {"Inserire gettone", "Insert token", "inserer jeton", "Token einfugen", },
     {"Pagare cassa", "Pay at desk", "payer au caissier", "bezahlen Kasse", },
     {"Scelta programma", "Choose program", "choix programme", "Programmwahl", },
@@ -11,7 +11,7 @@ const char *strings[49][4] = {
     {"FREDDO", "COLD", "FROID", "KALT", },
     {"LANA", "WHOOL", "LAINE", "WOLLE", },
     {"E MEMORIA", "E MEMORY", "E MEMOIRE", "E ERINNERUNG", },
-    {"PORTA APERTA", "OPEN DOOR", "PORTE OUVERTE", "OFFENE TÃœR", },
+    {"PORTA APERTA", "OPEN DOOR", "PORTE OUVERTE", "OFFENE TÜR", },
     {"OBLO' SBLOCCATO", "OBLO' SBLOCCATO", "OBLO' SBLOCCATO", "OBLO' SBLOCCATO", },
     {"EMERGENZA", "EMERGENCY", "URGENCE", "NOTFALL", },
     {"NO RISCALDAMENTO", "NO HEATING", "PAS DE CHAUFFAGE", "KEINE HEIZUNG", },
@@ -36,7 +36,7 @@ const char *strings[49][4] = {
     {"Tempo attivo", "Active time", "Temps actif", "Aktive Zeit", },
     {"Tempo lavoro", "Work time", "Temps de travail", "Arbeitszeit", },
     {"Tempo azione", "Action time", "Temps d'action", "Aktionszeit", },
-    {"Tempo ventilaz", "Fan time", "Temps ventilat", "LÃ¼ftungszeit", },
+    {"Tempo ventilaz", "Fan time", "Temps ventilat", "Lüftungszeit", },
     {"Tempo riscald.", "Heating time", "Temps chauffe", "Erhitzungszeit", },
     {"Cicli parziali", "Partial cycles", "cycles partiels", "Teilzyklen", },
     {"Cicli totali", "Total cycles", "cycles totaux", "Gesamtzyklen", },
@@ -45,7 +45,7 @@ const char *strings[49][4] = {
     {"I parametri caricati dalla eeprom non erano validi. Sono stati corretti", "I parametri caricati dalla eeprom non erano validi. Sono stati corretti", "I parametri caricati dalla eeprom non erano validi. Sono stati corretti", "I parametri caricati dalla eeprom non erano validi. Sono stati corretti", },
     {"Salvataggio in corso...", "Saving...", "Saving .... ", "Saving....,", },
     {"TEMPO CICLO", "CYCLE TIME", "TEMPS DE CYCLE", "ZYKLUSZEIT", },
-    {"TEMPERATURA", "TEMPERATURE", "TEMPÃ‰RATURE", "TEMPERATURE", },
+    {"TEMPERATURA", "TEMPERATURE", "TEMPÉRATURE", "TEMPERATURE", },
     {"UMIDITA' ", "UMIDITY", "UMIDITY", "UMIDITY", },
     {"VELOCITA'", "SPEED", "VITESSE", "DREHZAHL", },
 };
