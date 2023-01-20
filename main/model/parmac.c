@@ -41,13 +41,14 @@ enum {
 extern parameter_handle_t parameters[];
 
 static uint8_t parameters_in_chunk[NUM_CHUNKS][NUM_LIVELLI_ACCESSO] = {{0}};
+static const char *languages[] = {"LINGUA", "LANGUAGE", "LANGUE", "SPRACHE"};
 
 static void                formatta(char *string, const void *arg);
 static parameter_handle_t *get_actual_parameter(model_t *pmodel, size_t parameter, uint8_t al);
 static uint8_t             get_livello_accesso(uint8_t parametri_ridotti);
 static size_t              num_parameters_in_chunk(size_t chunk);
-static size_t              get_parameter_index(model_t *pmodel, size_t parameter);
-static size_t              get_parameter_chunk(model_t *pmodel, size_t parameter);
+static size_t              get_parameter_index(model_t *pmodel, size_t parameter, size_t al);
+static size_t              get_parameter_chunk(model_t *pmodel, size_t parameter, size_t al);
 
 
 void parmac_init(model_t *p, int reset) {
@@ -59,8 +60,8 @@ void parmac_init(model_t *p, int reset) {
 
 
 void parmac_setup_commissioning(model_t *p) {
-    parameters[PARMAC_COMMISSIONING_LINGUA] = PARAMETER_C99(PARAMETER_TYPE_UINT8, &p->pmac.lingua, NULL, NULL, 0, 1, 0,
-                                                            1, AL_USER, FINT(PARMAC_DESCRIPTIONS_LINGUA), NULL, NULL);
+    parameters[PARMAC_COMMISSIONING_LINGUA] = PARAMETER_C99(PARAMETER_TYPE_UINT8, &p->pmac.lingua, NULL, NULL, 0, 3, 0,
+                                                            1, AL_USER, ((parameter_user_data_t){languages, formatta, NULL, NULL}), NULL, NULL);
     parameters[PARMAC_COMMISSIONING_LOGO] =
         PARAMETER_C99(PARAMETER_TYPE_UINT8, &p->pmac.logo_ditta, NULL, NULL, 0, 5, 1, 1, AL_TECH,
                       FINT(PARMAC_DESCRIPTIONS_STRINGA_DITTA_VISUALIZZATA), NULL, NULL);
@@ -181,7 +182,12 @@ void parmac_operation(model_t *pmodel, size_t parameter, int op, uint8_t al) {
 const char *parmac_get_description(model_t *pmodel, size_t parameter, uint8_t al) {
     parameter_user_data_t data = parameter_get_user_data(get_actual_parameter(pmodel, parameter, al));
 
-    return data.descrizione[pmodel->pmac.lingua];
+    unsigned int lingua = pmodel->pmac.lingua;
+    if (lingua > 1) {
+        lingua = 1; // Le stringhe dei parametri possono essere solo in italiano e in inglese
+    }
+
+    return data.descrizione[lingua];
 }
 
 void parmac_format_value(model_t *pmodel, char *string, size_t parameter, uint8_t al) {
@@ -234,19 +240,18 @@ static size_t num_parameters_in_chunk(size_t chunk) {
 
 
 static parameter_handle_t *get_actual_parameter(model_t *pmodel, size_t parameter, uint8_t al) {
-    size_t chunk = get_parameter_chunk(pmodel, parameter);
+    size_t chunk = get_parameter_chunk(pmodel, parameter, al);
     if (chunk != pmodel->parchunk) {
         parmac_setup_full(pmodel, chunk, 0);
     }
 
-    return parameter_get_handle(parameters, num_parameters_in_chunk(chunk), get_parameter_index(pmodel, parameter),
+    return parameter_get_handle(parameters, num_parameters_in_chunk(chunk), get_parameter_index(pmodel, parameter, al),
                                 get_livello_accesso(al));
 }
 
 
-static size_t get_parameter_chunk(model_t *pmodel, size_t parameter) {
+static size_t get_parameter_chunk(model_t *pmodel, size_t parameter, size_t al) {
     size_t i  = 0;
-    size_t al = pmodel->pmac.abilita_parametri_ridotti;
 
     for (i = 0; i < NUM_CHUNKS; i++) {
         if (parameter < parameters_in_chunk[i][al]) {
@@ -260,9 +265,8 @@ static size_t get_parameter_chunk(model_t *pmodel, size_t parameter) {
 }
 
 
-static size_t get_parameter_index(model_t *pmodel, size_t parameter) {
+static size_t get_parameter_index(model_t *pmodel, size_t parameter, size_t al) {
     size_t i  = 0;
-    size_t al = pmodel->pmac.abilita_parametri_ridotti;
 
     for (i = 0; i < NUM_CHUNKS; i++) {
         if (parameter < parameters_in_chunk[i][al]) {

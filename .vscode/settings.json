@@ -7,5 +7,5 @@
         "controller.h": "c",
         "digout.h": "c"
     },
-    "python.pythonPath": "/home/maldus/Projects/Rotondi/Paperoga.X/.env/bin/python3.9"
+    "C_Cpp.intelliSenseEngine": "disabled",
 }

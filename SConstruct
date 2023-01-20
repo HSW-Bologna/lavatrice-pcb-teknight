@@ -74,7 +74,7 @@ CPPPATH = [
     f"#{COMPONENTS}", f"#{LVGL}/src", f"#{LVGL}", f"#{MAIN}",
     f"#{MAIN}/config", f"#{MAIN}/config/mbconf", f"#{MAIN}/simulator", f"#{COMPONENTS}/gel/generic_embedded_libs",
     f"{LIBLIGHTMODBUS}/include",
-    "simulator",
+    "simulator", "simulator/port"
 ]
 
 if SDLPATH:

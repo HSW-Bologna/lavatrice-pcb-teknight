@@ -58,7 +58,12 @@ const char *parciclo_get_description(const model_t *pmodel, size_t parameter) {
     parameter_user_data_t data = parameter_get_user_data(parameter_get_handle(
         parameters, NUM_PARAMETERS, parameter, get_livello_accesso(pmodel->pmac.abilita_parametri_ridotti)));
 
-    return data.descrizione[pmodel->pmac.lingua];
+    unsigned int lingua = pmodel->pmac.lingua;
+    if (lingua > 1) {
+        lingua = 1; // Le stringhe dei parametri possono essere solo in italiano e in inglese
+    }
+
+    return data.descrizione[lingua];
 }
 
 void parciclo_format_value(char *string, size_t parameter, model_t *pmodel) {

@@ -17,6 +17,10 @@ void digout_buzzer_stop(void) {}
 
 void rele_set(rele_t rele, int val) {}
 
+uint8_t rele_get(rele_t rele) {
+    return 0;
+}
+
 void pwm_set(uint8_t perc) {}
 
 void digout_buzzer_set_off(void) {}
