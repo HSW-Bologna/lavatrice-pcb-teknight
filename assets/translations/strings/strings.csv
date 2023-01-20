@@ -1,5 +1,5 @@
 Identificatore; Italiano; Inglese; francese; tedesco
-INSERIRE_MONETA; Inserire moneta; Insert coin; inserer une piece; M�nze einwerfen
+INSERIRE_MONETA; Inserire moneta; Insert coin; inserer une piece; Münze einwerfen
 INSERIRE_GETTONE; Inserire gettone; Insert token; inserer jeton; Token einfugen
 PAGARE_CASSA; Pagare cassa; Pay at desk; payer au caissier; bezahlen Kasse
 SCELTA_PROGRAMMA; Scelta programma; Choose program; choix programme; Programmwahl
@@ -11,7 +11,7 @@ PROGRAMMA_TIEPIDO; TIEPIDO; TEPID; PEU CHAUD; WENIG HEISS
 PROGRAMMA_FREDDO; FREDDO; COLD; FROID; KALT
 PROGRAMMA_LANA; LANA; WHOOL; LAINE; WOLLE
 ALLARME_ERRORE_RAM; E MEMORIA; E MEMORY; E MEMOIRE; E ERINNERUNG
-ALLARME_OBLO_APERTO; PORTA APERTA; OPEN DOOR; PORTE OUVERTE; OFFENE T�R
+ALLARME_OBLO_APERTO; PORTA APERTA; OPEN DOOR; PORTE OUVERTE; OFFENE TÜR
 ALLARME_OBLO_SBLOCCATO; OBLO' SBLOCCATO; OBLO' SBLOCCATO; OBLO' SBLOCCATO; OBLO' SBLOCCATO
 ALLARME_EMERGENZA; EMERGENZA; EMERGENCY; URGENCE; NOTFALL
 ALLARME_TEMPO_SCADUTO_T1; NO RISCALDAMENTO; NO HEATING; PAS DE CHAUFFAGE; KEINE HEIZUNG
@@ -36,7 +36,7 @@ STATISTICHE; STATISTICHE; STATISTICS; STATISTIQUES; STATISTIKEN
 TEMPO_ACCENSIONE; Tempo attivo; Active time; Temps actif; Aktive Zeit
 TEMPO_LAVORO; Tempo lavoro; Work time; Temps de travail; Arbeitszeit
 TEMPO_MOTO; Tempo azione; Action time; Temps d'action; Aktionszeit
-TEMPO_VENTILAZIONE; Tempo ventilaz; Fan time; Temps ventilat; L�ftungszeit
+TEMPO_VENTILAZIONE; Tempo ventilaz; Fan time; Temps ventilat; Lüftungszeit
 TEMPO_RISCALDAMENTO; Tempo riscald.; Heating time; Temps chauffe; Erhitzungszeit
 CICLI_PARZIALI; Cicli parziali; Partial cycles;cycles partiels; Teilzyklen
 CICLI_TOTALI; Cicli totali; Total cycles; cycles totaux; Gesamtzyklen
@@ -45,6 +45,6 @@ ERRORE_FATALE_RAM; Si e' verificato un malfunzionamento fatale della eeprom. I p
 ERRORE_LIEVE_RAM; I parametri caricati dalla eeprom non erano validi. Sono stati corretti; I parametri caricati dalla eeprom non erano validi. Sono stati corretti; I parametri caricati dalla eeprom non erano validi. Sono stati corretti; I parametri caricati dalla eeprom non erano validi. Sono stati corretti
 SALVATAGGIO_IN_CORSO; Salvataggio in corso...; Saving...; Saving .... ; Saving....,
 TEMPO_CICLO; TEMPO CICLO; CYCLE TIME; TEMPS DE CYCLE; ZYKLUSZEIT
-TEMPERATURA; TEMPERATURA; TEMPERATURE; TEMPERATURE; TEMPERATURE
+TEMPERATURA; TEMPERATURA; TEMPERATURE; TEMPÉRATURE; TEMPERATURE
 UMIDITA; UMIDITA' ; UMIDITY; UMIDITY; UMIDITY
 VELOCITA; VELOCITA'; SPEED; VITESSE; DREHZAHL
