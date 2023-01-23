@@ -11,7 +11,7 @@
 /*                                                                            */
 /*  Data  : 19/07/2021      REV  : 00.0                                       */
 /*                                                                            */
-/*  U.mod.: 03/12/2022      REV  : 02.4                                       */
+/*  U.mod.: 21/01/2023      REV  : 02.5                                       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -87,7 +87,7 @@ void parmac_setup_full(model_t *p, size_t chunk, int reset) {
             parameters[i++] = PARAMETER_C99(PARAMETER_TYPE_UINT8, &p->pmac.abilita_visualizzazione_cicli_totali,NULL,   NULL,   0,      3,      3,      1,      AL_TECH,     FINT(PARMAC_DESCRIPTIONS_ABILITA_VISUALIZZAZIONE_CICLI_TOTALI),    NULL,       NULL);
             parameters[i++] = PARAMETER_C99(PARAMETER_TYPE_UINT8, &p->pmac.abilita_parametri_ridotti,           NULL,   NULL,   0,      1,      1,      1,      AL_TECH,     FINT(PARMAC_DESCRIPTIONS_ABILITA_PARAMETRI_RIDOTTI),               NULL,       NULL);
             parameters[i++] = PARAMETER_C99(PARAMETER_TYPE_UINT8, &p->pmac.modello_macchina,                    NULL,   NULL,   1,      19,     0,      1,      AL_TECH,     FINT(PARMAC_DESCRIPTIONS_MODELLO_MACCHINA),                        NULL,       NULL);
-            parameters[i++] = PARAMETER_C99(PARAMETER_TYPE_UINT8, &p->pmac.abilita_autoavvio,                   NULL,   NULL,   0,      1,      0,      1,      AL_TECH,     FINT(PARMAC_DESCRIPTIONS_ABILITA_AUTOAVVIO),                       NULL,       NULL);
+            parameters[i++] = PARAMETER_C99(PARAMETER_TYPE_UINT8, &p->pmac.abilita_autoavvio,                   NULL,   NULL,   0,      1,      1,      1,      AL_TECH,     FINT(PARMAC_DESCRIPTIONS_ABILITA_AUTOAVVIO),                       NULL,       NULL);
             parameters[i++] = PARAMETER_C99(PARAMETER_TYPE_UINT8, &p->pmac.tipo_pausa_asciugatura,              NULL,   NULL,   0,      1,      0,      1,      AL_TECH,     FINT(PARMAC_DESCRIPTIONS_TIPO_PAUSA),                              NULL,       NULL);
             parameters[i++] = PARAMETER_C99(PARAMETER_TYPE_UINT8, &p->pmac.abilita_gas,                         NULL,   NULL,   0,      1  ,    0,      1,      AL_TECH,     FINT(PARMAC_DESCRIPTIONS_ABILITA_GAS),                             NULL,       NULL);
             parameters[i++] = PARAMETER_C99(PARAMETER_TYPE_UINT8, &p->pmac.numero_tentativi_reset_gas,          NULL,   NULL,   0,      9,      3,      1,      AL_TECH,     FINT(PARMAC_DESCRIPTIONS_NUMERO_TENTATIVI_RESET_GAS),              NULL,       NULL);
@@ -105,7 +105,7 @@ void parmac_setup_full(model_t *p, size_t chunk, int reset) {
             parameters[i++] = PARAMETER_C99(PARAMETER_TYPE_UINT8, &p->pmac.tipo_out_macchina_occupata,          NULL,   NULL,   0,      3,      0,      1,      AL_USER,     FINT(PARMAC_DESCRIPTIONS_TIPO_OUT_MACCHINA_OCCUPATA),              NULL,       NULL);
             parameters[i++] = PARAMETER_C99(PARAMETER_TYPE_UINT8, &p->pmac.tempo_uscita_pagine,                 NULL,   NULL,   1,      60,     30,     1,      AL_TECH,     FINT(PARMAC_DESCRIPTIONS_TEMPO_USCITA_PAGINE),                     NULL,       NULL);
             parameters[i++] = PARAMETER_C99(PARAMETER_TYPE_UINT8, &p->pmac.tempo_reset_lingua,                  NULL,   NULL,   1,      250,    1,      1,      AL_TECH,     FINT(PARMAC_DESCRIPTIONS_TEMPO_RESET_LINGUA),                      NULL,       NULL);
-            parameters[i++] = PARAMETER_C99(PARAMETER_TYPE_UINT8, &p->pmac.tempo_azzeramento_ciclo_pausa,       NULL,   NULL,   1,      60,     0,      1,      AL_USER,     FINT(PARMAC_DESCRIPTIONS_TEMPO_AZZERAMENTO_CICLO_PAUSA),           NULL,       NULL);
+            parameters[i++] = PARAMETER_C99(PARAMETER_TYPE_UINT8, &p->pmac.tempo_azzeramento_ciclo_pausa,       NULL,   NULL,   1,      60,     1,      1,      AL_USER,     FINT(PARMAC_DESCRIPTIONS_TEMPO_AZZERAMENTO_CICLO_PAUSA),           NULL,       NULL);
             parameters[i++] = PARAMETER_C99(PARAMETER_TYPE_UINT8, &p->pmac.tempo_azzeramento_ciclo_stop,        NULL,   NULL,   1,      60,     1,      1,      AL_USER,     FINT(PARMAC_DESCRIPTIONS_TEMPO_AZZERAMENTO_CICLO_STOP),            NULL,       NULL);
             parameters[i++] = PARAMETER_C99(PARAMETER_TYPE_UINT8, &p->pmac.abilita_stop_tempo_ciclo,            NULL,   NULL,   0,      1,      1,      1,      AL_USER,     FINT(PARMAC_DESCRIPTIONS_ABILITA_STOP_TEMPO_CICLO),                NULL,       NULL);
             parameters[i++] = PARAMETER_C99(PARAMETER_TYPE_UINT8, &p->pmac.tempo_attesa_azzeramento_ciclo,      NULL,   NULL,   0,      250,    1  ,    1,      AL_TECH,     FINT(PARMAC_DESCRIPTIONS_TEMPO_ATTESA_AZZERAMENTO_CICLO),          NULL,       NULL);

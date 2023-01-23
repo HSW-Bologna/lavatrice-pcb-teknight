@@ -17,7 +17,7 @@
 /*                                                                            */
 /*  ver. 00.0:  05/05/2021  dalla da MiniEco V:17.4   D:11/04/2021            */
 /*                                                                            */
-/*  ver. att.:  18/01/2023  02.5                                              */
+/*  ver. att.:  21/01/2023  02.5                                              */
 /*                                                                            */
 /*  BY:         Maldus (Mattia MALDINI) & Virginia NEGRI & Massimo ZANNA      */
 /*                                                                            */
@@ -32,7 +32,7 @@
 /* ************************************************************************** */
 
 //                                    12345678901234567890
-const unsigned char versione_prg[] = "V:02.5  D:18/01/2023";
+const unsigned char versione_prg[] = "V:02.5  D:21/01/2023";
 
 
 
@@ -228,7 +228,7 @@ const unsigned char versione_prg[] = "V:02.5  D:18/01/2023";
 /*                                                                            */
 /*----------------------------------------------------------------------------*/
 /*                                                                            */
-/*  rev.:       18/01/2023 (02.5)                                             */
+/*  rev.:       21/01/2023 (02.5)                                             */
 /*                                                                            */
 /*      - GT PW DA FERMO STOP+STOP+STOP+TIE+FRED+LINGUA -> MOD MAC/LOGO/LINGUA*/
 /*                                                                            */
@@ -238,8 +238,26 @@ const unsigned char versione_prg[] = "V:02.5  D:18/01/2023";
 /*                                                                            */
 /*      - CORRETTO ERRORE "AUTOAVVIO"                                         */
 /*                                                                            */
+/*      - CORRETTO ERRORE "GESTIONE LINGUE" SIA "PAR MAC" CHE "COMMISSIONING" */
+/*                                                                            */
+/*      - MIGLIORATA VENTILAZIONE FORZATA CON APERTURA OBLO'(NO CON ALTRI ALL)*/
+/*                                                                            */
 /******************************************************************************/
 
+/******************************************************************************/
+/*      DA FARE : 21-01-2023 # 02.5                                           */
+/*                                                                            */
+/*      - MOGLIORARE GT ALLARMI (DA MOTO A PAUSA SE LA CAUSA SCOMPARE !!!!)   */
+/*                                                                            */
+/*      - CON RESET E MOD MAC INIZIALIZZARE "TUTTE" LE VAR MAC/CIC ???? !!!!  */
+/*                                                                            */
+/*      - MIGLIORARE GT "ANTIPIEGA" E "GT OUT MACC OCC @ 3"                   */
+/*                                                                            */
+/*      - AUMENTARE A 28 IL CONTRASTO LCD STD                                 */
+/*                                                                            */
+/*      - MIGLIORARE GT PW CON GT CONFTONTO STRINGA ????                      */
+/*                                                                            */
+/******************************************************************************/
 
 
 #include "peripherals/system.h"

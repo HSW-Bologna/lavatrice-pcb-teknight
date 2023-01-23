@@ -430,7 +430,8 @@ const pman_page_t page_main = {
 
 void view_status_string(model_t *p)
 {
-    if (p->status.n_allarme == ALL_NO)
+      if (p->status.n_allarme==ALL_NO)
+//    if (p->status.n_allarme==ALL_NO && p->status.f_all==0)
     {
         if (model_get_status_stopped(p))
         {
@@ -474,6 +475,7 @@ void view_status_string(model_t *p)
         if (p->status.n_allarme != AVV_ANTIPIEGA)
         {
             lv_label_set_text(page_data.status, view_intl_get_string(p, allarme_codice[p->status.n_allarme - 1]));
+//          lv_label_set_text(page_data.status, view_intl_get_string(p, allarme_codice[p->status.n_old_allarme - 1]));
             view_status_legacy_img(p);
         }
         else
@@ -481,6 +483,7 @@ void view_status_string(model_t *p)
             if (page_data.blink_antipiega < 2)
             {
                 lv_label_set_text(page_data.status, view_intl_get_string(p, allarme_codice[p->status.n_allarme - 1]));
+//              lv_label_set_text(page_data.status, view_intl_get_string(p, allarme_codice[p->status.n_old_allarme - 1]));
                 view_status_legacy_img(p);
             }
             else

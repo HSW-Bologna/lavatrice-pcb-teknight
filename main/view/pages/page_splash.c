@@ -71,6 +71,7 @@ static view_message_t process_page_event(model_t *pmodel, void *arg, pman_event_
             else
             {
                 msg.vmsg.page = &page_commissioning;
+                pmodel->status.f_start_ok = 0;
             }
             break;
 

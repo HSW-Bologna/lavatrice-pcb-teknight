@@ -11,7 +11,7 @@
 /*                                                                            */
 /*  Data  : 19/07/2021      REV  : 00.0                                       */
 /*                                                                            */
-/*  U.mod.: 13/01/2023      REV  : 02.4                                       */
+/*  U.mod.: 21/01/2023      REV  : 02.5                                       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -40,10 +40,6 @@ void gt_allarmi (model_t *p)
 {
     static uint8_t  n_old_allarme = 0;
     
-    // p->status.f_start_ok = 0; 
-    
-    
-    
     if (p->status.f_start_ok==1 || p->status.f_no_gt_all==1 || p->status.f_in_test == 1)
     {
         p->status.n_allarme = ALL_NO;
@@ -63,6 +59,7 @@ void gt_allarmi (model_t *p)
         if (p->status.n_allarme!=AVV_ANTIPIEGA)
         {
             n_old_allarme = p->status.n_allarme;
+//          p->status.n_old_allarme =  p->status.n_allarme; //++++ -!!!! ToDO
         }
         
         if (n_old_allarme>0 && n_old_allarme<ALL_TEMPERATURA_1)
@@ -94,12 +91,11 @@ void gt_allarmi (model_t *p)
     
     if (p->status.f_errore_ram_ko==1)         // ALL RAM KO -------------------*
     {
-        // n_allarme = 9;
-        
         if (p->status.n_allarme != ALL_ERRORE_RAM)
         {
             p->status.n_allarme = ALL_ERRORE_RAM;
-//            Cambio_pag(PAGINA_VIS_ERR_RAM);
+            
+//          Cambio_pag(PAGINA_VIS_ERR_RAM); // -!!!! ToDO
         }
     }
 

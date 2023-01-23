@@ -11,7 +11,7 @@
 /*                                                                            */
 /*  Data  : 19/07/2021      REV  : 00.0                                       */
 /*                                                                            */
-/*  U.mod.: 18/02/2022      REV  : 01.0                                       */
+/*  U.mod.: 21/01/2023      REV  : 02.5                                       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -163,7 +163,7 @@ void ventilazione_apertura_oblo(model_t *p, unsigned long timestamp)
     
     
     
-    if (p->status.f_ventilazione_oblo==0 && digin_get(OBLO_APERTO)==0)
+    if (p->status.f_ventilazione_oblo==0 && digin_get(OBLO_APERTO)==0 && p->status.n_allarme==2 && p->status.f_start_ok==0)
     {
             ventilazione_marcia(p);
             stopwatch_set(&ct_ventilazione_oblo, p->pmac.tempo_ventilazione_oblo_aperto*1000UL);
