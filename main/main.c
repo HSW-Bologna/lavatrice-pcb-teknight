@@ -17,7 +17,7 @@
 /*                                                                            */
 /*  ver. 00.0:  05/05/2021  dalla da MiniEco V:17.4   D:11/04/2021            */
 /*                                                                            */
-/*  ver. att.:  21/01/2023  02.5                                              */
+/*  ver. att.:  09/02/2023  02.5                                              */
 /*                                                                            */
 /*  BY:         Maldus (Mattia MALDINI) & Virginia NEGRI & Massimo ZANNA      */
 /*                                                                            */
@@ -32,7 +32,7 @@
 /* ************************************************************************** */
 
 //                                    12345678901234567890
-const unsigned char versione_prg[] = "V:02.5  D:21/01/2023";
+const unsigned char versione_prg[] = "V:02.5  D:09/02/2023";
 
 
 
@@ -228,11 +228,11 @@ const unsigned char versione_prg[] = "V:02.5  D:21/01/2023";
 /*                                                                            */
 /*----------------------------------------------------------------------------*/
 /*                                                                            */
-/*  rev.:       21/01/2023 (02.5)                                             */
+/*  rev.:       09/02/2023 (02.5)  REV. 2                                     */
 /*                                                                            */
 /*      - GT PW DA FERMO STOP+STOP+STOP+TIE+FRED+LINGUA -> MOD MAC/LOGO/LINGUA*/
 /*                                                                            */
-/*      - BLOCCATO ACCESSO CON PW CON MACCHINA NON FERMA # MIGLIORATA         */
+/*      - RI-SBLOCCATO ACCESSO TEST CON PW CON MACCHINA NON FERMA # NO GT OUT */
 /*                                                                            */
 /*      - introdotto "pmac.tipo_out_macchina_occupata" a 3 # MIGLIORATA       */
 /*                                                                            */
@@ -245,9 +245,13 @@ const unsigned char versione_prg[] = "V:02.5  D:21/01/2023";
 /******************************************************************************/
 
 /******************************************************************************/
-/*      DA FARE : 21-01-2023 # 02.5                                           */
+/*      DA FARE : 09-02-2023 # 02.5                                           */
 /*                                                                            */
 /*      - MOGLIORARE GT ALLARMI (DA MOTO A PAUSA SE LA CAUSA SCOMPARE !!!!)   */
+/*                                                                            */
+/*      - INSERIRE PAGINA "START MACCHINA" IN START => NO VER PROG E TEST     */
+/*                                                                            */
+/*      - NEL TEST CESTO / OUT / VARI FERMARE TUTTO IN CASO DI ALLARMI !!!!   */
 /*                                                                            */
 /*      - CON RESET E MOD MAC INIZIALIZZARE "TUTTE" LE VAR MAC/CIC ???? !!!!  */
 /*                                                                            */
