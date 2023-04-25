@@ -1071,7 +1071,28 @@ size_t model_private_parameters_deserialize(model_t *pmodel, uint8_t *buff) {
 
 void model_add_second(model_t *pmodel) {
     assert(pmodel != NULL);
+    
     pmodel->pwoff.tempo_attivita++;
+    
+    if (model_get_status_not_stopped(pmodel))
+    {
+        pmodel->pwoff.tempo_lavoro++;
+    }
+    
+    if ((model_get_output_status(pmodel, 0)==1) || (model_get_output_status(pmodel, 2==1)))
+    {
+        pmodel->pwoff.tempo_moto++;
+    }
+    
+    if ((model_get_output_status(pmodel, 2)==1))
+    {
+        pmodel->pwoff.tempo_riscaldamento++;
+    }
+    
+    if ((model_get_output_status(pmodel, 3)==1))
+    {
+        pmodel->pwoff.tempo_ventilazione++;
+    }
 }
 
 

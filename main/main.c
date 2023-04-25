@@ -17,7 +17,7 @@
 /*                                                                            */
 /*  ver. 00.0:  05/05/2021  dalla da MiniEco V:17.4   D:11/04/2021            */
 /*                                                                            */
-/*  ver. att.:  09/02/2023  02.5                                              */
+/*  ver. att.:  06/04/2023  02.7                                              */
 /*                                                                            */
 /*  BY:         Maldus (Mattia MALDINI) & Virginia NEGRI & Massimo ZANNA      */
 /*                                                                            */
@@ -32,7 +32,7 @@
 /* ************************************************************************** */
 
 //                                    12345678901234567890
-const unsigned char versione_prg[] = "V:02.5  D:09/02/2023";
+const unsigned char versione_prg[] = "V:02.7  D:06/04/2023";
 
 
 
@@ -242,10 +242,28 @@ const unsigned char versione_prg[] = "V:02.5  D:09/02/2023";
 /*                                                                            */
 /*      - MIGLIORATA VENTILAZIONE FORZATA CON APERTURA OBLO'(NO CON ALTRI ALL)*/
 /*                                                                            */
+/*----------------------------------------------------------------------------*/
+/*                                                                            */
+/*  rev.:       16/03/2023 (02.6)                                             */
+/*                                                                            */
+/*      - RIMESSA POSSIBILITA' DI ENTRARE IN TEST CON MACCHINA IN MOTO        */
+/*                                                                            */
+/*      - MODIFICA FATTA A LODI NEL MAIN (NON SI FERMAVA A OBLO' APERTO: MOC- */
+/*        CHINA CON VENIVA MAI SPENTA E DOPO PW-OFF ANDAVA BENE X UN PO')     */
+/*                                                                            */
+/*----------------------------------------------------------------------------*/
+/*                                                                            */
+/*  rev.:       06/04/2023 (02.7)                                             */
+/*                                                                            */
+/*      - RIMESSA POSSIBILITA' DI ENTRARE IN TEST CON MACCHINA IN MOTO        */
+/*                                                                            */
+/*      - MODIFICA FATTA A LODI NEL MAIN (NON SI FERMAVA A OBLO' APERTO: MOC- */
+/*        CHINA CON VENIVA MAI SPENTA E DOPO PW-OFF ANDAVA BENE X UN PO')     */
+/*                                                                            */
 /******************************************************************************/
 
 /******************************************************************************/
-/*      DA FARE : 09-02-2023 # 02.5                                           */
+/*      DA FARE : 06-04-2023 # 02.7                                           */
 /*                                                                            */
 /*      - MOGLIORARE GT ALLARMI (DA MOTO A PAUSA SE LA CAUSA SCOMPARE !!!!)   */
 /*                                                                            */
@@ -362,7 +380,7 @@ int main(void)
         modbus_server_manage(&model);
         
         // gestione macchina ------------------ //
-        if (is_expired(ts_allarmi, get_millis(), 200))
+        if (is_expired(ts_allarmi, get_millis(), 13))
         {
             model.status.f_no_gt_all = 0;
             
@@ -468,7 +486,8 @@ int main(void)
         
         
         
-        if (timer_second_passed()) {
+        if (timer_second_passed())
+        {
             model_add_second(&model);
             controller_update_pwoff(&model);
         }
