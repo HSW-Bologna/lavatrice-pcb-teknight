@@ -400,6 +400,7 @@ void model_get_pwoff(model_t *pmodel)
             {
                 if (pmodel->status.stato_step==STATO_STEP_ASC || pmodel->status.stato_step == STATO_STEP_RAF)
                 {
+                    pmodel->status.f_pwoff = 1;
                     model_seleziona_ciclo(pmodel,  pmodel->status.ciclo);
                     model_set_status_work(pmodel);
                     stopwatch_start(&pmodel->status.tempo_asciugatura, get_millis()); // -!!!! ToDO
@@ -882,8 +883,8 @@ void model_seleziona_ciclo(model_t *pmodel, tipo_ciclo_t ciclo)
         else
         {
             pmodel->status.f_pwoff = 0;
-            model_event(pmodel, EVENT_PAUSE);
-            pmodel->status.stato = STATO_PAUSE;
+            ////model_event(pmodel, EVENT_PAUSE);
+            ////pmodel->status.stato = STATO_PAUSE;
             //assert(pmodel != NULL);
             //pmodel->pwoff.delta_temperatura = 0;
             //pmodel->pwoff.delta_umidita = 0;

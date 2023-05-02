@@ -17,7 +17,7 @@
 /*                                                                            */
 /*  ver. 00.0:  05/05/2021  dalla da MiniEco V:17.4   D:11/04/2021            */
 /*                                                                            */
-/*  ver. att.:  06/04/2023  02.7                                              */
+/*  ver. att.:  26/04/2023  02.8                                              */
 /*                                                                            */
 /*  BY:         Maldus (Mattia MALDINI) & Virginia NEGRI & Massimo ZANNA      */
 /*                                                                            */
@@ -32,7 +32,7 @@
 /* ************************************************************************** */
 
 //                                    12345678901234567890
-const unsigned char versione_prg[] = "V:02.7  D:06/04/2023";
+const unsigned char versione_prg[] = "V:02.8  D:26/04/2023";
 
 
 
@@ -257,13 +257,20 @@ const unsigned char versione_prg[] = "V:02.7  D:06/04/2023";
 /*                                                                            */
 /*      - RIMESSA POSSIBILITA' DI ENTRARE IN TEST CON MACCHINA IN MOTO        */
 /*                                                                            */
-/*      - MODIFICA FATTA A LODI NEL MAIN (NON SI FERMAVA A OBLO' APERTO: MOC- */
-/*        CHINA CON VENIVA MAI SPENTA E DOPO PW-OFF ANDAVA BENE X UN PO')     */
+/*      - PRIMA PROVA SALVATAGGIO COMPLETO DATI AL PW-OFF PER RIPRESA IN AUTO-*/
+/*        AVVIO (NON RIPARTE BENE SE ABILITATO E NON CI SONO TUTTE LE STATIS.)*/
+/*                                                                            */
+/*----------------------------------------------------------------------------*/
+/*                                                                            */
+/*  rev.:       26/04/2023 (02.8)                                             */
+/*                                                                            */
+/*      - SECON.PROVA SALVATAGGIO COMPLETO DATI AL PW-OFF PER RIPRESA IN AUTO-*/
+/*        AVVIO (NON RIPARTE BENE SE ABILITATO E NON CI SONO TUTTE LE STATIS.)*/
 /*                                                                            */
 /******************************************************************************/
 
 /******************************************************************************/
-/*      DA FARE : 06-04-2023 # 02.7                                           */
+/*      DA FARE : 26-04-2023 # 02.8                                           */
 /*                                                                            */
 /*      - MOGLIORARE GT ALLARMI (DA MOTO A PAUSA SE LA CAUSA SCOMPARE !!!!)   */
 /*                                                                            */
