@@ -334,7 +334,7 @@ model_t model;
 
 int main(void)
 {
-    unsigned long tskp = 0, ts_input = 0, ts_temperature = 0, ts_spi = 0, ts_allarmi = 0;
+    unsigned long tskp = 0, ts_input = 0, ts_temperature = 0, ts_spi = 0, ts_allarmi = 0, ts_start_delay = 0, ts_reset = 0;
 
     // inizializzazioni ----------------------- //
     system_init();
@@ -385,17 +385,24 @@ int main(void)
     for (;;) {
         controller_manage_gui(&model);
         modbus_server_manage(&model);
+
+        if (!model_get_status_stopped(&model)) {
+            ts_reset = get_millis();
+        }
+                
+        if (model.status.f_start_ok && is_expired(ts_start_delay, get_millis(), 5000)) {
+            model.status.f_start_ok = 0;
+        }
+
+        if (is_expired(ts_reset, get_millis(), 4UL*60UL*60UL*1000UL)) {
+            __asm__ volatile ("reset");
+        }
         
         // gestione macchina ------------------ //
         if (is_expired(ts_allarmi, get_millis(), 13))
         {
-            model.status.f_no_gt_all = 0;
-            
-            if (model.pmac.abilita_disabilito_allarmi == 1)
-            {
-                model.status.f_no_gt_all = 1;
-            }
             gt_allarmi(&model);
+            ts_allarmi = get_millis();
         }
 
         gt_ciclo(&model, get_millis());
@@ -433,6 +440,7 @@ int main(void)
             keypad_update_t update = keyboard_manage(get_millis());
 
             if (update.event != KEY_NOTHING) {
+                ts_reset = get_millis();
                 view_event((view_event_t){.code = VIEW_EVENT_KEYPAD, .key_event = update});
             }
             if (model_is_in_test(&model)) {

@@ -40,7 +40,7 @@ void gt_allarmi (model_t *p)
 {
     static uint8_t  n_old_allarme = 0;
     
-    if (p->status.f_start_ok==1 || p->status.f_no_gt_all==1 || p->status.f_in_test == 1)
+    if (p->status.f_start_ok==1 || p->pmac.abilita_disabilito_allarmi == 1 || p->status.f_in_test == 1)
     {
         p->status.n_allarme = ALL_NO;
         p->status.f_all = ALL_NO;

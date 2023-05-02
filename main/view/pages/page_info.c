@@ -7,6 +7,7 @@
 #include "view/common.h"
 #include "view/styles.h"
 #include "config/app_config.h"
+#include "view/view_types.h"
 #include <stdio.h>
 
 
@@ -78,6 +79,9 @@ static view_message_t process_page_event(model_t *pmodel, void *arg, pman_event_
         case VIEW_EVENT_KEYPAD: {
             if (event.key_event.code == BUTTON_STOP && event.key_event.event == KEY_CLICK) {
                 msg.vmsg.code = VIEW_PAGE_COMMAND_CODE_BACK;
+            } else if (event.key_event.code == BUTTON_MENU && event.key_event.event == KEY_CLICK) {
+                msg.vmsg.code = VIEW_PAGE_COMMAND_CODE_CHANGE_PAGE;
+                msg.vmsg.page = &page_stupid;
             }
             break;
         }

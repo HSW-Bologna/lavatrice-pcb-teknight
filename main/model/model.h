@@ -228,7 +228,6 @@ typedef struct {
         stato_step_t stato_step;
         uint8_t      f_in_test;
         uint8_t      f_sblocco_ridotti;
-        uint8_t      f_no_gt_all;
         uint8_t      f_start_ok;
         uint8_t      f_ok_gettone;
         uint8_t      f_ventilazione;
