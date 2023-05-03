@@ -11,7 +11,7 @@
 /*                                                                            */
 /*  Data  : 19/07/2021      REV  : 00.0                                       */
 /*                                                                            */
-/*  U.mod.: 21/01/2023      REV  : 02.5                                       */
+/*  U.mod.: 03/05/2023      REV  : 02.9                                       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -60,6 +60,7 @@ void gt_allarmi (model_t *p)
         {
             n_old_allarme = p->status.n_allarme;
 //          p->status.n_old_allarme =  p->status.n_allarme; //++++ -!!!! ToDO
+            p->status.n_old_allarme =  p->status.n_allarme; //++++ -!!!! ToDO
         }
         
         if (n_old_allarme>0 && n_old_allarme<ALL_TEMPERATURA_1)

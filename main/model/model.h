@@ -12,7 +12,7 @@
 
 
 //#define PARS_SERIALIZED_SIZE          136
-#define PARS_SERIALIZED_SIZE         144 + 2
+#define PARS_SERIALIZED_SIZE         145 + 2
 #define PRIVATE_PARS_SERIALIZED_SIZE 3
 //#define PWOFF_SERIALIZED_SIZE         42
 #define PWOFF_SERIALIZED_SIZE       44                            //// STR AAAA          
@@ -138,6 +138,7 @@ typedef struct {
     uint8_t tempo_ventilazione_oblo_aperto;             // 57
     uint8_t abilita_inversione_velocita;                // 58
     uint8_t abilita_disabilito_allarmi;                 // 59
+    uint8_t abilita_autoreset;                          // 60
     
     ///////////////    uint8_t temperatura_stop_tempo_ciclo; // XX NU
     

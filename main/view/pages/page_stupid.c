@@ -25,7 +25,7 @@ static void *create_page(model_t *pmodel, void *extra) {
 
 static void open_page(model_t *pmodel, void *data) {
     lv_task_set_prio(page_data.task, LV_TASK_PRIO_MID);
-    view_common_title(lv_scr_act(), "INFO");
+    view_common_title(lv_scr_act(), "INFO DUMMY");
 
     lv_obj_t *lbl = lv_label_create(lv_scr_act(), NULL);
     lv_obj_set_auto_realign(lbl, 1);
@@ -60,9 +60,9 @@ static view_message_t process_page_event(model_t *pmodel, void *arg, pman_event_
 
 
 static view_t update_page(model_t *pmodel, void *arg) {
-    lv_label_set_text_fmt(page_data.label_stuff, "f_start %i, pmac %i, test %i, n_all %i, f_all %i",
-                          pmodel->status.f_start_ok, pmodel->pmac.abilita_disabilito_allarmi, pmodel->status.f_in_test,
-                          pmodel->status.n_allarme, pmodel->status.f_all);
+    lv_label_set_text_fmt(page_data.label_stuff, "f_start=%i, no_all=%i,autores=%i, test=%i, n_all=%i, n_old_all=%i, f_all=%i,",
+                          pmodel->status.f_start_ok, pmodel->pmac.abilita_disabilito_allarmi, pmodel->pmac.abilita_autoreset, pmodel->status.f_in_test,
+                          pmodel->status.n_allarme, pmodel->status.n_old_allarme, pmodel->status.f_all);
 
     return 0;
 }

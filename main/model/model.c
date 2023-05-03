@@ -192,7 +192,8 @@ size_t model_pars_serialize(model_t *pmodel, uint8_t *buff) {
     i += serialize_uint8(&buff[i], pmodel->pmac.temperatura_raffreddo_allarme);
     i += serialize_uint8(&buff[i], pmodel->pmac.tempo_ventilazione_oblo_aperto);
     i += serialize_uint8(&buff[i], pmodel->pmac.abilita_inversione_velocita);
-    i += serialize_uint8(&buff[i], pmodel->pmac.abilita_disabilito_allarmi); // 59
+    i += serialize_uint8(&buff[i], pmodel->pmac.abilita_disabilito_allarmi);
+    i += serialize_uint8(&buff[i], pmodel->pmac.abilita_autoreset); // 60
     
     
     
@@ -292,7 +293,8 @@ size_t model_pars_deserialize(model_t *pmodel, uint8_t *buff) {
         i += deserialize_uint8(&pmodel->pmac.temperatura_raffreddo_allarme, &buff[i]);
         i += deserialize_uint8(&pmodel->pmac.tempo_ventilazione_oblo_aperto, &buff[i]);
         i += deserialize_uint8(&pmodel->pmac.abilita_inversione_velocita, &buff[i]);
-        i += deserialize_uint8(&pmodel->pmac.abilita_disabilito_allarmi, &buff[i]); // 59
+        i += deserialize_uint8(&pmodel->pmac.abilita_disabilito_allarmi, &buff[i]);
+        i += deserialize_uint8(&pmodel->pmac.abilita_autoreset, &buff[i]); // 60
         
         pmodel->lingua_temporanea = pmodel->pmac.lingua;
     }

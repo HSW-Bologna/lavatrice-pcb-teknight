@@ -6,8 +6,7 @@
 
 
 
-#define NT7534_DEFAULT_CONTRAST 26
-
+#define NT7534_DEFAULT_CONTRAST 30
 
 
 void nt7534_init(void);

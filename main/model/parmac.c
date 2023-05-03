@@ -11,7 +11,7 @@
 /*                                                                            */
 /*  Data  : 19/07/2021      REV  : 00.0                                       */
 /*                                                                            */
-/*  U.mod.: 21/01/2023      REV  : 02.5                                       */
+/*  U.mod.: 03/05/2023      REV  : 02.9                                       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -23,9 +23,9 @@
 #include "parmac.h"
 #include "descriptions/AUTOGEN_FILE_parmac.h"
 
-#define NUM_PARAMETERS           59
+#define NUM_PARAMETERS           60
 #define NUM_CHUNKS               ((NUM_PARAMETERS / MAX_PARAMETER_CHUNK) + ((NUM_PARAMETERS % MAX_PARAMETER_CHUNK) > 0))
-#define PARAMETERS_IN_LAST_CHUNK 8
+#define PARAMETERS_IN_LAST_CHUNK 9
 
 #define AL_USER 0x01
 #define AL_TECH 0x02
@@ -151,7 +151,8 @@ void parmac_setup_full(model_t *p, size_t chunk, int reset) {
             parameters[i++] = PARAMETER_C99(PARAMETER_TYPE_UINT8, &p->pmac.tempo_ventilazione_oblo_aperto,      NULL,   NULL,   0,      240,    10,     1,      AL_TECH,     FINT(PARMAC_DESCRIPTIONS_TEMPO_VENTILAZIONE_OBLO_APERTO),          NULL,       NULL);
             parameters[i++] = PARAMETER_C99(PARAMETER_TYPE_UINT8, &p->pmac.abilita_inversione_velocita,         NULL,   NULL,   0,      1,      1,      1,      AL_TECH,     FINT(PARMAC_DESCRIPTIONS_ABILITA_INVERSIONE_VELOCITA),             NULL,       NULL);
             parameters[i++] = PARAMETER_C99(PARAMETER_TYPE_UINT8, &p->pmac.abilita_disabilito_allarmi,          NULL,   NULL,   0,      1,      0,      1,      AL_TECH,     FINT(PARMAC_DESCRIPTIONS_ABILITA_DISABILITO_ALLARMI),              NULL,       NULL);
-            // 59
+            parameters[i++] = PARAMETER_C99(PARAMETER_TYPE_UINT8, &p->pmac.abilita_autoreset,                   NULL,   NULL,   0,      1,      0,      1,      AL_TECH,     FINT(PARMAC_DESCRIPTIONS_ABILITA_AUTORESET),                       NULL,       NULL);
+            // 60
             assert(i == PARAMETERS_IN_LAST_CHUNK);
             
             

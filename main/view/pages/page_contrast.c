@@ -9,7 +9,7 @@
 #include "view/widgets/custom_lv_img.h"
 #include "view/intl/intl.h"
 #include "peripherals/digin.h"
-
+#include "peripherals/NT7534.h"
 
 static struct page_data { lv_obj_t *lbl; } page_data;
 
@@ -69,7 +69,7 @@ static view_message_t process_page_event(model_t *pmodel, void *arg, pman_event_
                         break;
 
                     case BUTTON_MENU:
-                        pmodel->hsw.contrasto = 26;
+                        pmodel->hsw.contrasto = NT7534_DEFAULT_CONTRAST;
                         msg.cmsg.code = VIEW_CONTROLLER_COMMAND_CODE_UPDATE_CONTRAST;
                         update_page(pmodel);
                         break;

@@ -17,7 +17,7 @@
 /*                                                                            */
 /*  ver. 00.0:  05/05/2021  dalla da MiniEco V:17.4   D:11/04/2021            */
 /*                                                                            */
-/*  ver. att.:  26/04/2023  02.8                                              */
+/*  ver. att.:  03/05/2023  02.9                                              */
 /*                                                                            */
 /*  BY:         Maldus (Mattia MALDINI) & Virginia NEGRI & Massimo ZANNA      */
 /*                                                                            */
@@ -31,8 +31,12 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+
+
 //                                    12345678901234567890
-const unsigned char versione_prg[] = "V:02.8  D:26/04/2023";
+const unsigned char versione_prg[] = "V:02.9  D:03/05/2023";
+
+// NNB: OCCHIO ALLE TRADUZIONI NELLE LINGUE CON LE ACCENTATE !!!!!!!!!!!!!!!! //
 
 
 
@@ -267,10 +271,22 @@ const unsigned char versione_prg[] = "V:02.8  D:26/04/2023";
 /*      - SECON.PROVA SALVATAGGIO COMPLETO DATI AL PW-OFF PER RIPRESA IN AUTO-*/
 /*        AVVIO (NON RIPARTE BENE SE ABILITATO E NON CI SONO TUTTE LE STATIS.)*/
 /*                                                                            */
+/*----------------------------------------------------------------------------*/
+/*                                                                            */
+/*  rev.:       03/05/2023 (02.9)                                             */
+/*                                                                            */
+/*      - X LODI AGGIUNTO AUTO-RESET SCHEDA DOPO 6 ORE INATTIVITA @ CP STATO  */
+/*                                                                            */
+/*      - AGGIUNTA PAG DI SERVIZIO VIS VARIABILI NO ALL DA VER PRO & KEY MENU */
+/*                                                                            */
+/*      - CREATO PAR MAC 60 "pmac.abilita_autoreset" 0=NO / 1=SI              */
+/*                                                                            */
+/*      - AUMENTATO A 30 DA 26 IL CONTRASTO LCD STD                           */
+/*                                                                            */
 /******************************************************************************/
 
 /******************************************************************************/
-/*      DA FARE : 26-04-2023 # 02.8                                           */
+/*      DA FARE : 03-05-2023 # 02.9                                           */
 /*                                                                            */
 /*      - MOGLIORARE GT ALLARMI (DA MOTO A PAUSA SE LA CAUSA SCOMPARE !!!!)   */
 /*                                                                            */
@@ -282,9 +298,7 @@ const unsigned char versione_prg[] = "V:02.8  D:26/04/2023";
 /*                                                                            */
 /*      - MIGLIORARE GT "ANTIPIEGA" E "GT OUT MACC OCC @ 3"                   */
 /*                                                                            */
-/*      - AUMENTARE A 28 IL CONTRASTO LCD STD                                 */
-/*                                                                            */
-/*      - MIGLIORARE GT PW CON GT CONFTONTO STRINGA ????                      */
+/*      - MIGLIORARE GT PW CON GT CONFRONTO STRINGA ????                      */
 /*                                                                            */
 /******************************************************************************/
 
@@ -364,19 +378,6 @@ int main(void)
     
     
     
-    
-    
-#warning "  ####  DA Rimuovere !!!! FATTA PER DANILO !!!!  #### " // -TODO !!!!
-    
-//    model.status.f_no_gt_all = 1; // #########################################
-    
-//    model.status.f_no_gt_all = 0;
-//    
-//    if (model.pmac.abilita_disabilito_allarmi == 1)
-//    {
-//        model.status.f_no_gt_all = 1;
-//    }
-    
     model.status.f_start_ok = 1;
     
     digout_buzzer_bip(4, 200, 200);
@@ -385,18 +386,27 @@ int main(void)
     for (;;) {
         controller_manage_gui(&model);
         modbus_server_manage(&model);
-
-        if (!model_get_status_stopped(&model)) {
-            ts_reset = get_millis();
-        }
                 
-        if (model.status.f_start_ok && is_expired(ts_start_delay, get_millis(), 5000)) {
+        if (model.status.f_start_ok && is_expired(ts_start_delay, get_millis(), 5000))
+        {
             model.status.f_start_ok = 0;
         }
+        
+        
+        
+        // AUTO-RESET x LODI dopo 6 ORE DI INATTIVITA' =========================
+        if (!model_get_status_stopped(&model))
+        {
+            ts_reset = get_millis();
+        }
 
-        if (is_expired(ts_reset, get_millis(), 4UL*60UL*60UL*1000UL)) {
+        if ((is_expired(ts_reset, get_millis(), 6UL*60UL*60UL*1000UL)) && (model.pmac.abilita_autoreset==1))
+//      if ((is_expired(ts_reset, get_millis(),          30UL*1000UL)) && (model.pmac.abilita_autoreset==1))          // x TEST CHE RESETTI DOPO 30 sec
+        {
             __asm__ volatile ("reset");
         }
+        
+        
         
         // gestione macchina ------------------ //
         if (is_expired(ts_allarmi, get_millis(), 13))
