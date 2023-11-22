@@ -1,4 +1,4 @@
-const char *parmac_descriptions[77][2] = {
+const char *parmac_descriptions[78][2] = {
     {"LINGUA", "LANGUAGE", },
     {"N.MAX.LINGUE BAN", "N.MAX.LINGUE BAN", },
     {"LOGO IN TESTATA", "LOGO IN TESTATA", },
@@ -59,6 +59,7 @@ const char *parmac_descriptions[77][2] = {
     {"INVERSIONE 2 VEL", "INVERSIONE 2 VEL", },
     {"DISABILITO  ALL.", "DISABILITO  ALL.", },
     {"ABILIT.AUTORESET", "ABILIT.AUTORESET", },
+    {"OBLO'APER. NA/NC", "OBLO'APER. NA/NC", },
     {"ASCIUGA MAN/AUT.", "ASCIUGA MAN/AUT", },
     {"T.DURATA ASCIUG.", "T.DURATA ASCIUG.", },
     {"AB. ATTESA TEMP.", "AB. ATTESA TEMP.", },

@@ -17,7 +17,7 @@
 /*                                                                            */
 /*  ver. 00.0:  05/05/2021  dalla da MiniEco V:17.4   D:11/04/2021            */
 /*                                                                            */
-/*  ver. att.:  03/05/2023  02.9                                              */
+/*  ver. att.:  31/07/2023  03.0                                              */
 /*                                                                            */
 /*  BY:         Maldus (Mattia MALDINI) & Virginia NEGRI & Massimo ZANNA      */
 /*                                                                            */
@@ -34,7 +34,7 @@
 
 
 //                                    12345678901234567890
-const unsigned char versione_prg[] = "V:02.9  D:03/05/2023";
+const unsigned char versione_prg[] = "V:03.0 D:31/07/2023";
 
 // NNB: OCCHIO ALLE TRADUZIONI NELLE LINGUE CON LE ACCENTATE !!!!!!!!!!!!!!!! //
 
@@ -283,10 +283,16 @@ const unsigned char versione_prg[] = "V:02.9  D:03/05/2023";
 /*                                                                            */
 /*      - AUMENTATO A 30 DA 26 IL CONTRASTO LCD STD                           */
 /*                                                                            */
+/*----------------------------------------------------------------------------*/
+/*                                                                            */
+/*  rev.:      31/07/2023 (03.0)                                              */
+/*                                                                            */
+/*      - CREATO PAR MAC 61 "pmac.oblo_aperto_na_nc" 0=NA / 1=NC              */
+/*                                                                            */
 /******************************************************************************/
 
 /******************************************************************************/
-/*      DA FARE : 03-05-2023 # 02.9                                           */
+/*      DA FARE : 31-07-2023 # 03.0                                           */
 /*                                                                            */
 /*      - MOGLIORARE GT ALLARMI (DA MOTO A PAUSA SE LA CAUSA SCOMPARE !!!!)   */
 /*                                                                            */
@@ -387,10 +393,10 @@ int main(void)
         controller_manage_gui(&model);
         modbus_server_manage(&model);
                 
-        if (model.status.f_start_ok && is_expired(ts_start_delay, get_millis(), 5000))
-        {
-            model.status.f_start_ok = 0;
-        }
+//        if (model.status.f_start_ok && is_expired(ts_start_delay, get_millis(), 5000))
+//        {
+//            model.status.f_start_ok = 0;
+//        }
         
         
         
@@ -399,7 +405,7 @@ int main(void)
         {
             ts_reset = get_millis();
         }
-
+        
         if ((is_expired(ts_reset, get_millis(), 6UL*60UL*60UL*1000UL)) && (model.pmac.abilita_autoreset==1))
 //      if ((is_expired(ts_reset, get_millis(),          30UL*1000UL)) && (model.pmac.abilita_autoreset==1))          // x TEST CHE RESETTI DOPO 30 sec
         {
@@ -414,24 +420,24 @@ int main(void)
             gt_allarmi(&model);
             ts_allarmi = get_millis();
         }
-
+        
         gt_ciclo(&model, get_millis());
-
+        
         gt_ventilazione(&model, get_millis());
         //ventilazione_apertura_oblo(&model, get_millis());
         
         gt_presenza_aria(&model, get_millis());
         gt_riscaldamento(&model, get_millis());
         gt_umidita(&model, get_millis());
-
+        
         gt_cesto(&model, get_millis());
         gt_macchina_occupata(&model);
         gt_reset_bruciatore(&model, get_millis());
         gt_reset_bruciatore_extended(&model, get_millis());
         model.outputs = rele_get_status();
-
+        
         ClrWdt();
-
+        
         if (is_expired(ts_input, get_millis(), 2))
         {
             if (digin_take_reading())
@@ -443,12 +449,12 @@ int main(void)
             
             ts_input = get_millis();
         }
-
-
-
+        
+        
+        
         if (is_expired(tskp, get_millis(), 5)) {
             keypad_update_t update = keyboard_manage(get_millis());
-
+            
             if (update.event != KEY_NOTHING) {
                 ts_reset = get_millis();
                 view_event((view_event_t){.code = VIEW_EVENT_KEYPAD, .key_event = update});
@@ -459,9 +465,9 @@ int main(void)
             }
             tskp = get_millis();
         }
-
-
-
+        
+        
+        
         if (is_expired(ts_temperature, get_millis(), 50)) {
             ptc_read_temperature();
             view_event((view_event_t){.code = VIEW_EVENT_MODEL_UPDATE});

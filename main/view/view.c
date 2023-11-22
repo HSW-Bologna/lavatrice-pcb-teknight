@@ -51,7 +51,7 @@ void view_init(model_t *model, void (*flush_cb)(struct _disp_drv_t *, const lv_a
 
     pman_init(&pman);
     event_queue_init(&q);
-    // view_change_page(model, &page_splash);
+   // view_change_page(model, &page_splash);
 }
 
 

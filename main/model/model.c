@@ -193,9 +193,8 @@ size_t model_pars_serialize(model_t *pmodel, uint8_t *buff) {
     i += serialize_uint8(&buff[i], pmodel->pmac.tempo_ventilazione_oblo_aperto);
     i += serialize_uint8(&buff[i], pmodel->pmac.abilita_inversione_velocita);
     i += serialize_uint8(&buff[i], pmodel->pmac.abilita_disabilito_allarmi);
-    i += serialize_uint8(&buff[i], pmodel->pmac.abilita_autoreset); // 60
-    
-    
+    i += serialize_uint8(&buff[i], pmodel->pmac.abilita_autoreset);
+    i += serialize_uint8(&buff[i], pmodel->pmac.oblo_aperto_na_nc); // 61
     
     unsigned short crc = crc16_ccitt(&buff[2], i - 2, 0);
     serialize_uint16_be(&buff[0], crc);
@@ -203,14 +202,20 @@ size_t model_pars_serialize(model_t *pmodel, uint8_t *buff) {
     return i;
 }
 
-size_t model_pars_deserialize(model_t *pmodel, uint8_t *buff) {
+size_t model_pars_deserialize(model_t *pmodel, uint8_t *buff)
+{
     size_t   i = 0, j = 0;
     uint16_t crc;
     i += deserialize_uint16_be(&crc, &buff[i]);
-    if (crc != crc16_ccitt(&buff[2], PARS_SERIALIZED_SIZE - 2, 0)) {
+    
+    if (crc != crc16_ccitt(&buff[2], PARS_SERIALIZED_SIZE - 2, 0))
+    {
         return -1;
-    } else {
-        for (j = 0; j < NUM_CICLI; j++) {
+    }
+    else
+    {
+        for (j = 0; j < NUM_CICLI; j++)
+        {
             i += deserialize_uint8(&pmodel->pciclo[j].tipo_asciugatura_m_a, &buff[i]); // 01
             i += deserialize_uint8(&pmodel->pciclo[j].tempo_durata_asciugatura, &buff[i]);
             i += deserialize_uint8(&pmodel->pciclo[j].abilita_attesa_temperatura, &buff[i]);
@@ -294,17 +299,19 @@ size_t model_pars_deserialize(model_t *pmodel, uint8_t *buff) {
         i += deserialize_uint8(&pmodel->pmac.tempo_ventilazione_oblo_aperto, &buff[i]);
         i += deserialize_uint8(&pmodel->pmac.abilita_inversione_velocita, &buff[i]);
         i += deserialize_uint8(&pmodel->pmac.abilita_disabilito_allarmi, &buff[i]);
-        i += deserialize_uint8(&pmodel->pmac.abilita_autoreset, &buff[i]); // 60
+        i += deserialize_uint8(&pmodel->pmac.abilita_autoreset, &buff[i]);
+        i += deserialize_uint8(&pmodel->pmac.oblo_aperto_na_nc, &buff[i]); // 61
         
         pmodel->lingua_temporanea = pmodel->pmac.lingua;
     }
-    
     assert(i == PARS_SERIALIZED_SIZE);
     return i;
 }
 
 
-size_t model_pwoff_serialize(model_t *pmodel, uint8_t *buff) {
+
+size_t model_pwoff_serialize(model_t *pmodel, uint8_t *buff)
+{
     assert(pmodel != NULL);
 
     size_t i = 2;

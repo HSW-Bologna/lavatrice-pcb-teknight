@@ -11,7 +11,7 @@
 /*                                                                            */
 /*  Data  : 19/07/2021      REV  : 00.0                                       */
 /*                                                                            */
-/*  U.mod.: 21/01/2023      REV  : 02.5                                       */
+/*  U.mod.: 31/07/2023      REV  : 03.0                                       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -154,7 +154,9 @@ void ventilazione_stop(model_t *p)
 
 void ventilazione_apertura_oblo(model_t *p, unsigned long timestamp)
 {
-    if (p->status.f_ventilazione_oblo==0 && digin_get(OBLO_APERTO)==1)
+//  if (p->status.f_ventilazione_oblo==0 && digin_get(OBLO_APERTO)==1)
+//  if (p->status.f_ventilazione_oblo==0 && ((digin_get(OBLO_APERTO)==1 && p->pmac.oblo_aperto_na_nc==0) || (digin_get(OBLO_APERTO)==0 && p->pmac.oblo_aperto_na_nc==1)))
+    if (p->status.f_ventilazione_oblo==0 && p->status.f_oblo_aperto==1)
     {
             ventilazione_stop(p);
             stopwatch_stop(&ct_ventilazione_oblo); // -ToDO 26/10/22
@@ -162,8 +164,9 @@ void ventilazione_apertura_oblo(model_t *p, unsigned long timestamp)
     }
     
     
-    
-    if (p->status.f_ventilazione_oblo==0 && digin_get(OBLO_APERTO)==0 && p->status.n_allarme==2 && p->status.f_start_ok==0)
+//  if (p->status.f_ventilazione_oblo==0 && digin_get(OBLO_APERTO)==0 && p->status.n_allarme==2 && p->status.f_start_ok==0)
+//  if (p->status.f_ventilazione_oblo==0 && ((digin_get(OBLO_APERTO)==0 && p->pmac.oblo_aperto_na_nc==0) || (digin_get(OBLO_APERTO)==1 && p->pmac.oblo_aperto_na_nc==1)) && p->status.n_allarme==2 && p->status.f_start_ok==0)
+    if (p->status.f_ventilazione_oblo==0 && p->status.f_oblo_aperto==0 && p->status.n_allarme==2 && p->status.f_start_ok==0)
     {
             ventilazione_marcia(p);
             stopwatch_set(&ct_ventilazione_oblo, p->pmac.tempo_ventilazione_oblo_aperto*1000UL);
@@ -175,7 +178,9 @@ void ventilazione_apertura_oblo(model_t *p, unsigned long timestamp)
     
     
     
-    if (p->status.f_ventilazione_oblo==1 && digin_get(OBLO_APERTO)==0)
+//  if (p->status.f_ventilazione_oblo==1 && digin_get(OBLO_APERTO)==0)
+//  if (p->status.f_ventilazione_oblo==1 && ((digin_get(OBLO_APERTO)==0 && p->pmac.oblo_aperto_na_nc==0) || (digin_get(OBLO_APERTO)==1 && p->pmac.oblo_aperto_na_nc==1)))
+    if (p->status.f_ventilazione_oblo==1 && p->status.f_oblo_aperto==0)
     {
         if ((stopwatch_get_state(&ct_ventilazione_oblo) == TIMER_STOPPED) || stopwatch_is_timer_reached(&ct_ventilazione_oblo, timestamp)) 
         {
@@ -189,7 +194,9 @@ void ventilazione_apertura_oblo(model_t *p, unsigned long timestamp)
     
     
     
-    if (p->status.f_ventilazione_oblo==1 && digin_get(OBLO_APERTO)==1)
+//  if (p->status.f_ventilazione_oblo==1 && digin_get(OBLO_APERTO)==1)
+//  if (p->status.f_ventilazione_oblo==1 && ((digin_get(OBLO_APERTO)==1 && p->pmac.oblo_aperto_na_nc==0) || (digin_get(OBLO_APERTO)==0 && p->pmac.oblo_aperto_na_nc==1)))
+    if (p->status.f_ventilazione_oblo==1 && p->status.f_oblo_aperto==1)
     {
             ventilazione_stop(p);
                   
@@ -199,7 +206,9 @@ void ventilazione_apertura_oblo(model_t *p, unsigned long timestamp)
     
     
     
-    if (p->status.f_ventilazione_oblo==2 && digin_get(OBLO_APERTO)==1)
+//  if (p->status.f_ventilazione_oblo==2 && digin_get(OBLO_APERTO)==1)
+//  if (p->status.f_ventilazione_oblo==2 && ((digin_get(OBLO_APERTO)==1 && p->pmac.oblo_aperto_na_nc==0) || (digin_get(OBLO_APERTO)==0 && p->pmac.oblo_aperto_na_nc==1)))
+    if (p->status.f_ventilazione_oblo==2 && p->status.f_oblo_aperto==1)
     {
             p->status.f_ventilazione_oblo = 0;
     }

@@ -13,8 +13,9 @@
 #include <stdlib.h>
 #include <stdint.h>
 
- unsigned long millis      = 0-10000;
-static uint8_t       second_flag = 0;
+
+static unsigned long  millis      = 0;
+static uint8_t        second_flag = 0;
 static uint16_t       gettoni_gettoniera = 0;
 static uint16_t       gettoni_ingresso = 0; 
 

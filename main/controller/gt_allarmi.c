@@ -11,7 +11,7 @@
 /*                                                                            */
 /*  Data  : 19/07/2021      REV  : 00.0                                       */
 /*                                                                            */
-/*  U.mod.: 03/05/2023      REV  : 02.9                                       */
+/*  U.mod.: 31/07/2023      REV  : 02.0                                       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -181,7 +181,7 @@ void gt_allarmi (model_t *p)
 
     
     
-    else if (p->status.f_all_anomalia_aria==1) // ALL anomalia aria ---------------------*
+    else if (p->status.f_all_anomalia_aria==1) // ALL anomalia aria -----------*
     {
         p->status.n_allarme = ALL_ANOMALIA_ARIA;
         
@@ -191,7 +191,9 @@ void gt_allarmi (model_t *p)
         }
     }
     
-    else if (digin_get(OBLO_APERTO)==0)    // ALL oblo'aperto  ---------------------------*
+//  else if (digin_get(OBLO_APERTO)==0)    // ALL oblo'aperto  ----------------*
+//  else if ((digin_get(OBLO_APERTO)==0 && p->pmac.oblo_aperto_na_nc==0) || (digin_get(OBLO_APERTO)==1 && p->pmac.oblo_aperto_na_nc==1))    // ALL oblo'aperto  ---------------------------*
+    else if (p->status.f_oblo_aperto==0)    // ALL oblo'aperto  ---------------*
     {
         if (model_in_antipiega(p))
         {

@@ -11,7 +11,7 @@
 /*                                                                            */
 /*  Data  : 19/07/2021      REV  : 00.0                                       */
 /*                                                                            */
-/*  U.mod.: 03/01/2023      REV  : 02.4                                       */
+/*  U.mod.: 31/07/2023      REV  : 03.0                                       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -22,6 +22,9 @@
 #include "view/view.h"
 #include "peripherals/timer.h"
 #include "peripherals/digout.h"
+#include "peripherals/digin.h"
+
+
 
 extern stopwatch_t ct_moto_cesto;
 extern stopwatch_t ct_oblo_open_close_on;
@@ -35,6 +38,37 @@ extern stopwatch_t ct_anti_piega_pausa;
 
 void gt_ciclo(model_t *p, uint32_t timestamp)
 {
+    // GT INVERSIONE MICRO OBLO --------------------------------------------- //
+    if (p->pmac.oblo_aperto_na_nc==0)
+    {
+        if(digin_get(OBLO_APERTO)==0)
+        {
+            p->status.f_oblo_aperto = 0;
+        }
+        else if(digin_get(OBLO_APERTO)==1)
+        {
+            p->status.f_oblo_aperto = 1;
+        }
+            
+    }
+    
+    if (p->pmac.oblo_aperto_na_nc==1)
+    {
+        if(digin_get(OBLO_APERTO)==0)
+        {
+            p->status.f_oblo_aperto = 1;
+        }
+        else if(digin_get(OBLO_APERTO)==1)
+        {
+            p->status.f_oblo_aperto = 0;
+        }
+            
+    }
+    
+    
+    
+    
+    
     if (model_get_status_stopped(p))
     {
         stopwatch_init(&ct_moto_cesto);

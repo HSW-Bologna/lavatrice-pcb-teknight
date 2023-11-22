@@ -12,7 +12,7 @@
 
 
 //#define PARS_SERIALIZED_SIZE          136
-#define PARS_SERIALIZED_SIZE         145 + 2
+#define PARS_SERIALIZED_SIZE         146 + 2
 #define PRIVATE_PARS_SERIALIZED_SIZE 3
 //#define PWOFF_SERIALIZED_SIZE         42
 #define PWOFF_SERIALIZED_SIZE       44                            //// STR AAAA          
@@ -139,6 +139,7 @@ typedef struct {
     uint8_t abilita_inversione_velocita;                // 58
     uint8_t abilita_disabilito_allarmi;                 // 59
     uint8_t abilita_autoreset;                          // 60
+    uint8_t oblo_aperto_na_nc;                          // 61
     
     ///////////////    uint8_t temperatura_stop_tempo_ciclo; // XX NU
     
@@ -231,6 +232,7 @@ typedef struct {
         uint8_t      f_sblocco_ridotti;
         uint8_t      f_start_ok;
         uint8_t      f_ok_gettone;
+        uint8_t      f_oblo_aperto;
         uint8_t      f_ventilazione;
         uint8_t      f_ventilazione_oblo;
         uint8_t      f_ava_ind;
