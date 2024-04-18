@@ -17,6 +17,7 @@ static void *create_page(model_t *model, void *extra) {
 
 
 static void open_page(model_t *pmodel, void *data) {
+    LV_IMG_DECLARE(img_logo_unity_laundry);
     (void)data;
 
 #ifdef PC_SIMULATOR
@@ -26,28 +27,43 @@ static void open_page(model_t *pmodel, void *data) {
 #endif
     lv_task_once(task);
 
-    lv_obj_t *logo = custom_lv_img_create(lv_scr_act(), NULL);
-
+    lv_obj_t *logo = NULL;
+    
     switch (model_get_logo_ditta(pmodel)) {
-        case 0:
+        case 0: {
+            logo = custom_lv_img_create(lv_scr_act(), NULL);
             custom_lv_img_set_src(logo, &legacy_img_logo_ciao);
             break;
+        }
 
-        case 1:
+        case 1: {
+            logo = custom_lv_img_create(lv_scr_act(), NULL);
             custom_lv_img_set_src(logo, &legacy_img_logo_msgroup);
             break;
+        }
 
-        case 2:
+        case 2: {
+            logo = custom_lv_img_create(lv_scr_act(), NULL);
             custom_lv_img_set_src(logo, &legacy_img_logo_rotondi);
             break;
+        }
 
-        case 3:
+        case 3: {
+            logo = custom_lv_img_create(lv_scr_act(), NULL);
             custom_lv_img_set_src(logo, &legacy_img_logo_hoover);
             break;
+        }
 
-        case 4:
+        case 4: {
+            logo = custom_lv_img_create(lv_scr_act(), NULL);
             custom_lv_img_set_src(logo, &legacy_img_logo_schulthess);
             break;
+        }
+        
+        case 5: {
+            logo = lv_img_create(lv_scr_act(), NULL);
+            lv_img_set_src(logo, &img_logo_unity_laundry);
+        }
 
         default:
             break;

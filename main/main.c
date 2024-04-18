@@ -34,7 +34,7 @@
 
 
 //                                    12345678901234567890
-const unsigned char versione_prg[] = "V:03.0 D:31/07/2023";
+const unsigned char versione_prg[] = "V:03.1 D:18/04/2024";
 
 // NNB: OCCHIO ALLE TRADUZIONI NELLE LINGUE CON LE ACCENTATE !!!!!!!!!!!!!!!! //
 
@@ -354,7 +354,7 @@ model_t model;
 
 int main(void)
 {
-    unsigned long tskp = 0, ts_input = 0, ts_temperature = 0, ts_spi = 0, ts_allarmi = 0, ts_start_delay = 0, ts_reset = 0;
+    unsigned long tskp = get_millis(), ts_input = get_millis(), ts_temperature = get_millis(), ts_spi = get_millis(), ts_allarmi = get_millis(), ts_start_delay = get_millis(), ts_reset = get_millis();
 
     // inizializzazioni ----------------------- //
     system_init();

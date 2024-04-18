@@ -482,7 +482,7 @@ typedef void * lv_obj_user_data_t;
 #define LV_USE_GAUGE    0
 
 /*Image (dependencies: lv_label*/
-#define LV_USE_IMG      0
+#define LV_USE_IMG      1
 
 /*Image Button (dependencies: lv_btn*/
 #define LV_USE_IMGBTN   0
