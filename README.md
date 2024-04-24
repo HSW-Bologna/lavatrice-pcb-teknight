@@ -1,5 +1,13 @@
 # Paperoga
 
+Firmware per la scheda minion del sistema tavolo da stiro Rotondi
+
+## Compilazione
+
+Il firmware dovrebbe essere compilato con i seguenti strumenti:
+ - XC16 v1.36
+ - MPLAB X IDE v6.05
+
 ## TODO
 
  - Attiva la pagina di errore ram
