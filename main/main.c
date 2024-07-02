@@ -17,7 +17,7 @@
 /*                                                                            */
 /*  ver. 00.0:  05/05/2021  dalla da MiniEco V:17.4   D:11/04/2021            */
 /*                                                                            */
-/*  ver. att.:  31/07/2023  03.0                                              */
+/*  ver. att.:  23/11/2023  03.1                                              */
 /*                                                                            */
 /*  BY:         Maldus (Mattia MALDINI) & Virginia NEGRI & Massimo ZANNA      */
 /*                                                                            */
@@ -34,7 +34,8 @@
 
 
 //                                    12345678901234567890
-const unsigned char versione_prg[] = "V:03.1 D:18/04/2024";
+//const unsigned char versione_prg[] = "V:03.1 D:18/04/2024";
+const unsigned char versione_prg[] = "V:03.1 D:23/11/2023";
 
 // NNB: OCCHIO ALLE TRADUZIONI NELLE LINGUE CON LE ACCENTATE !!!!!!!!!!!!!!!! //
 
@@ -288,6 +289,14 @@ const unsigned char versione_prg[] = "V:03.1 D:18/04/2024";
 /*  rev.:      31/07/2023 (03.0)                                              */
 /*                                                                            */
 /*      - CREATO PAR MAC 61 "pmac.oblo_aperto_na_nc" 0=NA / 1=NC              */
+/*                                                                            */
+/*----------------------------------------------------------------------------*/
+/*                                                                            */
+/*  rev.:      23/11/2023 (03.1)                                              */
+/*                                                                            */
+/*      - CORRETTO ERRORE AZZERAMENTO CREDITO (CON ANTIPIEGA)                 */
+/*                                                                            */
+/*      + aggiunto logo AMERICANI ! il D:18/04/2024 da MATT #  GIT 02/07/2024 */
 /*                                                                            */
 /******************************************************************************/
 

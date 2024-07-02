@@ -45,7 +45,7 @@ static void update_strings(model_t *pmodel, int clear) {
     if (page_data.index == PARMAC_COMMISSIONING_LOGO || index_old == PARMAC_COMMISSIONING_LOGO || clear) {
         size_t      logo           = model_get_logo_ditta(pmodel);
         const char *strings_logo[] = {
-            "SMILE", "MSGroup", "RotondiGR", "HooverPRO", "Shulthess",
+            "SMILE", "MSGroup", "RotondiGR", "HooverPRO", "Shulthess","Unity Laundry",
         };
 
         lv_label_set_text_fmt(page_data.lbl_logo, "LOGO[%i]%9s", logo, strings_logo[logo]);

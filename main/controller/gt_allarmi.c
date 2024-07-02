@@ -11,7 +11,7 @@
 /*                                                                            */
 /*  Data  : 19/07/2021      REV  : 00.0                                       */
 /*                                                                            */
-/*  U.mod.: 31/07/2023      REV  : 02.0                                       */
+/*  U.mod.: 23/11/2023      REV  : 03.1                                       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -195,7 +195,7 @@ void gt_allarmi (model_t *p)
 //  else if ((digin_get(OBLO_APERTO)==0 && p->pmac.oblo_aperto_na_nc==0) || (digin_get(OBLO_APERTO)==1 && p->pmac.oblo_aperto_na_nc==1))    // ALL oblo'aperto  ---------------------------*
     else if (p->status.f_oblo_aperto==0)    // ALL oblo'aperto  ---------------*
     {
-        if (model_in_antipiega(p))
+        if (model_in_antipiega(p) && model_get_status_not_stopped(p))
         {
             p->status.f_anti_piega = 0;
             model_fine_ciclo(p);

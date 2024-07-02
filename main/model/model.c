@@ -1011,6 +1011,7 @@ void model_fine_ciclo(model_t *pmodel) {
     assert(pmodel != NULL);
     model_event(pmodel, EVENT_STOP);
     pmodel->status.stato = STATO_STOPPED;
+    pmodel->status.stato_step = STATO_STEP_NUL;
     pmodel->status.nf_anti_piega = ANTIPIEGA_START;
     model_azzera_credito(pmodel);
 }
