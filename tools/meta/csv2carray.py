@@ -20,6 +20,7 @@ def main(indir, outdir):
             for line in csvreader:
                 if len(line) < 2:
                     print("Devono esserci almeno due colonne (la prima e' per l'enum)")
+                    print(line)
                     exit(1)
                 tmp[line[0]] = [x.lstrip() for x in line[1:]]
 

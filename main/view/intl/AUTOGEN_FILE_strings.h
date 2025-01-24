@@ -34,6 +34,7 @@ typedef enum {
     STRINGS_INGLESE,
     STRINGS_FRANCESE,
     STRINGS_TEDESCO,
+    STRINGS_POLACCO,
     STRINGS_CONTRASTO_LCD,
     STRINGS_STATISTICHE,
     STRINGS_TEMPO_ACCENSIONE,
@@ -53,6 +54,6 @@ typedef enum {
     STRINGS_VELOCITA,
 } strings_t;
 
-extern const char *strings[49][4];
+extern const char *strings[50][5];
 
 #endif

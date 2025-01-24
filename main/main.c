@@ -35,7 +35,7 @@
 
 //                                    12345678901234567890
 //const unsigned char versione_prg[] = "V:03.1 D:18/04/2024";
-const unsigned char versione_prg[] = "V:03.1 D:23/11/2023";
+const unsigned char versione_prg[] = "V:03.2 D:24/01/2025";
 
 // NNB: OCCHIO ALLE TRADUZIONI NELLE LINGUE CON LE ACCENTATE !!!!!!!!!!!!!!!! //
 

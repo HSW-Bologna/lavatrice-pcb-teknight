@@ -37,6 +37,7 @@ static void update_strings(model_t *pmodel, int clear) {
             STRINGS_INGLESE,
             STRINGS_FRANCESE,
             STRINGS_TEDESCO,
+            STRINGS_POLACCO,
         };
         lv_label_set_text(page_data.lbl_stringa_lingua,
                           view_intl_get_string(pmodel, strings_lingua[model_get_lingua(pmodel)]));

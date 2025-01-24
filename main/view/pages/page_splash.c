@@ -55,12 +55,6 @@ static void open_page(model_t *pmodel, void *data) {
         }
 
         case 4: {
-            logo = custom_lv_img_create(lv_scr_act(), NULL);
-            custom_lv_img_set_src(logo, &legacy_img_logo_schulthess);
-            break;
-        }
-        
-        case 5: {
             logo = lv_img_create(lv_scr_act(), NULL);
             lv_img_set_src(logo, &img_logo_unity_laundry);
         }

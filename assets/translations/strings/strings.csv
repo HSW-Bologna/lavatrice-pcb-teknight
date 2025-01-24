@@ -1,50 +1,51 @@
-Identificatore; Italiano; Inglese; francese; tedesco
-INSERIRE_MONETA; Inserire moneta; Insert coin; inserer une piece; Münze einwerfen
-INSERIRE_GETTONE; Inserire gettone; Insert token; inserer jeton; Token einfugen
-PAGARE_CASSA; Pagare cassa; Pay at desk; payer au caissier; bezahlen Kasse
-SCELTA_PROGRAMMA; Scelta programma; Choose program; choix programme; Programmwahl
-MACCHINA_AL_LAVORO; al  lavoro; at work; au travail; auf Arbeit
-MACCHINA_IN_PAUSA; pausa lavoro; pause; pause; pause
-PROGRAMMA_CALDO; CALDO; HOT; CHAUD; HEISSE
-PROGRAMMA_MEDIO; MEDIO; WARM; MEDIUM; MITTEL
-PROGRAMMA_TIEPIDO; TIEPIDO; TEPID; PEU CHAUD; WENIG HEISS
-PROGRAMMA_FREDDO; FREDDO; COLD; FROID; KALT
-PROGRAMMA_LANA; LANA; WHOOL; LAINE; WOLLE
-ALLARME_ERRORE_RAM; E MEMORIA; E MEMORY; E MEMOIRE; E ERINNERUNG
-ALLARME_OBLO_APERTO; PORTA APERTA; OPEN DOOR; PORTE OUVERTE; OFFENE TÜR
-ALLARME_OBLO_SBLOCCATO; OBLO' SBLOCCATO; OBLO' SBLOCCATO; OBLO' SBLOCCATO; OBLO' SBLOCCATO
-ALLARME_EMERGENZA; EMERGENZA; EMERGENCY; URGENCE; NOTFALL
-ALLARME_TEMPO_SCADUTO_T1; NO RISCALDAMENTO; NO HEATING; PAS DE CHAUFFAGE; KEINE HEIZUNG
-ALLARME_INVERTER; NO INVERTER; NO INVERTER; ONDULEUR; NO INVERTER
-ALLARME_FILTRO_APERTO; FILTRO  APERTO; OPEN FILTER; FILTRE OUVERT; FILTER OFFNEN
-ALLARME_BLOCCO_BRUCIATORE; E BRUCIATORE; E BURNER; E BRULEUR; E BRENNER
-ALLARME_TEMPERATURA_1; E TEMPERATURA; E TEMPERATURE; E TEMPERATURE; E TEMPERATUR
-ALLARME_FLUSSO_ARIA; NO  ARIA; NO AIR; PAS D'AIR; KEINE LUFT
-ALLARME_ANOMALIA_ARIA; ANOMALIA  ARIA; AIR PRESSURE; PRESSION DE L'AIR; LUFTDRUCK
-AVVISO_ANTIPIEGA; ANTIPIEGA; WRINKLE FREE; ANTIFROISSEMENT; KNITTSCHUTZ
-AVVISO_APRIRE_OBLO; APRIRE OBLO'; APRIRE OBLO'; APRIRE OBLO'; APRIRE OBLO'
-AVVISO_DRY_CONTROL; DRY  CONTROL; DRY  CONTROL; DRY  CONTROL; DRY  CONTROL
-AVVISO_SOVRATEMPERATURA; TEMPERATURA ALTA; OVER TEMPERATURE; SURCHAUFFE; UBERTEMPERATUR
-AVVISO_MANUTENZIONE; MANUTENZIONE; MAINTENANCE; ENTRETIEN; WARTUNG
-AVVISO_ALL_PW_OFF; AVV PW OFF !; AVV PW OFF !; AVV PW OFF !; AVV PW OFF !
-ITALIANO; ITALIANO; ITALIAN; ITALIEN; ITALIENISCH
-INGLESE; INGLESE; ENGLISH; ANGLAIS; ENGLISCH
-FRANCESE; FRANCESE; FRENCH; FRANCAIS; FRANZOSISCH
-TEDESCO; TEDESCO; GERMAN; ALLEMAND; DEUTSCH
-CONTRASTO_LCD; CONTRASTO LCD; LCD CONTRAST; LCD CONTRAST; LCD CONTRAST
-STATISTICHE; STATISTICHE; STATISTICS; STATISTIQUES; STATISTIKEN
-TEMPO_ACCENSIONE; Tempo attivo; Active time; Temps actif; Aktive Zeit
-TEMPO_LAVORO; Tempo lavoro; Work time; Temps de travail; Arbeitszeit
-TEMPO_MOTO; Tempo azione; Action time; Temps d'action; Aktionszeit
-TEMPO_VENTILAZIONE; Tempo ventilaz; Fan time; Temps ventilat; Lüftungszeit
-TEMPO_RISCALDAMENTO; Tempo riscald.; Heating time; Temps chauffe; Erhitzungszeit
-CICLI_PARZIALI; Cicli parziali; Partial cycles;cycles partiels; Teilzyklen
-CICLI_TOTALI; Cicli totali; Total cycles; cycles totaux; Gesamtzyklen
-GETTONI_TOTALI; Totale gettoni; Total coins; jetons totaux; Gesamttoken
-ERRORE_FATALE_RAM; Si e' verificato un malfunzionamento fatale della eeprom. I parametri non verranno caricati;  Si e' verificato un malfunzionamento fatale della eeprom. I parametri non verranno caricati; Si e' verificato un malfunzionamento fatale della eeprom. I parametri non verranno caricati; Si e' verificato un malfunzionamento fatale della eeprom. I parametri non verranno caricati
-ERRORE_LIEVE_RAM; I parametri caricati dalla eeprom non erano validi. Sono stati corretti; I parametri caricati dalla eeprom non erano validi. Sono stati corretti; I parametri caricati dalla eeprom non erano validi. Sono stati corretti; I parametri caricati dalla eeprom non erano validi. Sono stati corretti
-SALVATAGGIO_IN_CORSO; Salvataggio in corso...; Saving...; Saving .... ; Saving....,
-TEMPO_CICLO; TEMPO CICLO; CYCLE TIME; TEMPS DE CYCLE; ZYKLUSZEIT
-TEMPERATURA; TEMPERATURA; TEMPERATURE; TEMP�RATURE; TEMPERATURE
-UMIDITA; UMIDITA' ; UMIDITY; UMIDITY; UMIDITY
-VELOCITA; VELOCITA'; SPEED; VITESSE; DREHZAHL
+Identificatore; Italiano; Inglese; francese; tedesco;polski
+INSERIRE_MONETA; Inserire moneta; Insert coin; inserer une piece; Münze einwerfen;Wloz monete
+INSERIRE_GETTONE; Inserire gettone; Insert token; inserer jeton; Token einfugen;Wloz zeton
+PAGARE_CASSA; Pagare cassa; Pay at desk; payer au caissier; bezahlen Kasse;Zaplac przy kasie
+SCELTA_PROGRAMMA; Scelta programma; Choose program; choix programme; Programmwahl;Wybierz program
+MACCHINA_AL_LAVORO; al  lavoro; at work; au travail; auf Arbeit;W czasie pracy
+MACCHINA_IN_PAUSA; pausa lavoro; pause; pause; pause;Pauza
+PROGRAMMA_CALDO; CALDO; HOT; CHAUD; HEISSE;GORACY
+PROGRAMMA_MEDIO; MEDIO; WARM; MEDIUM; MITTEL;CIEPLY
+PROGRAMMA_TIEPIDO; TIEPIDO; TEPID; PEU CHAUD; WENIG HEISS;POSREDNI
+PROGRAMMA_FREDDO; FREDDO; COLD; FROID; KALT;ZIMNY
+PROGRAMMA_LANA; LANA; WHOOL; LAINE; WOLLE;WELNA
+ALLARME_ERRORE_RAM; E MEMORIA; E MEMORY; E MEMOIRE; E ERINNERUNG;E PAMIEC
+ALLARME_OBLO_APERTO; PORTA APERTA; OPEN DOOR; PORTE OUVERTE; OFFENE TÜR;DRZWI OTWARTE
+ALLARME_OBLO_SBLOCCATO; OBLO' SBLOCCATO; OBLO' SBLOCCATO; OBLO' SBLOCCATO; OBLO' SBLOCCATO;DRZWI ODBLOKOWANE
+ALLARME_EMERGENZA; EMERGENZA; EMERGENCY; URGENCE; NOTFALL;NAGLY WYPADEK
+ALLARME_TEMPO_SCADUTO_T1; NO RISCALDAMENTO; NO HEATING; PAS DE CHAUFFAGE; KEINE HEIZUNG;BRAK GRZANIA
+ALLARME_INVERTER; NO INVERTER; NO INVERTER; ONDULEUR; NO INVERTER;BRAK FALOWNIKA
+ALLARME_FILTRO_APERTO; FILTRO  APERTO; OPEN FILTER; FILTRE OUVERT; FILTER OFFNEN;OTWARTY FILTR
+ALLARME_BLOCCO_BRUCIATORE; E BRUCIATORE; E BURNER; E BRULEUR; E BRENNER;E PALNIK
+ALLARME_TEMPERATURA_1; E TEMPERATURA; E TEMPERATURE; E TEMPERATURE; E TEMPERATUR;E TEMPERATURA
+ALLARME_FLUSSO_ARIA; NO  ARIA; NO AIR; PAS D'AIR; KEINE LUFT;BRAK POWIETRZA
+ALLARME_ANOMALIA_ARIA; ANOMALIA  ARIA; AIR PRESSURE; PRESSION DE L'AIR; LUFTDRUCK;CISNIENIE POWIETRZA
+AVVISO_ANTIPIEGA; ANTIPIEGA; WRINKLE FREE; ANTIFROISSEMENT; KNITTSCHUTZ;BEZ ZMARSZCZEK
+AVVISO_APRIRE_OBLO; APRIRE OBLO'; APRIRE OBLO'; APRIRE OBLO'; APRIRE OBLO';DRZWI OTWARTE
+AVVISO_DRY_CONTROL; DRY  CONTROL; DRY  CONTROL; DRY  CONTROL; DRY  CONTROL; DRY  CONTROL
+AVVISO_SOVRATEMPERATURA; TEMPERATURA ALTA; OVER TEMPERATURE; SURCHAUFFE; UBERTEMPERATUR;ZA WYSOKA TEMP.
+AVVISO_MANUTENZIONE; MANUTENZIONE; MAINTENANCE; ENTRETIEN; WARTUNG;KONSERWACJA
+AVVISO_ALL_PW_OFF; AVV PW OFF !; AVV PW OFF !; AVV PW OFF !; AVV PW OFF !;AVV PW OFF!
+ITALIANO; ITALIANO; ITALIAN; ITALIEN; ITALIENISCH;WLOSKI
+INGLESE; INGLESE; ENGLISH; ANGLAIS;ZAPISYWANIE;ANGIELSKI
+FRANCESE; FRANCESE; FRENCH; FRANCAIS; FRANZOSISCH;FRANCUSKI
+TEDESCO; TEDESCO; GERMAN; ALLEMAND; DEUTSCH;NIEMIECKI
+POLACCO; POLACCO; POLISH; POLONAIS; POLIEREN;POLSKI
+CONTRASTO_LCD; CONTRASTO LCD; LCD CONTRAST; LCD CONTRAST; LCD CONTRAST;KONTRAST LCD
+STATISTICHE; STATISTICHE; STATISTICS; STATISTIQUES; STATISTIKEN;STATYSTYKI
+TEMPO_ACCENSIONE; Tempo attivo; Active time; Temps actif; Aktive Zeit;AKTYWNY CZAS
+TEMPO_LAVORO; Tempo lavoro; Work time; Temps de travail; Arbeitszeit;CZAS PRACY
+TEMPO_MOTO; Tempo azione; Action time; Temps d'action; Aktionszeit;CZAS AKTYWNOSCI
+TEMPO_VENTILAZIONE; Tempo ventilaz; Fan time; Temps ventilat; Lüftungszeit;CZAS WENTYLACJI
+TEMPO_RISCALDAMENTO; Tempo riscald.; Heating time; Temps chauffe; Erhitzungszeit;CZAS NAGRZEWANIA
+CICLI_PARZIALI; Cicli parziali; Partial cycles;cycles partiels; Teilzyklen;CZĘSCIOWE CYKLE
+CICLI_TOTALI; Cicli totali; Total cycles; cycles totaux; Gesamtzyklen;CYKLE W SUMIE
+GETTONI_TOTALI; Totale gettoni; Total coins; jetons totaux; Gesamttoken;MONETY W SUMIE
+ERRORE_FATALE_RAM; Si e' verificato un malfunzionamento fatale della eeprom. I parametri non verranno caricati;  Si e' verificato un malfunzionamento fatale della eeprom. I parametri non verranno caricati; Si e' verificato un malfunzionamento fatale della eeprom. I parametri non verranno caricati; Si e' verificato un malfunzionamento fatale della eeprom. I parametri non verranno caricati; Si e' verificato un malfunzionamento fatale della eeprom. I parametri non verranno caricati
+ERRORE_LIEVE_RAM; I parametri caricati dalla eeprom non erano validi. Sono stati corretti; I parametri caricati dalla eeprom non erano validi. Sono stati corretti; I parametri caricati dalla eeprom non erano validi. Sono stati corretti; I parametri caricati dalla eeprom non erano validi. Sono stati corretti; I parametri caricati dalla eeprom non erano validi. Sono stati corretti
+SALVATAGGIO_IN_CORSO; Salvataggio in corso...; Saving...; Saving .... ; Saving....;ZAPISYWANIE
+TEMPO_CICLO; TEMPO CICLO; CYCLE TIME; TEMPS DE CYCLE; ZYKLUSZEIT;CZAS CYKLU
+TEMPERATURA; TEMPERATURA; TEMPERATURE; TEMPÉRATURE; TEMPERATURE;TEMPERATURA
+UMIDITA; UMIDITA' ; UMIDITY; UMIDITY; UMIDITY;WILGOTNOSC
+VELOCITA; VELOCITA'; SPEED; VITESSE; DREHZAHL;PREDKOSC
