@@ -17,7 +17,6 @@ static void *create_page(model_t *model, void *extra) {
 
 
 static void open_page(model_t *pmodel, void *data) {
-    LV_IMG_DECLARE(img_logo_unity_laundry);
     (void)data;
 
 #ifdef PC_SIMULATOR
@@ -53,12 +52,19 @@ static void open_page(model_t *pmodel, void *data) {
             custom_lv_img_set_src(logo, &legacy_img_logo_hoover);
             break;
         }
+////////
+////////        case 4: {
+////////            logo = custom_lv_img_create(lv_scr_act(), NULL);
+////////            custom_lv_img_set_src(logo, &legacy_img_logo_schulthess);
+////////            break;
+////////        }
 
         case 4: {
-            logo = lv_img_create(lv_scr_act(), NULL);
-            lv_img_set_src(logo, &img_logo_unity_laundry);
+            logo = custom_lv_img_create(lv_scr_act(), NULL);
+            //custom_lv_img_set_src(logo, &legacy_img_logo_lavenda);
+            break;
         }
-
+        
         default:
             break;
     }

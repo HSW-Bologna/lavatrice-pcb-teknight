@@ -560,6 +560,7 @@
             <itemPath>main/view/images/legacy_img_raffreddamento.c</itemPath>
             <itemPath>main/view/images/legacy_img_antipiega.c</itemPath>
             <itemPath>main/view/images/img_logo_unity_laundry.c</itemPath>
+            <itemPath>main/view/images/legacy_img_logo_lavenda.c</itemPath>
           </logicalFolder>
           <logicalFolder name="intl" displayName="intl" projectFiles="true">
             <itemPath>main/view/intl/intl.c</itemPath>

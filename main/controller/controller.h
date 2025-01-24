@@ -7,6 +7,7 @@
 
 void   controller_process_msg(view_controller_command_t *msg, model_t *model);
 void   controller_init(model_t *pmodel);
+void   controller_init_run(model_t *pmodel);
 void   controller_save_pars(model_t *pmodel);
 void   controller_save_private_pars(model_t *pmodel);
 size_t controller_update_pwoff(model_t *pmodel);
