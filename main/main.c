@@ -17,7 +17,7 @@
 /*                                                                            */
 /*  ver. 00.0:  05/05/2021  dalla da MiniEco V:17.4   D:11/04/2021            */
 /*                                                                            */
-/*  ver. att.:  23/11/2023  03.1                                              */
+/*  ver. att.:  12/10/2024  03.2                                              */
 /*                                                                            */
 /*  BY:         Maldus (Mattia MALDINI) & Virginia NEGRI & Massimo ZANNA      */
 /*                                                                            */
@@ -35,7 +35,7 @@
 
 //                                    12345678901234567890
 //const unsigned char versione_prg[] = "V:03.1 D:18/04/2024";
-const unsigned char versione_prg[] = "V:03.1 D:23/11/2023";
+const unsigned char versione_prg[] = "V:03.2 D:12/10/2024";
 
 // NNB: OCCHIO ALLE TRADUZIONI NELLE LINGUE CON LE ACCENTATE !!!!!!!!!!!!!!!! //
 
@@ -297,6 +297,17 @@ const unsigned char versione_prg[] = "V:03.1 D:23/11/2023";
 /*      - CORRETTO ERRORE AZZERAMENTO CREDITO (CON ANTIPIEGA)                 */
 /*                                                                            */
 /*      + aggiunto logo AMERICANI ! il D:18/04/2024 da MATT #  GIT 02/07/2024 */
+/*                                                                            */
+/*----------------------------------------------------------------------------*/
+/*                                                                            */
+/*  rev.:      12/10/2024 (03.2)                                              */
+/*                                                                            */
+/*      #### AZZERAMENTO STATO E RICARICA PARAMETRI ALLO START CICLO !!!!     */
+/*      TENTATO MA RESETTA ALL'USO "controller_init_run" in "controller.c !!!!*/
+/*                                                                            */
+/*      - TOLTO logo SCHULTHESS                                               */
+/*                                                                            */
+/*      - AGGIUNTO logo LAVENDA                                               */
 /*                                                                            */
 /******************************************************************************/
 

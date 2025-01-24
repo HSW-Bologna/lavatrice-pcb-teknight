@@ -42,10 +42,16 @@ static void update_strings(model_t *pmodel, int clear) {
                           view_intl_get_string(pmodel, strings_lingua[model_get_lingua(pmodel)]));
     }
 
-    if (page_data.index == PARMAC_COMMISSIONING_LOGO || index_old == PARMAC_COMMISSIONING_LOGO || clear) {
+    if (page_data.index == PARMAC_COMMISSIONING_LOGO || index_old == PARMAC_COMMISSIONING_LOGO || clear)
+    {
         size_t      logo           = model_get_logo_ditta(pmodel);
+        
+////        const char *strings_logo[] = {
+////            "SMILE", "MSGroup", "RotondiGR", "HooverPRO", "Shulthess","Unity Laundry",
+////        };
+        
         const char *strings_logo[] = {
-            "SMILE", "MSGroup", "RotondiGR", "HooverPRO", "Shulthess","Unity Laundry",
+            "SMILE", "MSGroup", "RotondiGR", "HooverPRO", "Lavenda", "Unity Laundry",
         };
 
         lv_label_set_text_fmt(page_data.lbl_logo, "LOGO[%i]%9s", logo, strings_logo[logo]);

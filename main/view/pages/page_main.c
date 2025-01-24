@@ -19,6 +19,9 @@
 #include "view/widgets/custom_lv_img.h"
 #include "controller/ciclo.h"
 #include "controller/ciclo.h"
+#include "controller/controller.h"
+
+
 
 
 
@@ -252,6 +255,7 @@ static view_message_t process_page_event(model_t *model, void *arg, pman_event_t
                     case BUTTON_CALDO:
                         if (model->status.n_allarme==ALL_NO && model->status.f_all==ALL_NO)
                         {
+                            ////controller_init_run(&model); // 12//10/2024 !!!!
                             model_seleziona_ciclo(model, CICLO_CALDO);
                             view_status_string(model);
                             update_timer(model);
@@ -264,6 +268,7 @@ static view_message_t process_page_event(model_t *model, void *arg, pman_event_t
 
                     case BUTTON_MEDIO:
                         if (model->status.n_allarme==ALL_NO && model->status.f_all==ALL_NO) {
+                            ////controller_init_run(&model); // 12//10/2024 !!!!
                             model_seleziona_ciclo(model, CICLO_MEDIO);
                             view_status_string(model);
                             update_timer(model);
@@ -274,6 +279,7 @@ static view_message_t process_page_event(model_t *model, void *arg, pman_event_t
 
                     case BUTTON_TIEPIDO:
                         if (model->status.n_allarme==ALL_NO && model->status.f_all==ALL_NO) {
+                            ////controller_init_run(&model); // 12//10/2024 !!!!
                             model_seleziona_ciclo(model, CICLO_TIEPIDO);
                             view_status_string(model);
                             update_timer(model);
@@ -284,6 +290,7 @@ static view_message_t process_page_event(model_t *model, void *arg, pman_event_t
 
                     case BUTTON_LANA:
                         if (model->status.n_allarme==ALL_NO && model->status.f_all==ALL_NO) {
+                            ////controller_init_run(&model); // 12//10/2024 !!!!
                             model_seleziona_ciclo(model, CICLO_LANA);
                             view_status_string(model);
                             update_timer(model);
@@ -294,6 +301,7 @@ static view_message_t process_page_event(model_t *model, void *arg, pman_event_t
 
                     case BUTTON_FREDDO:
                         if (model->status.n_allarme==ALL_NO && model->status.f_all==ALL_NO) {
+                            ////controller_init_run(&model); // 12//10/2024 !!!!
                             model_seleziona_ciclo(model, CICLO_FREDDO);
                             view_status_string(model);
                             update_timer(model);

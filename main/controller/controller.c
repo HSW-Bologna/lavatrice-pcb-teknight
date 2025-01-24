@@ -188,14 +188,65 @@ void controller_init(model_t *pmodel)
         model_pwoff_deserialize(pmodel, pwoff_data);
         controller_update_pwoff(pmodel);
     }
-    
     pwoff_set_callback(controller_save_pwoff);
     nt7534_reconfigure(pmodel->hsw.contrasto);
     view_change_page(pmodel, &page_splash);
-    
-    
-    
-    
+}
+
+
+void controller_init_run(model_t *pmodel) // 12//10/2024 !!!!
+{
+#ifdef ENABLE_WEARLEVELING
+    wearleveling_init(&memory, read_block, write_block, read_marker, WL_BLOCK_NUM);
+#endif
+    size_t i = 0;
+
+    if (!controller_start_check()) // controllo prima accensione scheda vergine
+    {
+        uint8_t data[PARS_SERIALIZED_SIZE] = {0};
+        parmac_init(pmodel, 1);
+        
+        for (i = 0; i < NUM_CICLI; i++)
+        {
+            parciclo_init(pmodel, i, 1);
+        }
+        uint8_t check_byte = CHECK_BYTE;
+        EE24LC16_SEQUENTIAL_WRITE(eeprom_driver, CHECK_BYTE_ADDRESS, &check_byte, 1);
+
+        i = model_pars_serialize(pmodel, data);
+        EE24LC16_SEQUENTIAL_WRITE(eeprom_driver, PAR_START_ADDRESS, data, i);
+
+        i = model_private_parameters_serialize(pmodel, data);
+        EE24LC16_SEQUENTIAL_WRITE(eeprom_driver, PRIVATE_PARS_ADDRESS, data, i);
+    }
+    else
+    {
+        uint8_t data[PARS_SERIALIZED_SIZE] = {0};
+        EE24CL16_SEQUENTIAL_READ(eeprom_driver, PAR_START_ADDRESS, data, PARS_SERIALIZED_SIZE);
+        model_pars_deserialize(pmodel, data);
+
+//        EE24CL16_SEQUENTIAL_READ(eeprom_driver, PRIVATE_PARS_ADDRESS, data, PRIVATE_PARS_SERIALIZED_SIZE);
+//        model_private_parameters_deserialize(pmodel, data);
+//
+//        parmac_init(pmodel, 0);
+//        
+//        for (i = 0; i < NUM_CICLI; i++)
+//        {
+//            parciclo_init(pmodel, i, 0);
+//        }
+
+////////        uint8_t pwoff_data[PWOFF_SERIALIZED_SIZE] = {0};
+////////#ifdef ENABLE_WEARLEVELING
+////////        wearleveling_read(&memory, pwoff_data, PWOFF_SERIALIZED_SIZE);
+////////#else
+////////        EE24CL16_SEQUENTIAL_READ(eeprom_driver, PWOFF_DATA_ADDRESS, pwoff_data, PWOFF_SERIALIZED_SIZE);
+////////#endif
+////////        model_pwoff_deserialize(pmodel, pwoff_data);
+////////        controller_update_pwoff(pmodel);
+    }
+////////    pwoff_set_callback(controller_save_pwoff);
+////////    nt7534_reconfigure(pmodel->hsw.contrasto);
+////////    view_change_page(pmodel, &page_splash);    
 }
 
 

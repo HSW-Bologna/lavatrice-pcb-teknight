@@ -53,10 +53,16 @@ static void open_page(model_t *pmodel, void *data) {
             custom_lv_img_set_src(logo, &legacy_img_logo_hoover);
             break;
         }
+////////
+////////        case 4: {
+////////            logo = custom_lv_img_create(lv_scr_act(), NULL);
+////////            custom_lv_img_set_src(logo, &legacy_img_logo_schulthess);
+////////            break;
+////////        }
 
         case 4: {
             logo = custom_lv_img_create(lv_scr_act(), NULL);
-            custom_lv_img_set_src(logo, &legacy_img_logo_schulthess);
+            custom_lv_img_set_src(logo, &legacy_img_logo_lavenda);
             break;
         }
         

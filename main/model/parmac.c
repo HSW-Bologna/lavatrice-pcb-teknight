@@ -11,7 +11,7 @@
 /*                                                                            */
 /*  Data  : 19/07/2021      REV  : 00.0                                       */
 /*                                                                            */
-/*  U.mod.: 31/07/2023      REV  : 03.0                                       */
+/*  U.mod.: 09/10/2024      REV  : 03.2                                       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -64,6 +64,7 @@ void parmac_setup_commissioning(model_t *p) {
                                                             1, AL_USER, ((parameter_user_data_t){languages, formatta, NULL, NULL}), NULL, NULL);
     parameters[PARMAC_COMMISSIONING_LOGO] =
         PARAMETER_C99(PARAMETER_TYPE_UINT8, &p->pmac.logo_ditta, NULL, NULL, 0, 5, 1, 1, AL_TECH,
+        //PARAMETER_C99(PARAMETER_TYPE_UINT8, &p->pmac.logo_ditta, NULL, NULL, 0, 4, 1, 1, AL_TECH,
                       FINT(PARMAC_DESCRIPTIONS_STRINGA_DITTA_VISUALIZZATA), NULL, NULL);
     parameters[PARMAC_COMMISSIONING_MODELLO] =
         PARAMETER_C99(PARAMETER_TYPE_UINT8, &p->pmac.modello_macchina, NULL, NULL, 1, 19, 0, 1, AL_TECH,
@@ -99,8 +100,8 @@ void parmac_setup_full(model_t *p, size_t chunk, int reset) {
             break;
             
         case 1: // 18
-//            parameters[i++] = PARAMETER_C99(PARAMETER_TYPE_UINT8, &p->pmac.macchina_libera_off_on,              NULL,   NULL,   0,      1,      0,      1,      AL_TECH,     FINT(PARMAC_DESCRIPTIONS_MACCHINA_LIBERA_OFF_ON),              NULL,       NULL);
-//            parameters[i++] = PARAMETER_C99(PARAMETER_TYPE_UINT8, &p->pmac.tipo_out_macchina_occupata,          NULL,   NULL,   0,      3,      0,      1,      AL_TECH,     FINT(PARMAC_DESCRIPTIONS_TIPO_OUT_MACCHINA_OCCUPATA),               NULL,       NULL);
+//          parameters[i++] = PARAMETER_C99(PARAMETER_TYPE_UINT8, &p->pmac.macchina_libera_off_on,              NULL,   NULL,   0,      1,      0,      1,      AL_TECH,     FINT(PARMAC_DESCRIPTIONS_MACCHINA_LIBERA_OFF_ON),                  NULL,       NULL);
+//          parameters[i++] = PARAMETER_C99(PARAMETER_TYPE_UINT8, &p->pmac.tipo_out_macchina_occupata,          NULL,   NULL,   0,      3,      0,      1,      AL_TECH,     FINT(PARMAC_DESCRIPTIONS_TIPO_OUT_MACCHINA_OCCUPATA),              NULL,       NULL);
             parameters[i++] = PARAMETER_C99(PARAMETER_TYPE_UINT8, &p->pmac.macchina_libera_off_on,              NULL,   NULL,   0,      1,      0,      1,      AL_USER,     FINT(PARMAC_DESCRIPTIONS_MACCHINA_LIBERA_OFF_ON),                  NULL,       NULL);
             parameters[i++] = PARAMETER_C99(PARAMETER_TYPE_UINT8, &p->pmac.tipo_out_macchina_occupata,          NULL,   NULL,   0,      3,      0,      1,      AL_USER,     FINT(PARMAC_DESCRIPTIONS_TIPO_OUT_MACCHINA_OCCUPATA),              NULL,       NULL);
             parameters[i++] = PARAMETER_C99(PARAMETER_TYPE_UINT8, &p->pmac.tempo_uscita_pagine,                 NULL,   NULL,   1,      60,     30,     1,      AL_TECH,     FINT(PARMAC_DESCRIPTIONS_TEMPO_USCITA_PAGINE),                     NULL,       NULL);
