@@ -3,7 +3,7 @@
     <type>com.microchip.mplab.nbide.embedded.makeproject</type>
     <configuration>
         <data xmlns="http://www.netbeans.org/ns/make-project/1">
-            <name>Paperoga</name>
+            <name>lavaggio-teknight</name>
             <creation-uuid>b983c135-17d1-4c10-bbef-2ddb4a226583</creation-uuid>
             <make-project-type>0</make-project-type>
             <c-extensions>c</c-extensions>

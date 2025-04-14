@@ -32,6 +32,5 @@ void       view_common_password_reset(view_common_password_t *password, unsigned
 lv_task_t *view_common_register_timer(unsigned long period);
 int        view_common_check_password_started(view_common_password_t *inserted);
 void *     view_common_malloc_page_data(size_t size);
-const char * view_common_modello_str(model_t *pmodel);
 
 #endif

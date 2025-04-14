@@ -14,11 +14,8 @@ void controller_manage_gui(model_t *model) {
 
     view_message_t umsg;
     view_event_t   event;
-    lv_mem_monitor_t mem_monitor;
 
     lv_task_handler();
-    lv_mem_monitor(&mem_monitor);
-    model_mem_data(model, &mem_monitor);
     
     if (last_invoked != get_millis()) {
         lv_tick_inc(time_interval(last_invoked, get_millis()));

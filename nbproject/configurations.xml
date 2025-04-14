@@ -490,25 +490,10 @@
         <logicalFolder name="controller" displayName="controller" projectFiles="true">
           <itemPath>main/controller/gui.c</itemPath>
           <itemPath>main/controller/controller.c</itemPath>
-          <itemPath>main/controller/modbus_server.c</itemPath>
           <itemPath>main/controller/ciclo.c</itemPath>
-          <itemPath>main/controller/gt_cesto.c</itemPath>
-          <itemPath>main/controller/gt_riscaldamento.c</itemPath>
-          <itemPath>main/controller/gt_ventilazione.c</itemPath>
-          <itemPath>main/controller/gt_allarmi.c</itemPath>
-          <itemPath>main/controller/gt_reset_bruciatore.c</itemPath>
-          <itemPath>main/controller/gt_macchina_occupata.c</itemPath>
-          <itemPath>main/controller/gt_presenza_aria.c</itemPath>
         </logicalFolder>
         <logicalFolder name="model" displayName="model" projectFiles="true">
-          <logicalFolder name="descriptions"
-                         displayName="descriptions"
-                         projectFiles="true">
-            <itemPath>main/model/descriptions/AUTOGEN_FILE_parmac.c</itemPath>
-          </logicalFolder>
           <itemPath>main/model/model.c</itemPath>
-          <itemPath>main/model/parmac.c</itemPath>
-          <itemPath>main/model/parciclo.c</itemPath>
         </logicalFolder>
         <logicalFolder name="peripherals" displayName="peripherals" projectFiles="true">
           <itemPath>main/peripherals/system.c</itemPath>
@@ -568,25 +553,6 @@
           </logicalFolder>
           <logicalFolder name="pages" displayName="pages" projectFiles="true">
             <itemPath>main/view/pages/page_main.c</itemPath>
-            <itemPath>main/view/pages/page_temperature_test.c</itemPath>
-            <itemPath>main/view/pages/page_digout_test.c</itemPath>
-            <itemPath>main/view/pages/page_digin_test.c</itemPath>
-            <itemPath>main/view/pages/page_pwm_test.c</itemPath>
-            <itemPath>main/view/pages/page_led_test.c</itemPath>
-            <itemPath>main/view/pages/page_parmac.c</itemPath>
-            <itemPath>main/view/pages/page_info.c</itemPath>
-            <itemPath>main/view/pages/page_scelta_programma.c</itemPath>
-            <itemPath>main/view/pages/page_parciclo.c</itemPath>
-            <itemPath>main/view/pages/page_splash.c</itemPath>
-            <itemPath>main/view/pages/page_reset_ram.c</itemPath>
-            <itemPath>main/view/pages/page_commissioning.c</itemPath>
-            <itemPath>main/view/pages/page_coin_test.c</itemPath>
-            <itemPath>main/view/pages/page_contrast.c</itemPath>
-            <itemPath>main/view/pages/page_stats.c</itemPath>
-            <itemPath>main/view/pages/page_ram_error.c</itemPath>
-            <itemPath>main/view/pages/page_adjust.c</itemPath>
-            <itemPath>main/view/pages/page_wait.c</itemPath>
-            <itemPath>main/view/pages/page_stupid.c</itemPath>
           </logicalFolder>
           <logicalFolder name="widgets" displayName="widgets" projectFiles="true">
             <itemPath>main/view/widgets/custom_lv_img.c</itemPath>
@@ -1051,20 +1017,6 @@
       <item path="components/generic_embedded_libs/gel/pid/pid.c"
             ex="true"
             overriding="false">
-        <C30>
-        </C30>
-        <C30-AR>
-        </C30-AR>
-        <C30-AS>
-        </C30-AS>
-        <C30-CO>
-        </C30-CO>
-        <C30-LD>
-        </C30-LD>
-        <C30Global>
-        </C30Global>
-      </item>
-      <item path="main/controller/modbus_server.c" ex="false" overriding="false">
         <C30>
         </C30>
         <C30-AR>
