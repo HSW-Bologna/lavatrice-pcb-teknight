@@ -45,6 +45,13 @@ uint8_t model_is_temperature_ok(model_t *model) {
 void model_manage(model_t *model) {
     for (tank_t tank = TANK_1; tank < TANKS_NUM; tank++) {
         switch (model->tank_states[tank]) {
+            case TANK_STATE_HEATING:
+                if (model_is_temperature_ok(model)) {
+                    stopwatch_setngo(&model->tank_stopwatches[tank], model->tank_durations[tank], get_millis());
+                    model->tank_states[tank] = TANK_STATE_ON;
+                }
+                break;
+
             case TANK_STATE_ON:
                 if (stopwatch_is_timer_reached(&model->tank_stopwatches[tank], get_millis())) {
                     model_stop(model, tank);

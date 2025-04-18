@@ -62,6 +62,7 @@ int main(void) {
 
     // MAIN LOOP ============================================================ //
     for (;;) {
+        controller_manage(&model);
         controller_manage_gui(&model);
 
         ClrWdt();
@@ -76,8 +77,6 @@ int main(void) {
             ts_input = get_millis();
         }
 
-
-
         if (is_expired(tskp, get_millis(), 5)) {
             keypad_update_t update = keyboard_manage(get_millis());
 
@@ -91,8 +90,6 @@ int main(void) {
             }
             tskp = get_millis();
         }
-
-
 
         if (is_expired(ts_temperature, get_millis(), 50)) {
             ptc_read_temperature();

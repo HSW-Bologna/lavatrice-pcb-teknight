@@ -31,6 +31,7 @@ int main(int argc, char *argv[]) {
     controller_init(&model);
 
     for (;;) {
+        controller_manage(&model);
         controller_manage_gui(&model);
 
         if (is_expired(tskp, get_millis(), 5)) {

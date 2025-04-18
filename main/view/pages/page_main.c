@@ -25,7 +25,9 @@ static struct {
     view_common_password_t password;
 
     lv_obj_t *label_tank;
-    lv_obj_t *label_temperature;
+    lv_obj_t *label_temperature_icon;
+    lv_obj_t *label_temperature_1;
+    lv_obj_t *label_temperature_2;
     lv_obj_t *label_time;
     lv_obj_t *label_state;
 
@@ -52,7 +54,7 @@ static void open_page(model_t *model, void *data) {
     {
         lv_obj_t *cont = lv_obj_create(lv_scr_act(), NULL);
         lv_obj_set_style(cont, &style_obj_border);
-        lv_obj_set_size(cont, 128, 20);
+        lv_obj_set_size(cont, 128, 18);
         lv_obj_align(cont, NULL, LV_ALIGN_IN_TOP_MID, 0, 0);
 
         lv_obj_t *label = lv_label_create(cont, NULL);
@@ -72,11 +74,24 @@ static void open_page(model_t *model, void *data) {
     }
 
     {
+        lv_obj_t *label_icon = lv_label_create(lv_scr_act(), NULL);
+        lv_obj_set_auto_realign(label_icon, 1);
+        lv_obj_set_style(label_icon, &style_label_8x16);
+        lv_label_set_text(label_icon, "\xCE\xCF");
+        lv_obj_align(label_icon, NULL, LV_ALIGN_IN_RIGHT_MID, -40, 0);
+        page_data.label_temperature_icon = label_icon;
+
         lv_obj_t *label = lv_label_create(lv_scr_act(), NULL);
         lv_obj_set_auto_realign(label, 1);
         lv_obj_set_style(label, &style_label_8x16);
-        lv_obj_align(label, NULL, LV_ALIGN_IN_RIGHT_MID, -2, 0);
-        page_data.label_temperature = label;
+        lv_obj_align(label, NULL, LV_ALIGN_IN_RIGHT_MID, -2, -6);
+        page_data.label_temperature_1 = label;
+
+        label = lv_label_create(lv_scr_act(), NULL);
+        lv_obj_set_auto_realign(label, 1);
+        lv_obj_set_style(label, &style_label_8x16);
+        lv_obj_align(label, NULL, LV_ALIGN_IN_RIGHT_MID, -10, 8);
+        page_data.label_temperature_2 = label;
     }
 
     {
@@ -102,21 +117,9 @@ static view_message_t process_page_event(model_t *model, void *arg, pman_event_t
 
                 if (view_common_check_password(&page_data.password, VIEW_PASSWORD_MINUS, VIEW_SHORT_PASSWORD_LEN,
                                                get_millis())) {
-                    // if (model_get_status_stopped(model))
-                    //{
-                    // msg.vmsg.code           = VIEW_PAGE_COMMAND_CODE_CHANGE_PAGE;
-                    // msg.vmsg.page           = &page_digin_test;
-                    // model->status.f_in_test = 1;
                     break;
-                    //}
-                    // else
-                    //{
-                    //    break;
-                    //}
                 } else if (view_common_check_password(&page_data.password, VIEW_PASSWORD_RIGHT, VIEW_SHORT_PASSWORD_LEN,
                                                       get_millis())) {
-                    // msg.vmsg.code = VIEW_PAGE_COMMAND_CODE_CHANGE_PAGE;
-                    // msg.vmsg.page = &page_parmac;
                     break;
                 }
 
@@ -157,7 +160,7 @@ static view_message_t process_page_event(model_t *model, void *arg, pman_event_t
                         msg.vmsg.code = VIEW_PAGE_COMMAND_CODE_UPDATE;
                         break;
 
-                    case BUTTON_STOP:
+                    case BUTTON_MENU:
                         model_stop(model, page_data.tank);
                         msg.vmsg.code = VIEW_PAGE_COMMAND_CODE_UPDATE;
                         break;
@@ -176,7 +179,7 @@ static view_message_t process_page_event(model_t *model, void *arg, pman_event_t
                         msg.vmsg.code  = VIEW_PAGE_COMMAND_CODE_UPDATE;
                         break;
 
-                    case BUTTON_MENU:
+                    case BUTTON_STOP:
                         if (page_data.tank > 0) {
                             page_data.tank--;
                         } else {
@@ -225,31 +228,34 @@ static view_message_t process_page_event(model_t *model, void *arg, pman_event_t
 }
 
 static view_t update_page(model_t *model, void *arg) {
-    switch (page_data.tank) {
-        case TANK_1:
-            lv_label_set_text(page_data.label_tank, "Vasca 1");
-            break;
+    tank_t previous_tank = page_data.tank == TANK_1 ? TANK_3 : page_data.tank - 1;
+    tank_t next_tank     = (page_data.tank + 1) % TANKS_NUM;
 
-        case TANK_2:
-            lv_label_set_text(page_data.label_tank, "Vasca 2");
-            break;
-
-        case TANK_3:
-            lv_label_set_text(page_data.label_tank, "Vasca 3");
-            break;
-    }
+    lv_label_set_text_fmt(
+        page_data.label_tank, "%s  Vasca %i  %s",
+        model->tank_states[previous_tank] == TANK_STATE_ON || model->tank_states[previous_tank] == TANK_STATE_HEATING
+            ? "\xFF"
+            : "\xFE",
+        page_data.tank + 1,
+        model->tank_states[next_tank] == TANK_STATE_ON || model->tank_states[next_tank] == TANK_STATE_HEATING ? "\xFF"
+                                                                                                              : "\xFE");
 
     unsigned long total_seconds = model_get_remaining_seconds(model, page_data.tank);
-    unsigned long seconds       = total_seconds % 60;
-    unsigned long minutes       = total_seconds / 60;
+    int           seconds       = (int)(total_seconds % 60);
+    int           minutes       = (int)(total_seconds / 60);
 
     lv_label_set_text_fmt(page_data.label_time, "\xCC\xCD%02i:%02i", minutes, seconds);
 
     if (page_data.tank == TANK_1) {
-        lv_obj_set_hidden(page_data.label_temperature, 0);
-        lv_label_set_text_fmt(page_data.label_temperature, "\xCE\xCF%2iC", model->tank_1_temperature_setpoint);
+        lv_obj_set_hidden(page_data.label_temperature_icon, 0);
+        lv_obj_set_hidden(page_data.label_temperature_1, 0);
+        lv_obj_set_hidden(page_data.label_temperature_2, 0);
+        lv_label_set_text_fmt(page_data.label_temperature_1, "%2iC/", model->ptc_temperature);
+        lv_label_set_text_fmt(page_data.label_temperature_2, "%2iC", model->tank_1_temperature_setpoint);
     } else {
-        lv_obj_set_hidden(page_data.label_temperature, 1);
+        lv_obj_set_hidden(page_data.label_temperature_icon, 1);
+        lv_obj_set_hidden(page_data.label_temperature_1, 1);
+        lv_obj_set_hidden(page_data.label_temperature_2, 1);
     }
 
     switch (model->tank_states[page_data.tank]) {
