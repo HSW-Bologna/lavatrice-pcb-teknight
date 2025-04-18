@@ -20,19 +20,19 @@
 #define PRIVATE_PARS_ADDRESS 128
 
 
-void controller_process_msg(view_controller_command_t *msg, model_t *pmodel) {
+void controller_process_msg(view_controller_command_t *msg, model_t *model) {
     switch (msg->code) {
         case VIEW_CONTROLLER_COMMAND_CODE_UPDATE_PWM: {
             if (msg->pwm_channel == 1) {
-                pmodel->pwm1 = msg->value;
+                model->pwm1 = msg->value;
             } else if (msg->pwm_channel == 2) {
-                pmodel->pwm2 = msg->value;
+                model->pwm2 = msg->value;
             }
             if (msg->value == 0) {
                 int i = 0;
                 for (i = 0; i < 6; i++) {
                     rele_update(i, 0);
-                    pmodel->outputs = rele_get_status();
+                    // model->outputs = rele_get_status();
                 }
             } else {
                 int i = 0;
@@ -43,7 +43,7 @@ void controller_process_msg(view_controller_command_t *msg, model_t *pmodel) {
                         rele_update(i, 1);
                     }
                 }
-                pmodel->outputs = rele_get_status();
+                // model->outputs = rele_get_status();
             }
             break;
         }
@@ -55,7 +55,7 @@ void controller_process_msg(view_controller_command_t *msg, model_t *pmodel) {
                 if (i != (msg->output) - 1)
                     rele_update(i, 0);
             }
-            pmodel->outputs = rele_get_status();
+            // model->outputs = rele_get_status();
 
             view_event((view_event_t){.code = VIEW_EVENT_MODEL_UPDATE});
             break;
@@ -65,7 +65,7 @@ void controller_process_msg(view_controller_command_t *msg, model_t *pmodel) {
             int i = 0;
             for (i = 0; i < 6; i++) {
                 rele_update(i, 0);
-                pmodel->outputs = rele_get_status();
+                // model->outputs = rele_get_status();
             }
 
             view_event((view_event_t){.code = VIEW_EVENT_MODEL_UPDATE});
@@ -74,13 +74,13 @@ void controller_process_msg(view_controller_command_t *msg, model_t *pmodel) {
 
         case VIEW_CONTROLLER_COMMAND_CODE_PARAMETERS_SAVE: {
             digout_buzzer_stop();
-            controller_save_pars(pmodel);
+            controller_save_pars(model);
             view_event((view_event_t){.code = VIEW_EVENT_SAVED});
             break;
         }
 
         case VIEW_CONTROLLER_COMMAND_CODE_RESET_RAM: {
-            controller_save_pars(pmodel);
+            controller_save_pars(model);
             break;
         }
 
@@ -90,11 +90,11 @@ void controller_process_msg(view_controller_command_t *msg, model_t *pmodel) {
         }
 
         case VIEW_CONTROLLER_COMMAND_CODE_UPDATE_CONTRAST:
-            nt7534_reconfigure(pmodel->hsw.contrasto);
+            nt7534_reconfigure(model->hsw.contrasto);
             break;
 
         case VIEW_CONTROLLER_COMMAND_CODE_PRIVATE_PARAMETERS_SAVE:
-            controller_save_private_pars(pmodel);
+            controller_save_private_pars(model);
             break;
 
         case VIEW_CONTROLLER_COMMAND_CODE_NOTHING:
@@ -103,21 +103,34 @@ void controller_process_msg(view_controller_command_t *msg, model_t *pmodel) {
 }
 
 
-void controller_init(model_t *pmodel) {
-    nt7534_reconfigure(pmodel->hsw.contrasto);
-    view_change_page(pmodel, &page_main);
+void controller_init(model_t *model) {
+    nt7534_reconfigure(model->hsw.contrasto);
+    view_change_page(model, &page_main);
 }
 
 
-void controller_save_pars(model_t *pmodel) {
+void controller_manage(model_t *model) {
+    model_manage(model);
+
+    rele_update(DIGOUT_GENERALE_VENTOLE, 1);
+    rele_update(DIGOUT_POMPA_P1A, model->tank_states[TANK_1] == TANK_STATE_ON);
+    rele_update(DIGOUT_POMPA_P1B,
+                model->tank_states[TANK_1] == TANK_STATE_ON || model->tank_states[TANK_1] == TANK_STATE_HEATING);
+    rele_update(DIGOUT_RESISTENZE, !model_is_temperature_ok(model));
+    rele_update(DIGOUT_POMPA_P2, model->tank_states[TANK_2] == TANK_STATE_ON);
+    rele_update(DIGOUT_POMPA_P3, model->tank_states[TANK_3] == TANK_STATE_ON);
+}
+
+
+void controller_save_pars(model_t *model) {
     uint8_t data[PARS_SERIALIZED_SIZE] = {0};
-    size_t  i                          = 0;     // model_pars_serialize(pmodel, data);
+    size_t  i                          = 0;     // model_pars_serialize(model, data);
     EE24LC16_SEQUENTIAL_WRITE(eeprom_driver, PAR_START_ADDRESS, data, i);
 }
 
 
-void controller_save_private_pars(model_t *pmodel) {
+void controller_save_private_pars(model_t *model) {
     uint8_t data[PRIVATE_PARS_SERIALIZED_SIZE] = {0};
-    size_t  i                                  = 0;     // model_private_parameters_serialize(pmodel, data);
+    size_t  i                                  = 0;     // model_private_parameters_serialize(model, data);
     EE24LC16_SEQUENTIAL_WRITE(eeprom_driver, PRIVATE_PARS_ADDRESS, data, i);
 }

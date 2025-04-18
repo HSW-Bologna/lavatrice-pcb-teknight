@@ -12,6 +12,7 @@ void   controller_save_pars(model_t *pmodel);
 void   controller_save_private_pars(model_t *pmodel);
 size_t controller_update_pwoff(model_t *pmodel);
 void   controller_save_pwoff(void);
+void   controller_manage(model_t *pmodel);
 
 
 #endif

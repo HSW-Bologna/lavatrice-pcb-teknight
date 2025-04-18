@@ -30,8 +30,6 @@ int main(int argc, char *argv[]) {
     view_init(&model, monitor_flush, NULL, NULL, keyboard_reset);
     controller_init(&model);
 
-    model.status.f_start_ok = 0;
-
     for (;;) {
         controller_manage_gui(&model);
 

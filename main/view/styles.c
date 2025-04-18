@@ -7,6 +7,7 @@ lv_style_t style_label_8x16_reverse;
 lv_style_t style_label_6x8;
 lv_style_t style_label_normal;
 lv_style_t style_label_reverse;
+lv_style_t style_obj_border;
 
 
 void styles_init(void) {
@@ -34,4 +35,8 @@ void styles_init(void) {
     style_label_reverse.body.padding.bottom = 9;
     style_label_reverse.body.border.width   = 0;
     style_label_reverse.body.padding.inner  = 0;
+
+    lv_style_copy(&style_obj_border, &lv_style_scr);
+    style_obj_border.body.border.color = LV_COLOR_BLACK;
+    style_obj_border.body.border.width = 1;
 }

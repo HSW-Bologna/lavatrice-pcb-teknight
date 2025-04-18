@@ -26,8 +26,6 @@
 
 #include "peripherals/led.h"
 
-#include "controller/ciclo.h"
-
 
 model_t model;
 
@@ -65,8 +63,6 @@ int main(void) {
     // MAIN LOOP ============================================================ //
     for (;;) {
         controller_manage_gui(&model);
-
-        gt_ciclo(&model, get_millis());
 
         ClrWdt();
 

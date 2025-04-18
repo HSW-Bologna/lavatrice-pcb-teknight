@@ -10,12 +10,12 @@
 //
 typedef enum { RELE_1 = 0, RELE_2, RELE_3, RELE_4, RELE_5, RELE_6, NUM_RELE } rele_t;
 
-#define ORARIO            RELE_1
-#define ANTIORARIO        RELE_2
-#define RISCALDAMENTO     RELE_3
-#define VENTILAZIONE      RELE_4    // scambiati dalla 01.5 del 19-05-22    era 4   //  riscambiati v 01.7  era 6
-#define RESET_BRUCIATORE  RELE_5    // alla                                         //  del
-#define MACCHINA_OCCUPATA RELE_6    // 01.6 del 30-05-22                    era 6   //  11-07-2022           era 4
+#define DIGOUT_GENERALE_VENTOLE RELE_1
+#define DIGOUT_POMPA_P1A        RELE_2
+#define DIGOUT_POMPA_P1B        RELE_3
+#define DIGOUT_RESISTENZE       RELE_4
+#define DIGOUT_POMPA_P2         RELE_5
+#define DIGOUT_POMPA_P3         RELE_6
 
 void digout_init(void);
 
